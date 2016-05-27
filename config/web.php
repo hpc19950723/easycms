@@ -20,7 +20,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'admin/index/error',
+            'errorAction' => 'index/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -57,12 +57,7 @@ $config = [
         ],
 
     ],
-    'modules' => [
-        'admin' => [
-            'class' => 'app\modules\admin\Module',
-            'defaultRoute' => 'index',
-        ]
-    ],
+    'modules' => require(__DIR__ . '/modules.php'),
     'params' => $params,
 ];
 
