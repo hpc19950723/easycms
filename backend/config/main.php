@@ -15,7 +15,8 @@ return [
     'modules' => [],
     'components' => [
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\modules\admin\models\Admin',
+            'loginUrl' => array('index/login'),
             'enableAutoLogin' => true,
         ],
         'log' => [

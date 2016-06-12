@@ -1,7 +1,11 @@
 <?php
 namespace common\modules\admin\controllers;
 
+use Yii;
 use yii\web\Controller;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use common\modules\admin\models\LoginForm;
 
 class IndexController extends BaseController
 {
@@ -53,7 +57,7 @@ class IndexController extends BaseController
     }
 
     public function actionLogin()
-    {
+    {echo 'abc';exit;
         $this->layout = '/login';
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
