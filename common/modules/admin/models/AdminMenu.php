@@ -7,7 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "admin_menus".
+ * This is the model class for table "admin_menu".
  *
  * @property string $menu_id
  * @property string $name
@@ -16,7 +16,7 @@ use yii\db\Expression;
  * @property string $icon
  * @property integer $position
  */
-class AdminMenus extends \yii\db\ActiveRecord
+class AdminMenu extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

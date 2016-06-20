@@ -4,6 +4,7 @@ namespace common\modules\admin\models;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -23,7 +24,7 @@ class Admin extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user_admins}}';
+        return '{{%user_admin}}';
     }
 
     /**
@@ -32,7 +33,12 @@ class Admin extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',    // 自己根据数据库字段修改
+                'updatedAtAttribute' => 'updated_at',    // 自己根据数据库字段修改
+                'value' => new Expression('NOW()'),         // 自己根据数据库字段修改
+            ]
         ];
     }
 

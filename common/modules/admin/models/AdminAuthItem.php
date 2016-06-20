@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\models;
+namespace common\modules\admin\models;
 
 use yii\db\ActiveRecord;
-use backend\models\AdminAuthItemChild;
+use common\modules\admin\models\AdminAuthItemChild;
 
 class AdminAuthItem extends ActiveRecord
 {

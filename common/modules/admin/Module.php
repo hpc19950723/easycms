@@ -1,13 +1,7 @@
 <?php
 namespace common\modules\admin;
 
-class Module extends \common\modules\CommonModule
+class Module extends \common\modules\admin\CommonModule
 {
     public $controllerNamespace = 'common\modules\admin\controllers';
-    
-    public function init()
-    {
-        $this->viewPath = $this->basePath;
-        parent::init();
-    }
 }
