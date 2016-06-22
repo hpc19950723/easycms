@@ -8,7 +8,7 @@ $this->params['breadcrumbs'][] = '更新等级';
 ?>
 <div class="user-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
     
     <?= $this->render('_gradeForm', [
         'model' => $model,

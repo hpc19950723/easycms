@@ -10,6 +10,9 @@ use yii\web\Link;
 
 class CommonActiveRecord extends ActiveRecord
 {   
+    const VALUE_NO = 0;     //否定值
+    const VALUE_YES = 1;    //肯定值
+    
     public $cacheKeyStorage = [];      //缓存key寄存器
     
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
@@ -141,5 +144,17 @@ class CommonActiveRecord extends ActiveRecord
         foreach($this->cacheKeyStorage as $cacheKey) {
             Yii::$app->cache->delete($cacheKey);
         }
+    }
+    
+
+    /**
+     * 获取Yes,No数据
+     */
+    public static function getYesNo()
+    {
+        return [
+            static::VALUE_NO => '否',
+            static::VALUE_YES => '是'
+        ];
     }
 }

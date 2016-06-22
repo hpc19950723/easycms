@@ -18,7 +18,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="<?= str_replace('/', '-', Yii::$app->controller->route) ?>">
 <?php $this->beginBody() ?>
 <div class="container dw_container">
     <div class="row dw_height">
@@ -28,7 +28,7 @@ AppAsset::register($this);
             </div>
             <ul class="nav dw_nav">
                 <?php
-                $currentControllerAction = '/' . Yii::$app->controller->module->id . '/' . Yii::$app->controller->id . '/' . Yii::$app->controller->action->id;
+                $currentControllerAction = '/' . Yii::$app->controller->route;
                 foreach($this->context->getMenus() as $k=>$menu): ?>
                 <li>
                     <a class="<?php echo (0 < $menu['children_count'])?(in_array($currentControllerAction,$menu['child_route']) ? '' : 'collapsed'):(in_array($currentControllerAction,$menu['child_route'])?'menu-on':'collapsed')?>" href="<?php if(0 < $menu['children_count']) { echo '#menu' . $menu['menu_id']; } else { echo Url::to([$menu['route']]); } ?>"<?php if(0 < $menu['children_count']): ?> data-toggle="collapse"<?php endif; ?>><i class="icon Hui-iconfont"><?= $menu['icon'] ?></i><?php if(0 < $menu['children_count']): ?> <i class="icon Hui-iconfont float-right">&#xe6d5;</i><?php endif; ?> <?= $menu['name'] ?></a>
@@ -44,7 +44,7 @@ AppAsset::register($this);
                             id="menu<?= $menu['menu_id'] ?>"
                         >
                         <?php foreach($menu['children'] as $childrenMenu): ?>
-                            <li><a class="<?php echo (in_array($currentControllerAction,$childrenMenu['child_route'])?'menu-on':'')?>" href="<?= Url::to([$childrenMenu['route']]) ?>"><?= $childrenMenu['name'] ?></a></li>
+                            <li><a class="<?php echo (in_array($currentControllerAction,$childrenMenu['child_route'])?'menu-on children':'')?>" href="<?= Url::to([$childrenMenu['route']]) ?>"><?= $childrenMenu['name'] ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -52,11 +52,11 @@ AppAsset::register($this);
             </ul>
         </div>
         <div class="col-md-10 col-xs-10 dw_right">
-            <div class="row dw_right1">
+            <div class="row top-links">
                 <a data-method='post' href="<?= Url::to(['index/logout']) ?>">
                     <div>
                         <center>
-                            <h3><span class="glyphicon glyphicon-off"></span></h3>
+                            <p><span class="glyphicon glyphicon-off"></span></p>
                             <span>退出系统</span>
                         </center>
                     </div>
@@ -64,7 +64,7 @@ AppAsset::register($this);
                 <a href="/">
                 <div>
                     <center>
-                        <h3><span class="glyphicon glyphicon-home"></span></h3>
+                        <p><span class="glyphicon glyphicon-home"></span></p>
                         <span>系统首页</span>
                     </center>
                 </div>

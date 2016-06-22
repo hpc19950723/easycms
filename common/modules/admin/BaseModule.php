@@ -1,7 +1,7 @@
 <?php
 namespace common\modules\admin;
 
-class CommonModule extends \yii\base\Module
+class BaseModule extends \yii\base\Module
 {
     public function init()
     {

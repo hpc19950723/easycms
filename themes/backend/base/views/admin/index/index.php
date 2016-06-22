@@ -4,7 +4,7 @@
 
 $this->title = '欢迎来到后台管理中心';
 ?>
-<h1>欢迎来到后台管理中心</h1>
+<h3>欢迎来到后台管理中心</h3>
 <table  class="table">
     <tbody>
         <tr>

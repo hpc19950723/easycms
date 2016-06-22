@@ -12,12 +12,6 @@ use yii\helpers\ArrayHelper;
 
 class BaseController extends Controller
 {
-//    public function init()
-//    {
-//        ArrayHelper::merge(Yii::$app->view->theme->pathMap, [])
-//    }
-    
-    
     public function behaviors()
     {
         return [

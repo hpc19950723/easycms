@@ -6,14 +6,13 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
-
-        $modules = [];
-        foreach($this->activeModules as $name => $module){
-            $modules[$name]['class'] = $module->class;
-            if(is_array($module->settings)){
-                $modules[$name]['settings'] = $module->settings;
-            }
-        }
+        
+        $modules = [
+            'admin' => [
+                'class' => 'common\modules\user\admin\Module',
+                'defaultRoute' => 'index',
+            ]
+        ];
         $this->setModules($modules);
     }
 }

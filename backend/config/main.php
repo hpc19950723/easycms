@@ -19,8 +19,7 @@ return [
             'defaultRoute' => 'index',
         ],
         'user' => [
-            'class' => 'common\modules\user\admin\Module',
-            'defaultRoute' => 'index',
+            'class' => 'common\modules\user\Module',
         ]
     ],
     'components' => [

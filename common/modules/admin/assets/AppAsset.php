@@ -16,8 +16,10 @@ class AppAsset extends AssetBundle
         'css/site.css',
         'css/iconfont.css',
         'css/index.css',
+        'css/flat-ui.min.css',
     ];
     public $js = [
+        'js/flat-ui.min.js',
         'js/index.js',
     ];
     

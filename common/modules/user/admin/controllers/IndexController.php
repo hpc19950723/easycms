@@ -6,7 +6,7 @@ use Yii;
 use common\modules\user\models\User;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
-use common\modules\user\models\UserSearch;
+use common\modules\user\models\search\UserSearch;
 use common\models\Grade;
 
 class IndexController extends \common\modules\admin\components\BaseController

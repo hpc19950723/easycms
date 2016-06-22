@@ -6,11 +6,10 @@ use yii\widgets\ActiveForm;
 $this->title = Yii::t('backend/account', 'Update Password');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend/account', 'System Management'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend/account', 'Update Password')];
-$this->params['breadcrumbs'][] = Yii::t('backend', 'Update');
 ?>
 <div class="admin-menus-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <div class="password-form">
 

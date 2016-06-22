@@ -30,4 +30,21 @@ $(function() {
         }
         reader.readAsDataURL(document.getElementById(sourceId).files[0]);
     }
-})
+    
+    /* checkbox switch */
+    if ($('[data-toggle="switch"]').length) {
+      $('[data-toggle="switch"]').bootstrapSwitch();
+    }
+    
+    $('[data-toggle="switch"]').on('switchChange.bootstrapSwitch', function(event, state) {
+//          console.log(this); // DOM element
+//  console.log(event); // jQuery event
+//  console.log(state); // true | false
+        var $this = $(this);
+        $.ajax({
+            type: 'GET',
+            url: $this.data('ajax-url'),
+            dataType: 'json'
+        });
+    });
+});
