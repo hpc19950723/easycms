@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'title',
             'name',
-            'class',
+            'dir',
             'version',
             [
                 'attribute' => 'has_api',

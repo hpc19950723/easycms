@@ -10,7 +10,7 @@ use Yii;
  * @property integer $module_id
  * @property string $name
  * @property string $title
- * @property string $class
+ * @property string $dir
  * @property string $settings
  * @property string $version
  * @property integer $status
@@ -38,7 +38,7 @@ class Module extends \common\modules\core\models\CommonActiveRecord
             [['settings'], 'string'],
             [['status'], 'integer'],
             [['name', 'title', 'version'], 'string', 'max' => 45],
-            [['class'], 'string', 'max' => 255],
+            [['dir'], 'string', 'max' => 255],
         ];
     }
 
@@ -51,7 +51,7 @@ class Module extends \common\modules\core\models\CommonActiveRecord
         return [
             'name' => '名称',
             'title' => '标题',
-            'class' => '类',
+            'dir' => '目录',
             'settings' => '设置',
             'version' => '版本号',
             'has_api' => '存在API子模块',

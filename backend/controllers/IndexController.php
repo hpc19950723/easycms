@@ -8,6 +8,6 @@ class IndexController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        return $this->redirect(['admin/index']);
+        return $this->redirect(['/adm']);
     }
 }

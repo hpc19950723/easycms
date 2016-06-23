@@ -3,8 +3,8 @@
 use yii\helpers\Html;
 
 
-$this->title = Yii::t('app', 'Create Admin Menu');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Admin Menu'), 'url' => ['index']];
+$this->title = '创建菜单';
+$this->params['breadcrumbs'][] = ['label' => '菜单管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="admin-menu-create">

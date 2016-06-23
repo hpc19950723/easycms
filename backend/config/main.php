@@ -15,12 +15,9 @@ return [
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [
-            'class' => 'common\modules\admin\Module',
+            'class' => 'common\modules\AdminModule',
             'defaultRoute' => 'index',
         ],
-        'user' => [
-            'class' => 'common\modules\user\Module',
-        ]
     ],
     'components' => [
         'user' => [
@@ -89,14 +86,16 @@ return [
             'itemChildTable' => 'admin_auth_item_child',    //角色权限关系表
             'ruleTable' => 'admin_auth_rule'                //规则表
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<module:\w+>/<controller:[\w-]+>/<action:[\w-]+>'=>'admin/<module>/<controller>/<action>',
+                '<module:\w+>/<controller:[\w-]>/<action:[\w-]+>/<id:\d+>'=>'admin/<module>/<controller>/<action>',
+                '<module:\w+>/<controller:[\w-]+>'=>'admin/<module>/<controller>',
+                '<module:\w+>'=>'admin/<module>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

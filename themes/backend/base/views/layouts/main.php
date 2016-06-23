@@ -24,11 +24,11 @@ AppAsset::register($this);
     <div class="row dw_height">
         <div class="col-md-2 col-xs-2 dw_left">
             <div class="logo">
-                <img src="img/logo.png" />
+                <img src="/img/logo.png" />
             </div>
             <ul class="nav dw_nav">
                 <?php
-                $currentControllerAction = '/' . Yii::$app->controller->route;
+                $currentControllerAction = ltrim(Yii::$app->controller->route, 'admin');
                 foreach($this->context->getMenus() as $k=>$menu): ?>
                 <li>
                     <a class="<?php echo (0 < $menu['children_count'])?(in_array($currentControllerAction,$menu['child_route']) ? '' : 'collapsed'):(in_array($currentControllerAction,$menu['child_route'])?'menu-on':'collapsed')?>" href="<?php if(0 < $menu['children_count']) { echo '#menu' . $menu['menu_id']; } else { echo Url::to([$menu['route']]); } ?>"<?php if(0 < $menu['children_count']): ?> data-toggle="collapse"<?php endif; ?>><i class="icon Hui-iconfont"><?= $menu['icon'] ?></i><?php if(0 < $menu['children_count']): ?> <i class="icon Hui-iconfont float-right">&#xe6d5;</i><?php endif; ?> <?= $menu['name'] ?></a>

@@ -3,12 +3,10 @@
 use yii\helpers\Html;
 
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Admin Menu',
-]) . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Admin Menu'), 'url' => ['index']];
+$this->title = '更新菜单' . ' ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => '菜单管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->menu_id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('backend', 'Update');
 ?>
 <div class="admin-menu-update">
 

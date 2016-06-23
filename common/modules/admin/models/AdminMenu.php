@@ -50,6 +50,7 @@ class AdminMenu extends \yii\db\ActiveRecord
             ['position','default', 'value' => 0],
             [['parent_id', 'position'], 'integer'],
             [['name', 'route'], 'string', 'max' => 60],
+            ['child_route', 'safe'],
             [['icon'], 'string', 'max' => 20]
         ];
     }
@@ -60,12 +61,12 @@ class AdminMenu extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'menu_id' => Yii::t('app', 'Menu ID'),
-            'name' => Yii::t('app', 'Name'),
-            'parent_id' => Yii::t('app', 'Parent'),
-            'route' => Yii::t('app', 'Route'),
-            'icon' => Yii::t('app', 'Icon'),
-            'position' => Yii::t('app', 'Position'),
+            'name' => '菜单名称',
+            'parent_id' => '主菜单',
+            'route' => '路由',
+            'child_route' => '高亮路由',
+            'icon' => '图标',
+            'position' => '位置',
         ];
     }
 }
