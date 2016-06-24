@@ -27,27 +27,16 @@ use common\components\ArrayHelper;
 class User extends CommonActiveRecord implements IdentityInterface
 {
     //用户状态
-    const STATUS_FORBIDDEN = 0;
+    const STATUS_IN = 0;
     const STATUS_ACTIVE = 1;
-    const STATUS_SUSPENDED = 2;
 
     //用户类型
     const USER_TYPE_NORMAL = 1;
-    const USER_TYPE_GENIUS_RETAIL_INVESTOR = 2;
-    const USER_TYPE_AFP = 3;
 
     //用户性别
     const GENDER_PRIVACY = 0;
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
-
-    //是否允许发帖
-    const FORBID_POST = 0;
-    const ALLOW_POST = 1;
-    
-    //新预约
-    const HAS_NOT_NEW_APPOINTMENT = 0;
-    const HAS_NEW_APPOINTMENT = 1;
 
     const SCENARIOS_FRONTEND_UPDATE = 'frontend_update';
 
@@ -99,16 +88,14 @@ class User extends CommonActiveRecord implements IdentityInterface
             ['gender', 'default', 'value' => self::GENDER_PRIVACY],
             ['user_type', 'default', 'value' => self::USER_TYPE_NORMAL],
             ['grade', 'default', 'value' => 0],
-            ['status', 'in', 'range' => [self::STATUS_FORBIDDEN, self::STATUS_ACTIVE, self::STATUS_SUSPENDED]],
-            ['user_type', 'in', 'range' => [self::USER_TYPE_NORMAL, self::USER_TYPE_GENIUS_RETAIL_INVESTOR, self::USER_TYPE_AFP]],
+            ['status', 'in', 'range' => [self::STATUS_FORBIDDEN, self::STATUS_ACTIVE]],
+            ['user_type', 'in', 'range' => [self::USER_TYPE_NORMAL]],
             ['gender', 'in', 'range' => [self::GENDER_PRIVACY, self::GENDER_MALE, self::GENDER_FEMALE]],
-            ['allow_post', 'in', 'range' => [self::FORBID_POST, self::ALLOW_POST]],
             ['nickname', 'unique'],
             ['email', 'email'],
             [['real_name','qq','wechat'], 'string', 'length' => [2, 255]],
             ['grade', 'integer'],
             ['bio','safe'],
-            [['height', 'weight', 'appointment_fee'], 'double'],
             [['id_no'], 'match', 'pattern'=>'/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', 'message' => '身份证号码格式不正确'],
             [['opened_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             ['avatar', 'image', 'extensions' => 'gif, jpg, png', 'mimeTypes' => 'image/jpeg, image/png, image/gif', 'checkExtensionByMimeType' => false],
@@ -132,55 +119,8 @@ class User extends CommonActiveRecord implements IdentityInterface
             'wechat',
             'id_no',
             'user_type',
-            'allow_post',
-            'appointment_fee',
             'grade',
-            'fans_qty',
             'status',
-            'new_appointment'
-        ];
-    }
-    
-    
-    public function extraFields()
-    {
-        return [
-            'certification_status' => function($model) {
-                if(!empty($model->certification)) {
-                    return $model->certification->status;
-                } else {
-                    return Certification::STATUS_NOT_APPROVED;
-                }
-            },
-            'vprice' => function($model) {
-                if(!empty($model->vprice)) {
-                    return $model->vprice->vprice - $model->vprice->hold;
-                } else {
-                    return 0;
-                }
-            },
-            'viewVirtualQuotation' => function($model) {
-                $visibility = false;
-                if($model->virtualQuotation !== null) {
-                    if($this->user_id == Yii::$app->user->getId()) {
-                        $visibility = true;
-                    } else {
-                        switch ($model->virtualQuotation->visibility) {
-                            case VirtualQuotation::VISIBILITY_ALL:
-                                $visibility = true;
-                                break;
-                            case VirtualQuotation::VISIBILITY_FANS:
-                                $count = GroupFollow::find()->where(['group_user_id' => $this->user_id, 'user_id' => Yii::$app->user->getId()])
-                                    ->count();
-                                if($count > 0) {
-                                    $visibility = true;
-                                }
-                                break;
-                        }
-                    }
-                }
-                return $visibility;
-            }
         ];
     }
 
@@ -196,14 +136,13 @@ class User extends CommonActiveRecord implements IdentityInterface
             'qq' => 'QQ号',
             'wechat' => '微信号',
             'avatar' => '头像',
-            'appointment_fee' => '预约费用',
         ];
     }
 
 
     public function scenarios() {
         $scenarios = [
-            self::SCENARIOS_FRONTEND_UPDATE => ['gender', 'nickname', 'bio', 'real_name', 'qq', 'wechat', 'id_no', 'email', 'avatar', 'appointment_fee', 'mobile2'],
+            self::SCENARIOS_FRONTEND_UPDATE => ['gender', 'nickname', 'bio', 'real_name', 'qq', 'wechat', 'id_no', 'email', 'avatar'],
         ];
         return array_merge( parent:: scenarios(), $scenarios);
     }
@@ -363,8 +302,6 @@ class User extends CommonActiveRecord implements IdentityInterface
     {
         return [
             self::USER_TYPE_NORMAL => '普通用户',
-            self::USER_TYPE_GENIUS_RETAIL_INVESTOR => '牛散',
-            self::USER_TYPE_AFP => '理财师',
         ];
     }
 
@@ -381,18 +318,6 @@ class User extends CommonActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * 获取是否允许发帖选项
-     * @return array
-     */
-    public static function getAllowPostOptions()
-    {
-        return [
-            self::FORBID_POST => '禁止发帖',
-            self::ALLOW_POST => '允许发帖'
-        ];
-    }
-
 
     public function generateAccessToken() {
         $accessToken = Yii::$app->security->generateRandomString(32);
@@ -402,38 +327,6 @@ class User extends CommonActiveRecord implements IdentityInterface
         } else {
             return false;
         }
-    }
-    
-    
-    public function getCertification()
-    {
-        return $this->hasOne(Certification::className(), ['user_id' => 'user_id']);
-    }
-    
-    
-    public function getVprice()
-    {
-        return $this->hasOne(Vprice::className(), ['user_id' => 'user_id']);
-    }
-    
-    
-    public function getVirtualQuotation()
-    {
-        return $this->hasOne(VirtualQuotation::className(), ['user_id' => 'user_id']);
-    }
-    
-    
-    public function getVirtualQuotationFund()
-    {
-        return $this->hasMany(VirtualQuotationFund::className(), ['user_id' => 'user_id']);
-    }
-    
-    
-    public function getGroup()
-    {
-        return $this->hasMany(Group::className(), ['user_id' => 'user_id'])
-                ->orderBy(['fans_qty' => SORT_DESC])
-                ->limit(8);
     }
 
     
@@ -487,19 +380,5 @@ class User extends CommonActiveRecord implements IdentityInterface
     {
         $str = Tools::getRandomNumber(4, 'number');
         return $nickName . $str;
-    }
-
-
-    /**
-     * 更新粉丝数
-     * @param int $userId
-     */
-    public static function updateFansCount($userId)
-    {
-        $userFansCount = GroupFollow::find()->where(['group_user_id' => $userId])
-            ->groupBy(['group_user_id', 'user_id'])
-            ->count();
-
-        User::updateAll(['fans_qty' => $userFansCount], ['user_id' => $userId]);
     }
 }

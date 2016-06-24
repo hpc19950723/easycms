@@ -23,7 +23,7 @@ class BaseController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type || Yii::$app->user->can($action->controller->id . '/' . $action->id);
+                            return Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type || Yii::$app->user->can('/' . $action->controller->module->id . '/' . $action->controller->id . '/' . $action->id);
                         }
                     ],
 

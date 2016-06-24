@@ -19,7 +19,7 @@ class IndexController extends \common\modules\admin\components\BaseController
     
     public function behaviors()
     {
-        return [
+        $behaviors = [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -27,6 +27,7 @@ class IndexController extends \common\modules\admin\components\BaseController
                 ],
             ],
         ];
+        return array_merge(parent::behaviors(), $behaviors);
     }
     
     /**
@@ -42,6 +43,28 @@ class IndexController extends \common\modules\admin\components\BaseController
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel
         ]);
+    }
+    
+    
+    public function actionCreate()
+    {
+        $model = new UserForm();
+        
+        $model->setScenario(UserForm::SCENARIOS_CREATE);
+        
+        if(Yii::$app->request->isPost) {
+            $avatar = UploadedFile::getInstance($model, 'avatar');
+            $model->load(Yii::$app->request->post());
+            $model->avatar = $avatar;
+        }
+        
+        if(Yii::$app->request->isPost && $model->save()) {
+            return $this->redirect(['index']);
+        } else {
+            return $this->render('create',[
+                'model' => $model,
+            ]);
+        }
     }
     
     /**

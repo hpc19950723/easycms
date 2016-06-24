@@ -53,7 +53,7 @@ AppAsset::register($this);
         </div>
         <div class="col-md-10 col-xs-10 dw_right">
             <div class="row top-links">
-                <a data-method='post' href="<?= Url::to(['index/logout']) ?>">
+                <a data-method='post' href="<?= Url::to(['/adm/index/logout']) ?>">
                     <div>
                         <center>
                             <p><span class="glyphicon glyphicon-off"></span></p>

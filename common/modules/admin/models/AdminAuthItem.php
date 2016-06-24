@@ -34,4 +34,16 @@ class AdminAuthItem extends ActiveRecord
     {
         return $this->hasMany(AdminAuthItemChild::className(), ['parent' => 'name']);
     }
+    
+    
+    public function attributeLabels()
+    {
+        return [
+            'name' => '权限名称',
+            'type' => '类型',
+            'description' => '描述',
+            'rule_name' => '规则名',
+            'data' => '数据',
+        ];
+    }
 }

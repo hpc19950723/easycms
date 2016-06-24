@@ -4,6 +4,7 @@ namespace common\modules\core\components;
 
 use Yii;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 class Tools
 {
@@ -88,6 +89,27 @@ class Tools
     public static function addQueryParams($values)
     {
         Yii::$app->request->setQueryParams(\yii\helpers\ArrayHelper::merge(Yii::$app->request->get(), $values));
+    }
+    
+    
+    /**
+     * 获取post数据, 可附加额外数据
+     * @param array $values 附加数据,必须是数组形式
+     * @param string $formName 指定数据附加到特定键
+     */
+    public static function getPost(array $values, $formName = null)
+    {
+        if(Yii::$app->request->isPost) {
+            $data = Yii::$app->request->post();
+            if($formName !== null) {
+                $data[$formName] = ArrayHelper::merge($data[$formName], $values);
+            } else {
+                $data = ArrayHelper::merge($data, $values);
+            }
+            return $data;
+        } else {
+            return;
+        }
     }
     
     

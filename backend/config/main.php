@@ -22,7 +22,7 @@ return [
     'components' => [
         'user' => [
             'identityClass' => 'common\modules\admin\models\Admin',
-            'loginUrl' => array('admin/index/login'),
+            'loginUrl' => array('adm/index/login'),
             'enableAutoLogin' => true,
         ],
         'view' => [
@@ -53,7 +53,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => '/admin/index/error',
+            'errorAction' => '/admin/adm/index/error',
         ],
         'i18n' => [
             'translations' => [
