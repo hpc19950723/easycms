@@ -20,7 +20,7 @@ AppAsset::register($this);
 </head>
 <body class="<?= str_replace('/', '-', Yii::$app->controller->route) ?>">
 <?php $this->beginBody() ?>
-<div class="container dw_container">
+<div class="container-fluid">
     <div class="row dw_height">
         <div class="col-md-2 col-xs-2 dw_left">
             <div class="logo">
@@ -73,7 +73,7 @@ AppAsset::register($this);
             <div class="col-main" role="main">
                 <?= Breadcrumbs::widget([
                     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-                    'options' => ['class' => 'breadcrumb row']
+                    'options' => ['class' => 'breadcrumb']
                 ]) ?>
                 <?= Alert::widget() ?>
                 <?= $content ?>

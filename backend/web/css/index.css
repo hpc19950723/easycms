@@ -9,14 +9,13 @@ body {
     color: #333;
 }
 
-.dw_container {
-    width: 1170px;
+.container-fluid {
     height: 100%;
 }
 
-.dw_container .icon { padding-right: 5px; }
+.container-fluid .icon { padding-right: 5px; }
 
-.container .logo { height: 78px; text-align: center; padding-top: 20px; background: #292929; }
+.container-fluid .logo { height: 78px; text-align: center; padding-top: 20px; background: #292929; }
 
 .dw_height {
     height: 100%;
@@ -30,8 +29,10 @@ body {
 }
 
 .dw_right {
-    width: 960px;
+    float: none;
     height: 100%;
+    margin-left: 210px;
+    width: auto;
 }
 
 .dw_right .top-links {

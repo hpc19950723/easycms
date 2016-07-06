@@ -27,7 +27,7 @@ use common\components\ArrayHelper;
 class User extends CommonActiveRecord implements IdentityInterface
 {
     //用户状态
-    const STATUS_IN = 0;
+    const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
     //用户类型
@@ -88,7 +88,7 @@ class User extends CommonActiveRecord implements IdentityInterface
             ['gender', 'default', 'value' => self::GENDER_PRIVACY],
             ['user_type', 'default', 'value' => self::USER_TYPE_NORMAL],
             ['grade', 'default', 'value' => 0],
-            ['status', 'in', 'range' => [self::STATUS_FORBIDDEN, self::STATUS_ACTIVE]],
+            ['status', 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE]],
             ['user_type', 'in', 'range' => [self::USER_TYPE_NORMAL]],
             ['gender', 'in', 'range' => [self::GENDER_PRIVACY, self::GENDER_MALE, self::GENDER_FEMALE]],
             ['nickname', 'unique'],
@@ -288,9 +288,8 @@ class User extends CommonActiveRecord implements IdentityInterface
     public static function getStatus()
     {
         return [
-            self::STATUS_FORBIDDEN => '永久停用',
+            self::STATUS_INACTIVE => '永久停用',
             self::STATUS_ACTIVE => '已启用',
-            self::STATUS_SUSPENDED => '暂时停用',
         ];
     }
 

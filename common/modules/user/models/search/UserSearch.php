@@ -18,9 +18,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['user_id', 'gender', 'user_type', 'allow_post', 'grade', 'status'], 'integer'],
-            [['mobile', 'password', 'nickname', 'avatar', 'bio', 'real_name', 'email', 'qq', 'wechat', 'id_no', 'opened_at', 'created_at', 'updated_at'], 'safe'],
-            [['height', 'weight', 'appointment_fee'], 'number'],
+            [['user_id', 'gender', 'user_type', 'grade', 'status'], 'integer'],
+            [['mobile', 'password', 'nickname', 'avatar', 'bio', 'real_name', 'email', 'qq', 'wechat', 'id_no', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
