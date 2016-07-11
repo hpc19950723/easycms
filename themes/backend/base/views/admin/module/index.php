@@ -15,6 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="module-index">
 
     <h3><?= Html::encode($this->title) ?></h3>
+    
+    <p>
+        <?= Html::a('创建模块', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

@@ -47,4 +47,6 @@ $(function() {
             dataType: 'json'
         });
     });
+    
+    $(".dw_left").height($(".dw_height").height())
 });

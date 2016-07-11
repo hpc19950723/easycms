@@ -18,7 +18,7 @@ body {
 .container-fluid .logo { height: 78px; text-align: center; padding-top: 20px; background: #292929; }
 
 .dw_height {
-    height: 100%;
+    min-height: 100%;
 }
 
 .dw_left {
@@ -30,7 +30,7 @@ body {
 
 .dw_right {
     float: none;
-    height: 100%;
+    min-height: 100%;
     margin-left: 210px;
     width: auto;
 }

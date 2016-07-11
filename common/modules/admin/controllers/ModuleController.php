@@ -6,6 +6,7 @@ use Yii;
 use common\modules\admin\models\Module;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use common\modules\admin\models\forms\ModuleForm;
 
 class ModuleController extends \common\modules\admin\components\BaseController
 {
@@ -36,6 +37,23 @@ class ModuleController extends \common\modules\admin\components\BaseController
             $model->save();
             return self::formatSuccessResult();
         }
+    }
+    
+    
+    /**
+     * 创建模块
+     */
+    public function actionCreate()
+    {
+        $model = new ModuleForm();
+        
+        if($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
+        }
+        
+        return $this->render('create', [
+            'model' => $model
+        ]);
     }
     
     

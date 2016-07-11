@@ -68,8 +68,8 @@ class Module extends \common\modules\core\models\CommonActiveRecord
     public static function getStatusList()
     {
         return [
+            static::STATUS_ACTIVE => '开启',
             static::STATUS_INACTIVE => '关闭',
-            static::STATUS_ACTIVE => '开启'
         ];
     }
 }
