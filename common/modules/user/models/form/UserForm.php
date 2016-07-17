@@ -1,118 +1,191 @@
 <?php
 
-namespace common\models;
+namespace common\modules\user\models\form;
 
 use Yii;
 use yii\base\Model;
-use common\models\User;
+use common\modules\user\models\User;
+use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 class UserForm extends Model
 {
-    public $user_id;
+    public $mobile;
+    
     public $nickname;
+    
+    public $password;
+    
     public $real_name;
-    public $gender;
+    
+    public $gender = User::GENDER_PRIVACY;
+    
     public $email;
+    
+    public $user_type = 1;
+    
     public $qq;
+    
     public $wechat;
+    
     public $id_no;
-    public $appointment_fee;
-    public $grade;
+            
     public $bio;
+    
     public $avatar;
+    
+    public $status = User::STATUS_ACTIVE;
+    
     private $_user;
+    
+    const SCENARIOS_BACKEND_CREATE = 'backend_create';
+    
+    const SCENARIOS_BACKEND_UPDATE = 'backend_update';
 
 
-    public function init()
-    {
-        if($this->user_id !== null) {
-            $this->initUser();
-        }
-    }
-    
-    
     public function rules()
     {
         return [
-            ['user_id', 'required'],
-            ['gender', 'default', 'value' => User::GENDER_PRIVACY],
+            [['nickname', 'mobile'], 'required'],
+            ['password', 'required', 'on' => [self::SCENARIOS_BACKEND_CREATE]],
             ['gender', 'in', 'range' => [User::GENDER_PRIVACY, User::GENDER_MALE, User::GENDER_FEMALE]],
-            ['nickname', 'unique', 'targetClass' => '\common\models\User', 'targetAttribute' => 'nickname', 'when' => function(){
-                return $this->_user->nickname != $this->nickname;
+            [['nickname'], 'string', 'length' => [2, 20]],
+            ['nickname', 'unique', 'targetClass' => '\common\modules\user\models\User', 'targetAttribute' => 'nickname', 'when' => function(){
+                return $this->isNewRecord || $this->_user->nickname != $this->nickname;
             }],
-            ['email', 'email'],
-            [['real_name','qq','wechat'], 'string', 'length' => [2, 255]],
-            ['bio','safe'],
-            [['appointment_fee'], 'double'],
+            ['mobile', 'match', 'pattern'=>'/^[1][0-9]{10}$/','message' => '手机号格式不正确'],
+            ['mobile', 'unique', 'targetClass' => '\common\modules\user\models\User', 'message' => '您输入的手机号已经注册, 请更换手机号', 'when' => function(){
+                return $this->isNewRecord || $this->_user->mobile != $this->mobile;
+            }],
+            ['email', 'string', 'max' => 255],
+            ['email', 'match', 'pattern' => '/^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$/'],
+            [['password'], 'string', 'length' => [6, 32]],
+            [['real_name', 'qq', 'wechat'], 'string', 'length' => [2, 255]],
+            ['status', 'in', 'range' => array_keys(User::getStatus())],
+            ['user_type', 'safe'],
+            ['bio', 'string', 'length' => [0, 200]],
             [['id_no'], 'match', 'pattern'=>'/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', 'message' => '身份证号码格式不正确'],
             ['avatar', 'image', 'extensions' => 'jpg, png', 'maxSize' => 2097152, 'mimeTypes' => 'image/jpeg, image/png', 'checkExtensionByMimeType' => false, 'tooBig' => '文件"{file}"太大, 它的大小不能超过2.00 MB'],
         ];
     }
     
     
-    public function initUser()
+    public function scenarios() {
+        $scenarios = [
+            self::SCENARIOS_BACKEND_CREATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
+            self::SCENARIOS_BACKEND_UPDATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
+         ];
+        return array_merge( parent:: scenarios(), $scenarios);
+    }
+    
+    
+    /**
+     * 用户数据
+     * @param type $userId
+     * @return type
+     */
+    public function initUser($userId)
     {
-        $model = User::findOne(['user_id' => $this->user_id, 'status' => User::STATUS_ACTIVE]);
+        $this->_user = User::findOne(['user_id' => $userId, 'status' => User::STATUS_ACTIVE]);
 
-        if($model !== null) {
-            $this->nickname = $model->nickname;
-            $this->real_name = $model->real_name;
-            $this->gender = $model->gender;
-            $this->email = $model->email;
-            $this->qq = $model->qq;
-            $this->wechat = $model->wechat;
-            $this->id_no = $model->id_no;
-            $this->appointment_fee = $model->appointment_fee;
-            $this->grade = $model->grade;
-            $this->bio = $model->bio;
-            $this->avatar = $model->avatar;
-            $this->_user = $model;
+        if($this->_user !== null) {
+            $this->nickname = $this->_user->nickname;
+            $this->mobile = $this->_user->mobile;
+            $this->real_name = $this->_user->real_name;
+            $this->gender = $this->_user->gender;
+            $this->email = $this->_user->email;
+            $this->qq = $this->_user->qq;
+            $this->wechat = $this->_user->wechat;
+            $this->id_no = $this->_user->id_no;
+            $this->bio = $this->_user->bio;
+            $this->avatar = $this->_user->avatar;
         }
+        
+        return $this->_user;
+    }
+    
+    
+    /**
+     * 获取是否为新记录
+     * @return boolean
+     */
+    public function getIsNewRecord()
+    {
+        return $this->_user === null;
     }
     
     
     public function attributeLabels()
     {
         return [
+            'mobile'            => '手机号',
+            'password'          => '密码',
             'nickname'          => '昵称',
-            'real_name'         => '姓名',
+            'real_name'         => '真实姓名',
             'gender'            => '性别',
             'email'             => '邮箱',
             'qq'                => 'QQ',
             'wechat'            => '微信',
             'id_no'             => '身份证号',
-            'appointment_fee'   => '预约费用',
-            'grade'             => '等级',
-            'bio'               => '个人简介'
+            'bio'               => '个人简介',
+            'avatar'            => '头像',
+            'user_type'         => '用户类型',
+            'status'            => '状态'
         ];
     }
     
     
+    /**
+     * 保存数据
+     * @return boolean
+     */
     public function save()
     {
         if($this->validate()) {
-            if($this->_user === null) {
-                return false;
-            } else {
-                if($this->avatar instanceof \yii\web\UploadedFile) {
-                    $this->_user->avatar = $this->avatar;
-                }
-        
-                $this->_user->nickname = $this->nickname;
-                $this->_user->real_name = $this->real_name;
-                $this->_user->gender = $this->gender;
-                $this->_user->email = $this->email;
-                $this->_user->qq = $this->qq;
-                $this->_user->wechat = $this->wechat;
-                $this->_user->id_no = $this->id_no;
-                $this->_user->appointment_fee = $this->appointment_fee;
-                $this->_user->bio = $this->bio;
-                $this->_user->save();
-                $this->avatar = $this->_user->avatar;
+            if($this->isNewRecord) {
+                $this->_user = new User();
+            }
+            $this->uploadedFile();
+            $this->_user->mobile = $this->mobile;
+            if($this->password === '' || $this->password === null) {
+                $this->_user->password = $this->password;
+            }
+            $this->_user->nickname = $this->nickname;
+            $this->_user->real_name = $this->real_name;
+            $this->_user->gender = $this->gender;
+            $this->_user->email = $this->email;
+            $this->_user->qq = $this->qq;
+            $this->_user->wechat = $this->wechat;
+            $this->_user->id_no = $this->id_no;
+            $this->_user->bio = $this->bio;
+            if(isset($this->avatar)) {
+                $this->_user->avatar = $this->avatar;
+            }
+
+            if($this->_user->save()) {
                 return true;
+            } else {
+                $this->addErrors($this->_user->getErrors());
+                return false;
             }
         } else {
             return false;
+        }
+    }
+    
+    
+    /**
+     * 上传文件
+     */
+    public function uploadedFile()
+    {
+        if($this->avatar instanceof UploadedFile) {
+            $imageName = uniqid(Yii::$app->params['user']['uploads']['avatar']['prefix']) . '.' . $this->avatar->extension;
+            FileHelper::createDirectory(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir']), 0755, true);
+            $this->avatar->saveAs(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir'] . $imageName));
+            $this->avatar = $imageName;
+        } else {
+            unset($this->avatar);
         }
     }
 }

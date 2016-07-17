@@ -45,21 +45,9 @@ class Tools
      * @param type $type
      * @return string
      */
-    public static function getFileUrl($filename, $type = 'documents')
+    public static function getFileUrl($filename, $type)
     {
-        switch ($type) {
-            case 'documents':
-            case 'images/documents':
-            case 'images/avatar':
-            case 'images/idcard':
-            case 'images/post':
-            case 'images/prop':
-            case 'images/message':
-            case 'images/article':
-                return $filename?Url::to('@resDomain/' . $type . '/' . $filename):'';
-            default:
-                return '';
-        }
+        return $filename?Url::to('@resDomain/' . $type . '/' . $filename):'';
     }
     
     

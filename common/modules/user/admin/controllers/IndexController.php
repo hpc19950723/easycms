@@ -7,7 +7,8 @@ use common\modules\user\models\User;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use common\modules\user\models\search\UserSearch;
-use common\models\Grade;
+use common\modules\user\models\form\UserForm;
+use yii\web\UploadedFile;
 
 class IndexController extends \common\modules\admin\components\BaseController
 {
@@ -46,12 +47,15 @@ class IndexController extends \common\modules\admin\components\BaseController
     }
     
     
+    /**
+     * 创建用户
+     * @return mixed
+     */
     public function actionCreate()
     {
         $model = new UserForm();
         
-        $model->setScenario(UserForm::SCENARIOS_CREATE);
-        
+        $model->setScenario(UserForm::SCENARIOS_BACKEND_CREATE);
         if(Yii::$app->request->isPost) {
             $avatar = UploadedFile::getInstance($model, 'avatar');
             $model->load(Yii::$app->request->post());
@@ -73,19 +77,19 @@ class IndexController extends \common\modules\admin\components\BaseController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = new UserForm();
+        if($model->initUser($id) === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
 
-        $data = Yii::$app->request->post();
-        if(empty($data)) {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $model->setScenario(UserForm::SCENARIOS_BACKEND_UPDATE);
+        if(Yii::$app->request->isPost) {
+            $avatar = UploadedFile::getInstance($model, 'avatar');
+            $model->load(Yii::$app->request->post());
+            $model->avatar = $avatar;
         }
         
-        if(User::STATUS_SUSPENDED == $data['User']['status']) {
-            $data['User']['opened_at'] = date('Y-m-d H:i:s', time() + 7 * 3600 * 24);  //暂停用户使用,默认将禁用7天
-        }
-        if ($model->load($data) && $model->save()) {
+        if(Yii::$app->request->isPost && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [

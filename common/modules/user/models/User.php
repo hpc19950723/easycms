@@ -27,6 +27,7 @@ use common\components\ArrayHelper;
 class User extends CommonActiveRecord implements IdentityInterface
 {
     //用户状态
+    const STATUS_DELETE = -1;
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
@@ -62,45 +63,7 @@ class User extends CommonActiveRecord implements IdentityInterface
             ]
         ];
     }
-
-
-    public function beforeSave($insert) {
-        if(false === $insert) {
-            if($this->avatar instanceof \yii\web\UploadedFile) {
-                $imageName = uniqid(Yii::$app->params['upload']['avatar']['prefix']) . '.' . $this->avatar->extension;
-                $this->avatar->saveAs(Yii::$app->params['upload']['avatar']['dir'] . $imageName);
-                $this->avatar = $imageName;
-            } else {
-                unset($this->avatar);
-            }
-        }
-        return parent::beforeSave($insert);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['gender', 'default', 'value' => self::GENDER_PRIVACY],
-            ['user_type', 'default', 'value' => self::USER_TYPE_NORMAL],
-            ['grade', 'default', 'value' => 0],
-            ['status', 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE]],
-            ['user_type', 'in', 'range' => [self::USER_TYPE_NORMAL]],
-            ['gender', 'in', 'range' => [self::GENDER_PRIVACY, self::GENDER_MALE, self::GENDER_FEMALE]],
-            ['nickname', 'unique'],
-            ['email', 'email'],
-            [['real_name','qq','wechat'], 'string', 'length' => [2, 255]],
-            ['grade', 'integer'],
-            ['bio','safe'],
-            [['id_no'], 'match', 'pattern'=>'/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', 'message' => '身份证号码格式不正确'],
-            [['opened_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
-            ['avatar', 'image', 'extensions' => 'gif, jpg, png', 'mimeTypes' => 'image/jpeg, image/png, image/gif', 'checkExtensionByMimeType' => false],
-        ];
-    }
+    
 
     public function fields() {
         return [
@@ -119,7 +82,6 @@ class User extends CommonActiveRecord implements IdentityInterface
             'wechat',
             'id_no',
             'user_type',
-            'grade',
             'status',
         ];
     }
@@ -282,14 +244,14 @@ class User extends CommonActiveRecord implements IdentityInterface
     }
 
     /**
-     * 获取所有用户状态
+     * 获取可用用户状态
      * @return array
      */
     public static function getStatus()
     {
         return [
-            self::STATUS_INACTIVE => '永久停用',
-            self::STATUS_ACTIVE => '已启用',
+            self::STATUS_INACTIVE => '停用',
+            self::STATUS_ACTIVE => '启用',
         ];
     }
 

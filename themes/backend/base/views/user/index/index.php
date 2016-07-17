@@ -13,7 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h3><?= Html::encode($this->title) ?></h3>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    
+    <p>
+        <?= Html::a('创建用户', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

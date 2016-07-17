@@ -48,5 +48,5 @@ $(function() {
         });
     });
     
-    $(".dw_left").height($(".dw_height").height())
+    $(".dw_left").height($(".dw_height").height());
 });

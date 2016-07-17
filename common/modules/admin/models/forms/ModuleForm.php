@@ -59,8 +59,8 @@ class ModuleForm extends \yii\base\Model
             'title' => '标题',
             'dir' => '目录',
             'version' => '版本号',
-            'has_api' => '存在API子模块',
-            'has_admin' => '存在ADMIN子模块',
+            'has_api' => 'API子模块',
+            'has_admin' => 'ADMIN子模块',
             'status' => '状态',
         ];
     }

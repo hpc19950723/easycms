@@ -22,7 +22,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 <div class="container-fluid">
     <div class="row dw_height">
-        <div class="col-md-2 col-xs-2 dw_left">
+        <div class="sidebar">
             <div class="logo">
                 <img src="/img/logo.png" />
             </div>
