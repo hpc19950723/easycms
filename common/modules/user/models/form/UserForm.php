@@ -86,7 +86,7 @@ class UserForm extends Model
      */
     public function initUser($userId)
     {
-        $this->_user = User::findOne(['user_id' => $userId, 'status' => User::STATUS_ACTIVE]);
+        $this->_user = User::findOne(['user_id' => $userId]);
 
         if($this->_user !== null) {
             $this->nickname = $this->_user->nickname;
@@ -98,6 +98,7 @@ class UserForm extends Model
             $this->wechat = $this->_user->wechat;
             $this->id_no = $this->_user->id_no;
             $this->bio = $this->_user->bio;
+            $this->status = $this->_user->status;
             $this->avatar = $this->_user->avatar;
         }
         
@@ -147,8 +148,8 @@ class UserForm extends Model
             }
             $this->uploadedFile();
             $this->_user->mobile = $this->mobile;
-            if($this->password === '' || $this->password === null) {
-                $this->_user->password = $this->password;
+            if($this->password !== '' || $this->password !== null) {
+                $this->_user->setPassword($this->password);
             }
             $this->_user->nickname = $this->nickname;
             $this->_user->real_name = $this->real_name;
@@ -158,6 +159,7 @@ class UserForm extends Model
             $this->_user->wechat = $this->wechat;
             $this->_user->id_no = $this->id_no;
             $this->_user->bio = $this->bio;
+            $this->_user->status = $this->status;
             if(isset($this->avatar)) {
                 $this->_user->avatar = $this->avatar;
             }
@@ -184,6 +186,10 @@ class UserForm extends Model
             FileHelper::createDirectory(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir']), 0755, true);
             $this->avatar->saveAs(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir'] . $imageName));
             $this->avatar = $imageName;
+            
+            if($this->_user->avatar) {
+                @unlink(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir'] . $this->_user->avatar));
+            }
         } else {
             unset($this->avatar);
         }
