@@ -27,8 +27,8 @@ while (($file = readdir($handle)) !== false) {
     $path = $dir . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'main.php';
     if (file_exists($path)) {
         $moduleConfig = require($path);
-        if(isset($moduleConfig['admin'])) {
-            $moduleConfig = array_merge($moduleConfig, $moduleConfig['admin']);
+        if(isset($moduleConfig['api'])) {
+            $moduleConfig = array_merge($moduleConfig, $moduleConfig['api']);
         }
         unset($moduleConfig['api']);
         unset($moduleConfig['admin']);

@@ -3,14 +3,16 @@ return [
     'api' => [
         'modules' => [
             'user' => [
-                'class' => 'common\modules\user\api\Module'
+                'class' => 'common\modules\user\api\Module',
+                'defaultRoute' => 'index'
             ]
         ]
     ],
     'admin' => [
         'modules' => [
             'user' => [
-                'class' => 'common\modules\user\admin\Module'
+                'class' => 'common\modules\user\admin\Module',
+                'defaultRoute' => 'index'
             ]
         ]
     ],

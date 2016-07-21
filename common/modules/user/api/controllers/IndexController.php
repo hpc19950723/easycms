@@ -3,14 +3,14 @@
 namespace common\modules\user\api\controllers;
 
 use Yii;
-use common\modules\user\api\components\BaseController;
+use common\modules\core\api\components\BaseController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
 use common\modules\user\models\User;
 use common\components\core\Tools;
 
-class UserController extends BaseController
+class IndexController extends BaseController
 {
     
     public function behaviors()
@@ -26,15 +26,19 @@ class UserController extends BaseController
         return $behaviors;
     }
     
+    public function actionIndex()
+    {
+        echo 'abc';exit;
+    }
+    
     
     /**
      * 获取用户基本信息
      * @return array
      */
-    public function actionView()
+    public function actionView($id)
     {
-        Tools::addQueryParams(['expand' => 'certification_status, vprice, new_appointment']);
-        $model = User::findOne(Yii::$app->user->getId());
+        $model = User::findOne($id);
         return self::formatSuccessResult($model);
     }
 }
