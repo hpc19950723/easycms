@@ -7,7 +7,8 @@ use backend\assets\AppAsset;
 use yii\helpers\Html;
 use common\widgets\Alert;
 
-AppAsset::register($this);
+//AppAsset::register($this);
+$this->registerCssFile('@web/css/login.css');
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -23,19 +24,16 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <div class="container">
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <div class="flip-container" id='flippr'>
+        <div class="flipper">
+            <div class="front"></div>
+            <div class="back"></div>
+        </div>
     </div>
+
+    <h1 class="text" id="welcome">欢迎登录后台系统</h1>
+    <?= $content ?>
 </div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
 
 <?php $this->endBody() ?>
 </body>

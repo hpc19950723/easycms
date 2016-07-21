@@ -10,24 +10,15 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h3><?= Html::encode($this->title) ?></h3>
 
-    <p>Please fill out the following fields to login:</p>
+<?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+    <?= $form->field($model, 'username')->textInput(['placeholder' => '用户名','id' => 'username'])->label(false) ?>
 
-                <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'password')->passwordInput(['placeholder' => '密码','id' => 'password'])->label(false) ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
-        </div>
+    <div class="login">
+        <?= Html::submitButton('登录', ['style' => 'color: #fff;background-color:#3f88b8;font-size: 14px;height: 40px;border: none;margin: 0 auto 0 17px;padding: 0 20px 0 20px;-webkit-appearance:none;border-radius:0;cursor: pointer;', 'name' => 'login-button']) ?>
     </div>
-</div>
+
+<?php ActiveForm::end(); ?>

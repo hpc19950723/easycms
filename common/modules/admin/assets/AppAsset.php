@@ -13,7 +13,6 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
         'css/iconfont.css',
         'css/index.css',
         'css/flat-ui.min.css',
