@@ -123,7 +123,7 @@ class User extends CommonActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::find()->joinWith(['vprice'])->where([
+        return static::find()->where([
             'access_token' => $token
         ])->one();
     }

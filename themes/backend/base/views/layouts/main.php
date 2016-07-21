@@ -28,7 +28,7 @@ AppAsset::register($this);
             </div>
             <ul class="nav dw_nav">
                 <?php
-                $currentControllerAction = ltrim(Yii::$app->controller->route, 'admin');
+                $currentControllerAction = '/' . Yii::$app->controller->route;
                 foreach($this->context->getMenus() as $k=>$menu): ?>
                 <li>
                     <a class="<?php echo (0 < $menu['children_count'])?(in_array($currentControllerAction,$menu['child_route']) ? '' : 'collapsed'):(in_array($currentControllerAction,$menu['child_route'])?'menu-on':'collapsed')?>" href="<?php if(0 < $menu['children_count']) { echo '#menu' . $menu['menu_id']; } else { echo Url::to([$menu['route']]); } ?>"<?php if(0 < $menu['children_count']): ?> data-toggle="collapse"<?php endif; ?>><i class="icon Hui-iconfont"><?= $menu['icon'] ?></i><?php if(0 < $menu['children_count']): ?> <i class="icon Hui-iconfont float-right">&#xe6d5;</i><?php endif; ?> <?= $menu['name'] ?></a>
@@ -53,7 +53,7 @@ AppAsset::register($this);
         </div>
         <div class="col-md-10 col-xs-10 dw_right">
             <div class="row top-links">
-                <a data-method='post' href="<?= Url::to(['/adm/index/logout']) ?>">
+                <a data-method='post' href="<?= Url::to(['/admin/index/logout']) ?>">
                     <div>
                         <center>
                             <p><span class="glyphicon glyphicon-off"></span></p>

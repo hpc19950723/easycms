@@ -13,16 +13,10 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'index',
     'bootstrap' => ['log'],
-    'modules' => [
-        'admin' => [
-            'class' => 'common\modules\AdminModule',
-            'defaultRoute' => 'index',
-        ],
-    ],
     'components' => [
         'user' => [
             'identityClass' => 'common\modules\admin\models\Admin',
-            'loginUrl' => array('adm/index/login'),
+            'loginUrl' => array('admin/index/login'),
             'enableAutoLogin' => true,
         ],
         'view' => [
@@ -90,10 +84,6 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<module:\w+>/<controller:[\w-]+>/<action:[\w-]+>'=>'admin/<module>/<controller>/<action>',
-                '<module:\w+>/<controller:[\w-]>/<action:[\w-]+>/<id:\d+>'=>'admin/<module>/<controller>/<action>',
-                '<module:\w+>/<controller:[\w-]+>'=>'admin/<module>/<controller>',
-                '<module:\w+>'=>'admin/<module>',
             ],
         ],
     ],

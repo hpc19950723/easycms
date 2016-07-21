@@ -72,10 +72,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('backend','Created At'),
                 'value' => 'created_at'
             ],
-
             [
                 'class' => 'yii\grid\ActionColumn',
-                'options' => ['width'=>'70px']
+                'template' => '{update} {delete}',
             ],
         ],
     ]); ?>

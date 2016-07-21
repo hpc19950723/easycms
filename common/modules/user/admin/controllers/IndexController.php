@@ -12,12 +12,6 @@ use yii\web\UploadedFile;
 
 class IndexController extends \common\modules\admin\components\BaseController
 {
-    public $userStatus = [
-        0 => 'Forbidden',
-        1 => 'Active',
-        2 => 'Suspended',
-    ];
-    
     public function behaviors()
     {
         $behaviors = [
@@ -100,66 +94,17 @@ class IndexController extends \common\modules\admin\components\BaseController
     
     
     /**
-     * 查看用户详情
-     * @param type $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-        
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-    }
-    
-    
-    /**
      * 删除用户
      * @param type $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = User::STATUS_DELETE;
+        $model->save();
         
         return $this->redirect(['index']);
-    }
-    
-    
-    /**
-     * 等级列表
-     * @return mixed
-     */
-    public function actionGrade()
-    {
-        $query = Grade::find();
-        
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        
-        return $this->render('grade', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    
-    
-    public function actionUpdateGrade($id)
-    {
-        $model = Grade::findOne($id);
-        
-        if($model === null) {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        } else {
-            if($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['user/grade']);
-            }
-            
-            return $this->render('updateGrade', [
-                'model' => $model
-            ]);
-        }
     }
     
 
