@@ -7,6 +7,9 @@ return [
             'username' => 'easycms',
             'password' => '123456',
             'charset' => 'utf8',
+            'on afterOpen' => function($event) {
+                $event->sender->createCommand("SET time_zone = '+8:00'")->execute();
+            }
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',

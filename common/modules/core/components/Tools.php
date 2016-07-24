@@ -150,27 +150,6 @@ class Tools
         return floor($number*$pow)/$pow;
     }
 
-    /**
-     * 判断请示来源
-     */
-    public static function get_device_type()
-    {
-        //全部变成小写字母
-        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $type = 'other';
-        //分别进行判断
-        if(strpos($agent, 'iphone') || strpos($agent, 'ipad') || strpos($agent, 'ipod'))
-        {
-            $type = 'ios';
-        }
-
-        if(strpos($agent, 'android'))
-        {
-            $type = 'android';
-        }
-        return $type;
-    }
-    
     
     /**
      * 获取一条错误信息
@@ -195,5 +174,31 @@ class Tools
     public static function formatNumber($num)
     {
         return ($num/100000000 > 1) ? sprintf('%.2f', $num/100000000).'亿' : (($num/10000 > 1) ? sprintf('%.2f', $num/10000).'万' : sprintf('%.2f', $num));
+    }
+    
+    
+    /**
+     * 获取配置参数
+     * @param string $moduleId 模块ID
+     * @param mixed $keys 
+     * @param mixed $default 默认值
+     */
+    public static function getModuleParams($moduleId, $keys, $default = null)
+    {
+        if(is_string($keys) && isset(Yii::$app->params[$moduleId][$keys])) {
+            return Yii::$app->params[$moduleId][$keys];
+        } elseif(is_array($keys) && isset(Yii::$app->params[$moduleId])) {
+            $params = Yii::$app->params[$moduleId];
+            foreach($keys as $key) {
+                if(isset($params[$key])) {
+                    $params = $params[$key];
+                } else {
+                    return $default;
+                }
+            }
+            return $params;
+        }
+        
+        return $default;
     }
 }
