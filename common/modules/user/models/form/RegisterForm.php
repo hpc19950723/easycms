@@ -38,7 +38,14 @@ class RegisterForm extends Model
             ['password', 'string', 'min' => 6, 'max' => 32],
             ['password2', 'compare', 'compareAttribute' => 'password', 'message' => '确认密码不一致'],
             ['mobile', 'unique', 'targetClass' => 'common\modules\user\models\User', 'message' => '您输入的手机号已经注册, 请直接登录', 'on' => [self::SCENARIOS_REGISTER, self::SCENARIOS_WEB_REGISTER]],
-            ['code', 'validateCode'],
+            ['code', 'exist', 'targetClass' => 'common\modules\user\models\SecurityCode', 'filter' => function($query) {
+                $query->andWhere([
+                    'mobile' => $this->mobile,
+                    'type' => SecurityCode::TYPE_REGISTER
+                ])->andWhere([
+                    '>=', 'expiration', date('Y-m-d H:i:s')
+                ]);
+            }, 'message' => '您输入的验证码不正确或验证码已过期'],
         ];
     }
     
@@ -51,23 +58,6 @@ class RegisterForm extends Model
             'password' => '密码',
             'password2' => '确认密码',
         ];
-    }
-    
-    
-    public function validateCode()
-    {
-        if(!$this->hasErrors()) {
-            $count = SecurityCode::find()->where('mobile=:mobile and type=:type and code=:code and expiration>=:time', [
-                ':mobile' => $this->mobile,
-                ':type' => SecurityCode::TYPE_REGISTER,
-                ':code' => $this->code,
-                ':time' => date('Y-m-d H:i:s')
-            ])->count();
-            
-            if($count == 0) {
-                $this->addError('code', '您输入的验证码不正确或验证码已过期');
-            }
-        }
     }
     
 

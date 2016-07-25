@@ -67,7 +67,11 @@ class User extends CommonActiveRecord implements IdentityInterface
             'mobile',
             'nickname',
             'avatar' => function($model) {
-                return Tools::getFileUrl($model->avatar, 'images/avatar');
+                if($model->avatar) {
+                    return Yii::createObject('common\modules\core\components\Image')->init($model->avatar,'avatar')->resize(100,100)->__toString();
+                } else {
+                    return;
+                }
             },
             'bio',
             'real_name',
