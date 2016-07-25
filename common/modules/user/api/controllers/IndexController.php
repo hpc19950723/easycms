@@ -9,6 +9,7 @@ use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
 use common\modules\user\models\User;
 use common\components\core\Tools;
+use common\modules\user\models\form\RegisterForm;
 
 class IndexController extends BaseController
 {
@@ -22,13 +23,28 @@ class IndexController extends BaseController
                 HttpBasicAuth::className(),
                 QueryParamAuth::className(),
             ],
+            'optional' => ['create']
         ];
         return $behaviors;
     }
     
-    public function actionIndex()
+    
+    /**
+     * 用户注册
+     */
+    public function actionCreate()
     {
-        echo 'abc';exit;
+        $model = new RegisterForm();
+        
+        $model->setScenario(RegisterForm::SCENARIOS_REGISTER);
+        if($model->load(Yii::$app->request->post(), '') && $model->save()) {
+            $data = [
+                'accessToken' => $model->getAccessToken()
+            ];
+            return self::formatSuccessResult($data);
+        } else {
+           return self::formatResult(10202, Yii::t('user', 'Register fail'), $model->errors);
+        }
     }
     
     

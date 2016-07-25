@@ -25,7 +25,7 @@ class SecurityCodeController extends \common\modules\core\api\components\BaseCon
      */
     public function actionResetPassword()
     {
-        return $this->sendCaptcha(SecurityCode::TYPE_RESET_PASSWORD);
+        return $this->send(SecurityCode::TYPE_RESET_PASSWORD);
     }
     
     

@@ -109,7 +109,7 @@ class SecurityCodeForm extends Model
             $model = new SecurityCode();
             $model->mobile = $this->mobile;
             $model->code = $this->code;
-            $model->type = $this->getScenario();
+            $model->type = $this->type;
             $model->content = $sms->getMessage();
             
             if($model->save()) {
