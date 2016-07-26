@@ -8,13 +8,13 @@ use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
 use common\modules\user\models\User;
-use common\components\core\Tools;
 use common\modules\user\models\form\RegisterForm;
 use common\modules\user\models\form\LoginForm;
 use common\modules\user\models\form\ResetPasswordForm;
 use common\modules\user\models\form\UpdatePasswordForm;
 use common\modules\user\models\form\UserForm;
 use yii\web\UploadedFile;
+use common\modules\core\components\Tools;
 use yii\web\NotFoundHttpException;
 
 class IndexController extends BaseController
@@ -49,7 +49,7 @@ class IndexController extends BaseController
             ];
             return self::formatSuccessResult($data);
         } else {
-           return self::formatResult(10202, Yii::t('user', 'Register fail'), $model->errors);
+           return self::formatResult(10202, Tools::getFirstError($model->errors));
         }
     }
     
@@ -67,7 +67,7 @@ class IndexController extends BaseController
             ];
             return self::formatSuccessResult($data);
         } else {
-            return self::formatResult(10200, Yii::t('user','Login fail'), $model->errors);
+            return self::formatResult(10200, Tools::getFirstError($model->errors));
         }
     }
     
@@ -82,7 +82,7 @@ class IndexController extends BaseController
         if($model->load(Yii::$app->request->post(), '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-           return self::formatResult(10203, Yii::t('user', 'Reset password fail'), $model->errors);
+           return self::formatResult(10203, Tools::getFirstError($model->errors));
         }
     }
     
@@ -98,7 +98,7 @@ class IndexController extends BaseController
         if($model->load(Yii::$app->request->post(), '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10204, Yii::t('user', 'Update password fail'), $model->errors);
+            return self::formatResult(10204, Tools::getFirstError($model->errors));
         }
     }
     
@@ -107,9 +107,9 @@ class IndexController extends BaseController
      * 获取用户基本信息
      * @return array
      */
-    public function actionView($id)
+    public function actionView()
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel(Yii::$app->user->getId());
         return self::formatSuccessResult($model);
     }
     
@@ -130,7 +130,7 @@ class IndexController extends BaseController
         if($model->load($post,'') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10205, Yii::t('user', 'Update user information fail'), $model->errors);
+            return self::formatResult(10205, Tools::getFirstError($model->errors));
         }
     }
     
