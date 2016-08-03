@@ -21,7 +21,7 @@ class AdminAuthItem extends ActiveRecord
      * 获取类型数据
      * @return array
      */
-    public function getTypes()
+    public static function getTypes()
     {
         return [
             self::T_ROLE => '角色',
