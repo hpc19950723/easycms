@@ -41,12 +41,14 @@ class UserForm extends Model
     const SCENARIOS_BACKEND_CREATE = 'backend_create';
     
     const SCENARIOS_BACKEND_UPDATE = 'backend_update';
+    
+    const SCENARIOS_API_UPDATE = 'api_update';
 
 
     public function rules()
     {
         return [
-            [['nickname', 'mobile'], 'required'],
+            [['nickname', 'mobile'], 'required', 'on' => [self::SCENARIOS_BACKEND_CREATE, self::SCENARIOS_BACKEND_UPDATE]],
             ['password', 'required', 'on' => [self::SCENARIOS_BACKEND_CREATE]],
             ['gender', 'in', 'range' => [User::GENDER_PRIVACY, User::GENDER_MALE, User::GENDER_FEMALE]],
             [['nickname'], 'string', 'length' => [2, 20]],
@@ -74,6 +76,7 @@ class UserForm extends Model
         $scenarios = [
             self::SCENARIOS_BACKEND_CREATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
             self::SCENARIOS_BACKEND_UPDATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
+            self::SCENARIOS_API_UPDATE => ['nickname', 'gender', 'email', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
          ];
         return array_merge( parent:: scenarios(), $scenarios);
     }

@@ -25,7 +25,7 @@ class SecurityCodeController extends \common\modules\core\api\components\BaseCon
      */
     public function actionResetPassword()
     {
-        return $this->sendCaptcha(SecurityCode::TYPE_RESET_PASSWORD);
+        return $this->send(SecurityCode::TYPE_RESET_PASSWORD);
     }
     
     
@@ -43,7 +43,7 @@ class SecurityCodeController extends \common\modules\core\api\components\BaseCon
         if($model->load($data, '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10201, Yii::t('error', 'Send captcha failed'), $model->errors);
+            return self::formatResult(10201, Tools::getFirstError($model->errors));
         }
     }
 }

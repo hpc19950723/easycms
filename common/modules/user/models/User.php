@@ -2,13 +2,11 @@
 namespace common\modules\user\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use common\modules\core\models\CommonActiveRecord;
 use yii\web\IdentityInterface;
 use yii\db\Expression;
-use common\components\Tools;
-use common\components\ArrayHelper;
+use common\modules\core\components\Tools;
 
 /**
  * User model
@@ -39,8 +37,6 @@ class User extends CommonActiveRecord implements IdentityInterface
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
 
-    const SCENARIOS_FRONTEND_UPDATE = 'frontend_update';
-
     /**
      * @inheritdoc
      */
@@ -69,10 +65,13 @@ class User extends CommonActiveRecord implements IdentityInterface
         return [
             'user_id',
             'mobile',
-            'mobile2',
             'nickname',
             'avatar' => function($model) {
-                return Tools::getFileUrl($model->avatar, 'images/avatar');
+                if($model->avatar) {
+                    return Yii::createObject('common\modules\core\components\Image')->init($model->avatar,'avatar')->resize(100,100)->__toString();
+                } else {
+                    return;
+                }
             },
             'bio',
             'real_name',
@@ -99,14 +98,6 @@ class User extends CommonActiveRecord implements IdentityInterface
             'wechat' => '微信号',
             'avatar' => '头像',
         ];
-    }
-
-
-    public function scenarios() {
-        $scenarios = [
-            self::SCENARIOS_FRONTEND_UPDATE => ['gender', 'nickname', 'bio', 'real_name', 'qq', 'wechat', 'id_no', 'email', 'avatar'],
-        ];
-        return array_merge( parent:: scenarios(), $scenarios);
     }
 
 
@@ -289,26 +280,7 @@ class User extends CommonActiveRecord implements IdentityInterface
             return false;
         }
     }
-
     
-    public static function getUnique($nickName, $nickNames = null)
-    {
-        if($nickNames === null) {
-            $userModels = static::find()
-                ->where('nickname LIKE :query')
-                ->addParams([':query'=>$nickName.'%'])
-                ->all();
-            $nickNames = ArrayHelper::getColumn($userModels, 'nickname');
-        }
-
-        $result = in_array($nickName,$nickNames);
-        if($result) {
-            $nickName = User::createUniqueNick($nickName);
-            return self::getUnique($nickName, $nickNames);
-        }
-
-        return $nickName;
-    }
 
     public static function getGender($gender = '')
     {
@@ -316,30 +288,5 @@ class User extends CommonActiveRecord implements IdentityInterface
             return 1;
         else
             return 2;
-    }
-
-
-    public static function getUniqueness($oauthType,$openId)
-    {
-        $model = static::find()
-            ->where($oauthType.'= :openid', [':openid' => $openId])
-            ->one();
-        if($model === null){
-            return false;
-        }else{
-            return $model->generateAccessToken();
-        }
-
-    }
-
-
-    /*
-     * 生成唯一昵称
-     * @return array
-     */
-    public static function createUniqueNick($nickName)
-    {
-        $str = Tools::getRandomNumber(4, 'number');
-        return $nickName . $str;
     }
 }
