@@ -30,15 +30,7 @@ return [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning', 'info'],
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['info'],
-                    'categories' => ['payment'],
-                    'logFile' => '@api/runtime/logs/Payment/notify.log',
-                    'maxFileSize' => 1024 * 2,
-                    'maxLogFiles' => 50,
-                ],
+                ]
             ],
         ],
         'errorHandler' => [
