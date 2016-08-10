@@ -5,8 +5,8 @@ namespace common\modules\user\models\form;
 use Yii;
 use yii\base\Model;
 use common\modules\user\models\User;
-use yii\web\UploadedFile;
-use yii\helpers\FileHelper;
+use common\modules\core\components\ImageUploader;
+use common\modules\core\components\Tools;
 
 class UserForm extends Model
 {
@@ -149,7 +149,18 @@ class UserForm extends Model
             if($this->isNewRecord) {
                 $this->_user = new User();
             }
-            $this->uploadedFile();
+            
+            $fileUploader = new ImageUploader([
+                'uploadedFile' => $this->avatar,
+                'uploadedFileDir' => Tools::getUploadDir('user'),
+                'uploadedFilePrefix' => 'AVAT',
+                'oldFilePath' => $this->_user->avatar?:null
+            ]);
+            $imageName = $fileUploader->save();
+            if($imageName) {
+                $this->_user->avatar = Tools::getUploadDir('user') . '/' . $imageName;
+            }
+            
             $this->_user->mobile = $this->mobile;
             if($this->password !== '' || $this->password !== null) {
                 $this->_user->setPassword($this->password);
@@ -163,9 +174,6 @@ class UserForm extends Model
             $this->_user->id_no = $this->id_no;
             $this->_user->bio = $this->bio;
             $this->_user->status = $this->status;
-            if(isset($this->avatar)) {
-                $this->_user->avatar = $this->avatar;
-            }
 
             if($this->_user->save()) {
                 return true;
@@ -175,26 +183,6 @@ class UserForm extends Model
             }
         } else {
             return false;
-        }
-    }
-    
-    
-    /**
-     * 上传文件
-     */
-    public function uploadedFile()
-    {
-        if($this->avatar instanceof UploadedFile) {
-            $imageName = uniqid(Yii::$app->params['user']['uploads']['avatar']['prefix']) . '.' . $this->avatar->extension;
-            FileHelper::createDirectory(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir']), 0755, true);
-            $this->avatar->saveAs(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir'] . $imageName));
-            $this->avatar = $imageName;
-            
-            if($this->_user->avatar) {
-                @unlink(Yii::getAlias(Yii::$app->params['user']['uploads']['avatar']['dir'] . $this->_user->avatar));
-            }
-        } else {
-            unset($this->avatar);
         }
     }
 }

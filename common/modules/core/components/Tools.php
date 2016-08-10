@@ -45,9 +45,9 @@ class Tools
      * @param type $type
      * @return string
      */
-    public static function getFileUrl($filename, $type)
+    public static function getFileUrl($fileName)
     {
-        return $filename?Url::to('@resDomain/' . $type . '/' . $filename):'';
+        return $fileName? Url::to('@resDomain' . $fileName): '';
     }
     
     
@@ -200,5 +200,22 @@ class Tools
         }
         
         return $default;
+    }
+    
+    
+    /**
+     * 获取上传文件目录
+     * @param string $moduleId 模块ID
+     * @param array $moduleSubDir 模块子目录
+     */
+    public static function getUploadDir($moduleId, $moduleSubdir = null)
+    {
+        $uploadDir = '/' . $moduleId;
+        if(is_array($moduleSubdir)) {
+            foreach($moduleSubdir as $dirName) {
+                $uploadDir .= '/' . $dirName;
+            }
+        }
+        return $uploadDir;
     }
 }

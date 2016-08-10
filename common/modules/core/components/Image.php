@@ -12,6 +12,15 @@ class Image
     
     protected $_height;
     
+    //目标宽高
+    protected $_dstWidth;
+
+    protected $_dstHeight;
+    
+    //原始图片宽高
+    protected $_imageWidth;
+    protected $_imageHight;
+
     protected $_quality = 90;
     
     protected $_watermark;
@@ -33,16 +42,14 @@ class Image
     protected $_backgroundColor  = array(255, 255, 255);
 
     protected $_imageName;
-    
-    protected $_imageType;
+
+    protected $_dstImageName;
     
     protected $_imageFile;
     
     protected $_destinationImageFile;
 
-    protected $_placeholderName = 'placeholder.jpg';
-
-    protected $_placeholderType = 'placeholder';
+    protected $_placeholderName = '/placeholder/placeholder_460x460.jpg';
 
     protected $_placeholder;
     
@@ -57,7 +64,6 @@ class Image
         $this->_watermarkImageOpacity = null;
         $this->_imageFile = null;
         $this->_imageName = null;
-        $this->_imageType = null;
         $this->_destinationImageFile = null;
         return $this;
     }
@@ -72,16 +78,15 @@ class Image
     }
 
 
-    public function init($imageName, $imageType)
+    public function init($imageName)
     {
         $this->_reset();
         $this->_imageName = $imageName;
-        $this->_imageType = $imageType;
         if(!file_exists($this->getImageFile())) {
             $this->_imageName = $this->_placeholderName;
-            $this->_imageType = $this->_placeholderType;
             $this->_imageFile = null;
         }
+        $this->initImageSrcWidthHeight();
         return $this;
     }
     
@@ -97,6 +102,9 @@ class Image
     {
         $this->setWidth($width);
         $this->setHeight($height);
+        $this->initDestinationWidthHeight();
+        $this->initDstImageName();
+
         return $this;
     }
     
@@ -127,7 +135,7 @@ class Image
     protected function getImageFile()
     {
         if(!$this->_imageFile) {
-            $this->_imageFile = Yii::getAlias('@uploads/' . $this->_imageType . '/' . $this->_imageName);
+            $this->_imageFile = Yii::getAlias('@uploads' . $this->_imageName);
         }
 
         return $this->_imageFile;
@@ -137,7 +145,7 @@ class Image
     protected function getDestinationImageFile()
     {
         if(!$this->_destinationImageFile && $this->_width) {
-            $this->_destinationImageFile = Yii::getAlias('@uploads/cache/' . $this->_imageType . '/' . $this->_width . 'x' . $this->_height . '/' . $this->_imageName);
+            $this->_destinationImageFile = Yii::getAlias('@uploads/cache/' . $this->_width . 'x' . $this->_height . $this->_dstImageName);
         } elseif(!$this->_width) {
             $this->_destinationImageFile = $this->getImageFile();
         }
@@ -148,7 +156,7 @@ class Image
     
     public function getUrl()
     {
-        return Url::to('@resDomain/cache/' . $this->_imageType . '/' . $this->_width . 'x' . $this->_height . '/' . $this->_imageName);
+        return Url::to('@resDomain/cache/' . $this->_width . 'x' . $this->_height . $this->_dstImageName);
     }
     
 
@@ -161,9 +169,87 @@ class Image
     public function getPlaceholder()
     {
         if (!$this->_placeholder) {
-            $this->_placeholder = Url::to('@resDomain/' . $this->_imageType . '/' . $this->_imageName);
+            $this->_placeholder = Url::to('@resDomain' . $this->_imageName);
         }
         return $this->_placeholder;
+    }
+    
+    
+    public function initDestinationWidthHeight()
+    {
+        if (empty($this->_width) && empty($this->_height)) {
+            throw new Exception('Invalid image dimensions.');
+        }
+
+        $this->_dstWidth = $this->_width;
+        $this->_dstHeight = $this->_height;
+        // calculate lacking dimension
+        if (!$this->_keepFrame) {
+            if (null === $this->_width) {
+                $this->_dstWidth = round($this->_height * ($this->_imageWidth / $this->_imageHeight));
+            }
+            elseif (null === $this->_height) {
+                $this->_dstHeight = round($this->_width * ($this->_imageHeight / $this->_imageWidth));
+            }
+        }
+        else {
+            if (null === $this->_width) {
+                $this->_dstWidth = $this->_height;
+            }
+            elseif (null === $this->_height) {
+                $this->_dstHeight = $this->_width;
+            }
+        }
+
+        if ($this->_keepAspectRatio) {
+            // do not make picture bigger, than it is, if required
+            if ($this->_constrainOnly) {
+                if (($this->_dstWidth >= $this->_imageWidth) && ($this->_dstHeight >= $this->_imageHeight)) {
+                    $this->_dstWidth  = $this->_imageWidth;
+                    $this->_dstHeight = $this->_imageHeight;
+                }
+            }
+            // keep aspect ratio
+            if ($this->_imageWidth / $this->_imageHeight >= $this->_dstWidth / $this->_dstHeight) {
+                $this->_dstHeight = round(($this->_dstWidth / $this->_imageWidth) * $this->_imageHeight);
+            } else {
+                $this->_dstWidth = round(($this->_dstHeight / $this->_imageHeight) * $this->_imageWidth);
+            }
+        }
+    }
+    
+    
+    public function initDstImageName()
+    {
+        $lastUnderlinePostion = strrpos($this->_imageName, '_');
+        $lastPointPosition = strrpos($this->_imageName, '.');
+        $this->_dstImageName = substr($this->_imageName, 0, $lastUnderlinePostion + 1) . $this->_dstWidth . 'x' . $this->_dstWidth . substr($this->_imageName, $lastPointPosition);
+    }
+    
+    
+    /**
+     * 设置原始图片的宽高
+     */
+    public function initImageSrcWidthHeight()
+    {
+        $lastUnderlinePostion = strrpos($this->_imageName, '_');
+        $lastXPosition = strrpos($this->_imageName, 'x');
+        $lastPointPosition = strrpos($this->_imageName, '.');
+        $this->_imageWidth = substr($this->_imageName, $lastUnderlinePostion + 1, $lastXPosition - $lastUnderlinePostion - 1);
+        $this->_imageHeight = substr($this->_imageName, $lastXPosition + 1, $lastPointPosition - $lastXPosition - 1);
+
+        if (empty($this->_imageWidth) && empty($this->_imageHeight)) {
+            $imageFile = $this->getImageFile();
+            $imageSize = @getimagesize($imageFile);
+            if($imageSize) {
+                $this->_imageWidth = $imageSize[0];
+                $this->_imageHeight = $imageSize[1];
+            }
+        }
+        
+        if (empty($this->_imageWidth) && empty($this->_imageHeight)) {
+            throw new Exception('Invalid source image dimensions.');
+        }
     }
     
     
