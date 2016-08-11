@@ -1,6 +1,4 @@
 <?php
 return [
-    'params' => [
-        'core' => require('params.php')
-    ]
+    'params' => require('params.php')
 ];

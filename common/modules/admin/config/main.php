@@ -8,7 +8,5 @@ return [
             ]
         ]
     ],
-    'params' => [
-        'user' => require('params.php')
-    ]
+    'params' => require('params.php')
 ];

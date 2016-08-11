@@ -30,6 +30,9 @@ while (($file = readdir($handle)) !== false) {
         if(isset($moduleConfig['api'])) {
             $moduleConfig = array_merge($moduleConfig, $moduleConfig['api']);
         }
+        if(isset($moduleConfig['params'])) {
+            $moduleConfig['params'][$file] = $moduleConfig['params'];
+        }
         unset($moduleConfig['api']);
         unset($moduleConfig['admin']);
         $config = array_merge_recursive($config, $moduleConfig);
