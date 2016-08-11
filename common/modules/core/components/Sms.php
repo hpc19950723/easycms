@@ -6,21 +6,32 @@
 namespace common\modules\core\components;
 
 use yii\base\Component;
-use common\modules\core\components\Tools;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
+use yii\base\Exception;
 
 /**
- * $sms = new Sms([
+ * 发送短信事例
+ * $sms = Yii::$app->set([
  *    'type' => 'register',
  *    'smParams' => [
  *        '132302'
  *    ],
  *    'mobile' => 'xxxxxxxx'
  * ]);
+ * 
+ * $sms->send()
  */
 class Sms extends Component
 {
+    //请求URL
+    public $url;
+    
+    public $appId;
+    
+    public $sessionToken;
+    
+    public $content;
+    
     //短信类型
     public $type;
     
@@ -30,13 +41,31 @@ class Sms extends Component
     //手机号
     public $mobile;
     
+    
+    /**
+     * 设置短信数据
+     * @param type $options
+     * @return \common\modules\core\components\Sms
+     */
+    public function set($options)
+    {
+        foreach($options as $key => $option) {
+            $this->{$key} = $option;
+        }
+        return $this;
+    }
+    
     /**
      * 获取短信
      * @return string
      */
     public function getMessage()
     {
-        return vsprintf($this->_getMessages()[$this->type], $this->smParams);
+        if(isset($this->_getMessages()[$this->type])) {
+            return vsprintf($this->_getMessages()[$this->type], $this->smParams);
+        } else {
+            throw new Exception(sprintf('短信类型%s,未进行配置', $this->type));
+        }
     }
     
     
@@ -46,19 +75,19 @@ class Sms extends Component
     public function send()
     {
         try {
-            $params = [
+            $data = [
                 'mobilePhone' => $this->mobile,
                 'msg' => $this->getMessage()
             ];
             $headers = [
                 'Content-Type' => 'application/json',
-                'X-ML-AppId' => Tools::getModuleParams('core', ['sms', 'account', 'appId']),
-                'X-ML-Session-Token' => Tools::getModuleParams('core', ['sms', 'account', 'sessionToken']),
+                'X-ML-AppId' => $this->appId,
+                'X-ML-Session-Token' => $this->sessionToken,
             ];
             $client = new Client();
-            $client->request('POST', Tools::getModuleParams('core', ['sms', 'url']), [
+            $client->request('POST', $this->url, [
                 'headers' => $headers,
-                'body' => json_encode($params)
+                'body' => json_encode($data)
             ]);
             return true;
         } catch (\yii\base\Exception $e) {
@@ -73,6 +102,6 @@ class Sms extends Component
      */
     private function _getMessages()
     {
-        return Tools::getModuleParams('core', ['sms', 'content']);
+        return $this->content;
     }
 }

@@ -97,7 +97,7 @@ class SecurityCodeForm extends Model
     public function save()
     {
         if($this->validate()) {
-            $sms = new Sms([
+            $sms = Yii::$app->sms->set([
                 'mobile' => $this->mobile,
                 'smParams' => [
                     $this->code
@@ -114,7 +114,7 @@ class SecurityCodeForm extends Model
             
             if($model->save()) {
                 //发送短信
-                return $sms->send();
+                return Yii::$app->sms->send();
             } else {
                 return false;
             }

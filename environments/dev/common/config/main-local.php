@@ -11,6 +11,18 @@ return [
                 $event->sender->createCommand("SET time_zone = '+8:00'")->execute();
             }
         ],
+        //短信配置
+        'sms' => [
+            'class' => 'common\modules\core\components\Sms',
+            'url' => 'http://api.maxleap.cn/2.0/requestSmsMsg',
+            'appId' => '576a0f49169e7d0001387726',
+            'sessionToken' => 'Oe107dV3z1dAU2LIVZYC4f7bOhA4LhHmkSdWhHr-l5k',
+            'content' => [
+                'register' => '验证码:%s, 15分钟有效, 立即注册',
+                'reset_password' => '验证码:%s, 15分钟有效, 立即重置密码',
+                'login' => '验证码:%s, 15分钟有效, 立即登录',
+            ]
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
