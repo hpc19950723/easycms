@@ -11,12 +11,15 @@ class ConfigController extends BaseController
 {
     public function actionIndex()
     {
+        $moduleId = Yii::$app->request->get('module_id');
+        $class = Yii::$app->request->get('class');
         $config = $this->edit(Yii::$app->request->get('module_id'), Yii::$app->request->get('class'));
         
-        $rules = [];
+        $rules = $attributeLabels = [];
         $model = new CoreConfigForm();
         foreach($config['sections'] as $name => $section) {
             $model->$name = $section['value'];
+            $attributeLabels[$name] = $section['label'];
             if(isset($section['rules'])) {
                 foreach($section['rules'] as $rule) {
                     array_unshift($rule, $name);
@@ -24,11 +27,17 @@ class ConfigController extends BaseController
                 }
             }
         }
-
-        $model->rules = $rules;
+        $model->setPathPrefix($moduleId . '/' . $class . '/');
+        $model->setRules($rules);
+        $model->setAttributeLabels($attributeLabels);
+        
+        if($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', '保存成功');
+        }
 
         return $this->render('edit',[
             'config' => $config ,
+            'model' => $model
         ]);
     }
     
@@ -46,21 +55,11 @@ class ConfigController extends BaseController
             throw new \yii\web\NotFoundHttpException('没有找到配置项');
         }
         
-        $post = Yii::$app->request->post();
         foreach($config['sections'] as $key => &$section) {
             $path = $moduleId . '/' . $class . '/' . $key;
             
             $model = CoreConfig::find()->where('path=:path', [':path'=>$path])->one();
-            if(!empty($post)) {
-                if($model === null) {
-                    $model = new CoreConfig();
-                    $model->path = $path;
-                }
-                $section['value'] = $model->value = $post['config'][$key];
-                $model->save();
-                Yii::$app->getSession()->setFlash('success', '保存成功');
-                unset($model);
-            } elseif($model !== null) {
+            if($model !== null) {
                 $section['value'] = $model->value;
             } else {
                 $section['value'] = $section['default'];

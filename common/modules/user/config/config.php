@@ -9,7 +9,6 @@ return [
                 'frontend_type' => 'dropDownList',
                 'rules' => [
                     ['required'],
-                    ['integer'],
                 ],
                 'source_model' => 'common\modules\admin\models\source\Yesno',
                 'default' => '',
@@ -18,6 +17,9 @@ return [
             'backend_welcome' => [
                 'label' => '欢迎语',
                 'frontend_type' => 'textarea',
+                'rules' => [
+                    ['required'],
+                ],
                 'default' => '',
                 'sort' => 1,
                 'comment' => '修改后台登录后的欢迎语',
@@ -25,6 +27,9 @@ return [
             'footer_copyright' => [
                 'label' => '备案信息',
                 'frontend_type' => 'textarea',
+                'rules' => [
+                    ['required'],
+                ],
                 'default' => '',
                 'sort' => 2,
             ],

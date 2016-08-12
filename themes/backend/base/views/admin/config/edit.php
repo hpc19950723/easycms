@@ -16,27 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin(); ?>
 
         <?php foreach($config['sections'] as $name => $section): ?>
-        <div class="form-group field-<?= $name ?>">
-            <label for="<?= $name ?>" class="control-label"><?= $section['label'] ?></label>
-            <?php
-            if(!empty($section['source_model'])) {
-                $params = [
-                    'config['. $name .']',
-                    $section['value'],
-                    Yii::createObject($section['source_model'])->toArray(),
-                    ['class' => 'form-control', 'id' => $name]
-                ];
-            } else {
-                $params = [
-                    'config['. $name .']',
-                    $section['value'],
-                    ['class' => 'form-control', 'id' => $name]
-                ];
-            }
-            ?>
-            <?= call_user_func_array(array('yii\helpers\Html', $section['frontend_type']), $params) ?>
-            <p class="help-block"><?= !isset($section['comment'])?'':$section['comment'] ?></p>
-        </div>
+        <?php
+        $params = [];
+        if(!empty($section['source_model'])) {
+            $params = [
+                Yii::createObject($section['source_model'])->toArray(),
+                ['class' => 'form-control', 'id' => $name]
+            ];
+        }
+        $field = $form->field($model, $name)->label($section['label'])->hint(!isset($section['comment'])?'':$section['comment']);
+        ?>
+        <?= call_user_func_array(array($field, $section['frontend_type']), $params) ?>
         <?php endforeach; ?>
         
 
