@@ -1,4 +1,5 @@
 <?php
+
 return [
     'components' => [
         'i18n' => [
@@ -27,5 +28,5 @@ return [
             ]
         ]
     ],
-    'params' => require('params.php')
+    'params' => require(__DIR__ . '/params.php'),
 ];
