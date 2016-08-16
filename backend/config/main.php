@@ -47,7 +47,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => '/admin/adm/index/error',
+            'errorAction' => '/admin/index/error',
         ],
         'i18n' => [
             'translations' => [

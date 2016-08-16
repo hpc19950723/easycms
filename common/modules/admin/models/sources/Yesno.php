@@ -1,6 +1,6 @@
 <?php
 
-namespace common\modules\admin\models\source;
+namespace common\modules\admin\models\sources;
 
 use Yii;
 

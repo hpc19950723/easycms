@@ -3,7 +3,6 @@
 namespace common\modules\admin\controllers;
 
 use Yii;
-use izyue\admin\components\Helper;
 use yii\caching\TagDependency;
 use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
@@ -39,7 +38,7 @@ class RouteController extends \common\modules\admin\components\BaseController
         $routes = Yii::$app->getRequest()->post('route', '');
         $routes = preg_split('/\s*,\s*/', trim($routes), -1, PREG_SPLIT_NO_EMPTY);
         $this->saveNew($routes);
-        Helper::invalidate();
+        //Helper::invalidate();
         return $this->getRoutes();
     }
 
