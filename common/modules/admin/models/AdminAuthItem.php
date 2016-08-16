@@ -3,14 +3,11 @@
 namespace common\modules\admin\models;
 
 use yii\db\ActiveRecord;
+use yii\rbac\Item;
 use common\modules\admin\models\AdminAuthItemChild;
 
 class AdminAuthItem extends ActiveRecord
 {
-    const T_ROLE = 1;   //角色
-    const T_PERMISSION = 2;  //权限
-    
-    
     public static function tableName()
     {
         return '{{%admin_auth_item}}';
@@ -24,8 +21,8 @@ class AdminAuthItem extends ActiveRecord
     public static function getTypes()
     {
         return [
-            self::T_ROLE => '角色',
-            self::T_PERMISSION => '权限',
+            Item::TYPE_ROLE => '角色',
+            Item::TYPE_PERMISSION => '权限',
         ];
     }
     
@@ -44,6 +41,8 @@ class AdminAuthItem extends ActiveRecord
             'description' => '描述',
             'rule_name' => '规则名',
             'data' => '数据',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
         ];
     }
 }

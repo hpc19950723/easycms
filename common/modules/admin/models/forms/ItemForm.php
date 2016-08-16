@@ -8,6 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use common\modules\admin\models\AdminAuthItem;
 use yii\web\NotFoundHttpException;
+use yii\rbac\Item;
 
 class ItemForm extends Model
 {
@@ -49,8 +50,8 @@ class ItemForm extends Model
     
     public function rules() {
         return [
-            ['type', 'default', 'value' => AdminAuthItem::T_ROLE],
-            ['type', 'in', 'range' => [AdminAuthItem::T_ROLE,  AdminAuthItem::T_PERMISSION]],
+            ['type', 'default', 'value' => Item::TYPE_PERMISSION],
+            ['type', 'in', 'range' => [Item::TYPE_ROLE,  Item::TYPE_PERMISSION]],
             [['name', 'type'], 'required'],
             ['name', 'unique', 'targetClass' => '\common\modules\admin\models\AdminAuthItem', 'when' => function(){
                 return $this->isNewRecord || ($this->_authItemModel->name != $this->name);
@@ -103,7 +104,7 @@ class ItemForm extends Model
     {
         //实例化AuthManager类
         $auth = Yii::$app->authManager;
-        if($this->type == AdminAuthItem::T_ROLE){
+        if($this->type == Item::TYPE_ROLE){
             $item = $auth->createRole($this->name);
         }else{
             $item = $auth->createPermission($this->name);
@@ -156,7 +157,7 @@ class ItemForm extends Model
     public function updateItem($name)
     {
         $auth = Yii::$app->authManager;
-        if($this->type == AdminAuthItem::T_ROLE){
+        if($this->type == Item::TYPE_ROLE){
             $item = $auth->createRole($this->name);
             $item->description = $this->description?:'创建['.$this->name.']角色';
         }else{

@@ -4,7 +4,7 @@ namespace common\modules\user\api\controllers;
 
 use Yii;
 use common\modules\core\components\Tools;
-use common\modules\user\models\form\SecurityCodeForm;
+use common\modules\user\models\forms\SecurityCodeForm;
 use common\modules\user\models\SecurityCode;
 
 class SecurityCodeController extends \common\modules\core\api\components\BaseController

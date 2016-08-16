@@ -1,19 +1,23 @@
 <?php
 
-namespace common\modules\admin\controllers;
+namespace common\modules\admin\components;
 
 use Yii;
 use common\modules\admin\models\AdminAuthItem;
+use common\modules\admin\models\searchs\AdminAuthItemSearch;
 use common\modules\admin\models\forms\ItemForm;
+use yii\rbac\Item;
 use yii\data\ActiveDataProvider;
 use common\modules\admin\components\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
+use common\modules\core\components\Tools;
 
 /**
  * AuthController implements the CRUD actions for AdminAuthItem model.
  */
-class AuthController extends BaseController
+class AuthItemController extends BaseController
 {
     public function behaviors()
     {
@@ -34,24 +38,12 @@ class AuthController extends BaseController
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => AdminAuthItem::find(),
-        ]);
+        $searchModel = new AdminAuthItemSearch(['type' => $this->type]);
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
-        return $this->render('index', [
+        return $this->render('/auth/index', [
             'dataProvider' => $dataProvider,
-        ]);
-    }
-    
-    
-    public function actionRole()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => AdminAuthItem::find()->where('type=' . AdminAuthItem::T_ROLE),
-        ]);
-
-        return $this->render('role', [
-            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
     
@@ -61,9 +53,9 @@ class AuthController extends BaseController
      * @param string $id
      * @return mixed
      */
-    public function actionViewItem($id)
+    public function actionView($id)
     {
-        return $this->render('viewItem', [
+        return $this->render('/auth/view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -72,26 +64,33 @@ class AuthController extends BaseController
      * 创建角色权限
      * @return mixed
      */
-    public function actionCreateItem()
+    public function actionCreate()
     {
         $model = new ItemForm();
         //设置场景
         $model->setScenario(ItemForm:: SCENARIOS_CREATE);
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Tools::getPost(['type' => $this->type], $model->formName())) && $model->validate()) {
             $model->addItem();
-            if('role' == Yii::$app->request->get('type')) {
-                return $this->redirect(['role']);
-            } else {
-                return $this->redirect(['index']);
-            }
+            return $this->redirect(['index']);
         } else {
-            $dataProvider = new ActiveDataProvider([
-                'query' => AdminAuthItem::find()->where('type = ' . AdminAuthItem::T_PERMISSION),
+            if($this->type == Item::TYPE_ROLE) {
+                $models = AdminAuthItem::find()->where('type = ' . Item::TYPE_PERMISSION)
+                        ->andWhere(['not like', 'name', '/%', false])
+                        ->all();
+            } else {
+                $models = AdminAuthItem::find()->where('type = ' . Item::TYPE_PERMISSION)
+                        ->andWhere(['like', 'name', '/%', false])
+                        ->all();
+            }
+                        
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $models,
                 'pagination' => [
-                    'pageSize' => 100
-                ]
+                    'pageSize' => 2000,
+                ],
             ]);
-            return $this->render('createItem', [
+            
+            return $this->render('/auth/create', [
                 'model' => $model,
                 'dataProvider' => $dataProvider,
             ]);
@@ -104,7 +103,7 @@ class AuthController extends BaseController
      * @param string $id
      * @return mixed
      */
-    public function actionUpdateItem($id)
+    public function actionUpdate($id)
     {
         $model = new ItemForm();
         $model = $model->getItem($id);
@@ -121,14 +120,24 @@ class AuthController extends BaseController
                 return $this->redirect(['index']);
             }
         } else {
-            $dataProvider = new ActiveDataProvider([
-                'query' => AdminAuthItem::find()->where('type = ' . AdminAuthItem::T_PERMISSION)->orderBy(['description' => SORT_DESC]),
+            if($this->type == Item::TYPE_ROLE) {
+                $models = AdminAuthItem::find()->where('type = ' . Item::TYPE_PERMISSION)
+                        ->andWhere(['not like', 'name', '/%', false])
+                        ->all();
+            } else {
+                $models = AdminAuthItem::find()->where('type = ' . Item::TYPE_PERMISSION)
+                        ->andWhere(['like', 'name', '/%', false])
+                        ->all();
+            }
+                        
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $models,
                 'pagination' => [
-                    'pageSize' => 100
-                ]
+                    'pageSize' => 2000,
+                ],
             ]);
             
-            return $this->render('updateItem', [
+            return $this->render('/auth/create', [
                 'model' => $model,
                 'dataProvider' => $dataProvider,
             ]);
@@ -141,7 +150,7 @@ class AuthController extends BaseController
      * @param string $id
      * @return mixed
      */
-    public function actionDeleteItem($id)
+    public function actionDelete($id)
     {
         $model = new ItemForm();
         $model->setScenario(ItemForm:: SCENARIOS_DELETE);

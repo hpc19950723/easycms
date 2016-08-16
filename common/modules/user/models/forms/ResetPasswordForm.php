@@ -1,6 +1,6 @@
 <?php
 
-namespace common\modules\user\models\form;
+namespace common\modules\user\models\forms;
 
 use common\modules\user\models\User;
 use common\modules\user\models\SecurityCode;

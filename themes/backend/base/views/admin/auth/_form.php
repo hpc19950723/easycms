@@ -13,10 +13,6 @@ use yii\grid\GridView;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?php if($model->isNewRecord && 'role' != Yii::$app->request->get('type')): ?>
-    <?= $form->field($model, 'type')->dropDownList(AdminAuthItem::getTypes()) ?>
-    <?php endif; ?>
-
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
     
     <div>

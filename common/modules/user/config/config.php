@@ -10,7 +10,7 @@ return [
                 'rules' => [
                     ['required'],
                 ],
-                'source_model' => 'common\modules\admin\models\source\Yesno',
+                'source_model' => 'common\modules\admin\models\sources\Yesno',
                 'default' => '',
                 'sort' => 1,
             ], 

@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '权限管理';
+$this->title = AdminAuthItem::getTypes()[$this->context->type] . '管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="admin-auth-item-index">
@@ -16,39 +16,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
-        <?= Html::a('创建权限', ['create-item'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('创建'. AdminAuthItem::getTypes()[$this->context->type], ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'name',
-            [
-                'attribute' => 'type',
-                'value' => function($m) {
-                    return AdminAuthItem::getTypes()[$m->type];
-                }
-            ],
             'description:ntext',
-            'rule_name',
-            'data:ntext',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'urlCreator' => function ($action, $model, $key, $index) {
-                    switch($action)
-                    {
-                        case 'view':
-                            return  Url::to(['auth/view-item','id' => $model->name]);
-                        case 'update':
-                            return  Url::to(['auth/update-item','id' => $model->name]);
-                        case 'delete':
-                            return  Url::to(['auth/delete-item','id' => $model->name]);
-                        break;
-                    }
-
-                },
             ],
         ],
     ]); ?>

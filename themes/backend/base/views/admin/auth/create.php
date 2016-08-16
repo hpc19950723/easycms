@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-
+use common\modules\admin\models\AdminAuthItem;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\AdminAuthItem */
 
-$this->title = Yii::t('backend', Yii::$app->request->get('type')?'创建角色':'创建权限');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', Yii::$app->request->get('type')?'角色管理':'权限管理'), 'url' => 'role' == Yii::$app->request->get('type')?['role']:['index']];
+$this->title = Yii::t('backend', '创建' . AdminAuthItem::getTypes()[$this->context->type]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('backend', AdminAuthItem::getTypes()[$this->context->type] . '管理'), 'url' => 'role' == Yii::$app->request->get('type')?['role']:['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="admin-auth-item-create">

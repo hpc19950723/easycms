@@ -6,8 +6,8 @@ use Yii;
 use common\modules\user\models\User;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
-use common\modules\user\models\search\UserSearch;
-use common\modules\user\models\form\UserForm;
+use common\modules\user\models\searchs\UserSearch;
+use common\modules\user\models\forms\UserForm;
 use yii\web\UploadedFile;
 
 class IndexController extends \common\modules\admin\components\BaseController
