@@ -34,7 +34,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => '/core/index/error',
         ],
         'response' => [
             'class' => 'yii\web\Response',

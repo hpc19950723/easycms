@@ -28,7 +28,7 @@ class CoreConfig extends CommonActiveRecord
     
     public static function cacheAll()
     {
-        $models = static::find()->All();
+        $models = static::find()->all();
 
         $coreConfig = [];
         foreach($models as $model) {

@@ -3,6 +3,7 @@
 namespace common\modules\admin\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "module".
@@ -17,6 +18,8 @@ use Yii;
  */
 class Module extends \common\modules\core\models\CommonActiveRecord
 {
+    static $moduleCacheKey = 'Module_Cache_All';
+    
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     
@@ -71,5 +74,34 @@ class Module extends \common\modules\core\models\CommonActiveRecord
             static::STATUS_ACTIVE => '开启',
             static::STATUS_INACTIVE => '关闭',
         ];
+    }
+    
+    
+    /**
+     * 获取所有记录
+     */
+    public static function getAll()
+    {
+        $modules = Yii::$app->cache->get(static::$moduleCacheKey);
+        
+        if(empty($modules)) {
+            $modules = static::refreshCache();
+        }
+        return $modules;
+    }
+    
+    
+    public static function refreshCache()
+    {
+        $modules = static::find()->asArray()->all();
+        $modules = ArrayHelper::index($modules, 'name');
+        Yii::$app->cache->set(static::$moduleCacheKey, $modules);
+        return $modules;
+    }
+    
+    
+    public function afterSave($insert, $changedAttributes)
+    {
+        static::refreshCache();
     }
 }
