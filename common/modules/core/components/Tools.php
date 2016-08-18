@@ -5,6 +5,7 @@ namespace common\modules\core\components;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 class Tools
 {
@@ -217,5 +218,75 @@ class Tools
             }
         }
         return $uploadDir;
+    }
+    
+    
+    /**
+     * 复制文件夹及子目录文件
+     * @param string $source
+     * @param string $destination
+     */
+    public static function xCopy($source, $destination)
+    {
+        if(!is_dir($source)) {
+            throw new \yii\base\Exception("'$source'不是目录");
+        }
+        
+        FileHelper::createDirectory($destination, 0755, true);
+        $handle = opendir($source);
+        while (($file = readdir($handle)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            
+            $path = $source . DIRECTORY_SEPARATOR . $file;
+            if (is_dir($path)) {
+                static::xCopy($path, $destination . DIRECTORY_SEPARATOR . $file);
+            } else {
+                copy($path, $destination . DIRECTORY_SEPARATOR . $file);
+            }
+        }
+        closedir($handle);
+    }
+    
+    
+    /**
+     * 压缩文件或文件夹
+     * @param string $source 文件夹或文件路径
+     */
+    public static function folderToZip($source, &$zipArchive, $exclusiveLength)
+    {
+        if (is_dir($source) || is_file($source)) {
+            $handle = opendir($source);
+            while (($file = readdir($handle)) !== false) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+                
+                $path = $source . DIRECTORY_SEPARATOR . $file;
+                $localPath = substr($path, $exclusiveLength);
+                if (is_file($path)) {
+                    $zipArchive->addFile($path, $localPath); 
+                } elseif (is_dir($path)) {
+                    $zipArchive->addEmptyDir($localPath);
+                    static::folderToZip($path, $zipArchive, $exclusiveLength); 
+                } 
+            }
+            closedir($handle);
+        }
+    }
+    
+    
+    public static function zipDir($source)
+    {
+        $pathinfo = pathinfo($source);
+        $basename = $pathinfo['basename'];
+        $dirname = $pathinfo['dirname'];
+        
+        $zipArchive = new \ZipArchive();
+        $zipArchive->open($dirname . DIRECTORY_SEPARATOR . $basename . '.zip', \ZipArchive::CREATE);
+        $exclusiveLength = strlen($dirname) + 1;
+        static::folderToZip($source, $zipArchive, $exclusiveLength);
+        $zipArchive->close();
     }
 }

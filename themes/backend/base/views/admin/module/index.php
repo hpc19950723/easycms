@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'title',
             'name',
-            'dir',
             'version',
             [
                 'attribute' => 'has_api',
@@ -48,7 +47,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::input('checkbox', 'status', $model->status, ['checked' => (boolean)$model->status, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->module_id, 'type' => 'status'])]);
                 }
             ],
-//            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{zip} {delete}',
+                'buttons' => [
+                    'zip' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('admin', '压缩'),
+                            'aria-label' => Yii::t('admin', '压缩'),
+                            'data-pjax' => '0',
+                        ];
+                        return Html::a('<span class="glyphicon glyphicon-compressed"></span>', $url, $options);
+                    }
+                ]
+            ],
         ],
     ]); ?>
 
