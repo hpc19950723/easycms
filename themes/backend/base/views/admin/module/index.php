@@ -2,9 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use common\modules\admin\models\Module;
 use yii\helpers\Url;
-use common\modules\core\models\CommonActiveRecord;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,6 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <p>
         <?= Html::a('创建模块', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::button('导入模块', ['class' => 'btn btn-success btn-import-module']) ?>
+        <?php $form = ActiveForm::begin(['action' => ['import'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
+        <input type="file" multiple="" accept="application/x-zip-compressed" class="import-module"  id="importModule" name="importModule">
+        <?php ActiveForm::end(); ?>
     </p>
 
     <?= GridView::widget([
@@ -65,3 +68,14 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+<script>
+$(function(){
+    $('.btn-import-module').click(function(){
+        $('.import-module').click();
+    });
+    
+    $('.import-module').change(function(){
+        $(this).parent('form').submit();
+    });
+});
+</script>

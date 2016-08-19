@@ -229,7 +229,7 @@ class Tools
     public static function xCopy($source, $destination)
     {
         if(!is_dir($source)) {
-            throw new \yii\base\Exception("'$source'不是目录");
+            return;
         }
         
         FileHelper::createDirectory($destination, 0755, true);
@@ -277,6 +277,10 @@ class Tools
     }
     
     
+    /**
+     * 压缩文件夹
+     * @param string $source
+     */
     public static function zipDir($source)
     {
         $pathinfo = pathinfo($source);
@@ -288,5 +292,18 @@ class Tools
         $exclusiveLength = strlen($dirname) + 1;
         static::folderToZip($source, $zipArchive, $exclusiveLength);
         $zipArchive->close();
+    }
+    
+    
+    public static function unZip($source)
+    {
+        $pathinfo = pathinfo($source);
+        $dirname = $pathinfo['dirname'];
+        $zipArchive = new \ZipArchive();
+        $resource = $zipArchive->open($source);
+        if ($resource === true) {
+            $zipArchive->extractTo($dirname);
+            $zipArchive->close();
+        }
     }
 }

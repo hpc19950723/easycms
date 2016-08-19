@@ -77,4 +77,13 @@ class FileUploader extends Component
         }
         return $this->_uploadedFileName;
     }
+    
+    
+    /**
+     * 手动设置上传文件名
+     */
+    public function setUploadedFileName($fileName)
+    {
+        $this->_uploadedFileName = $fileName;
+    }
 }

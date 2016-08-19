@@ -39,7 +39,7 @@ class Module extends \common\modules\core\models\CommonActiveRecord
     {
         return [
             [['settings'], 'string'],
-            [['status'], 'integer'],
+            [['status', 'has_api', 'has_admin'], 'integer'],
             [['name', 'title', 'version'], 'string', 'max' => 45],
             [['dir'], 'string', 'max' => 255],
         ];

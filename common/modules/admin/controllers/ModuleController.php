@@ -9,9 +9,25 @@ use yii\web\NotFoundHttpException;
 use common\modules\admin\models\forms\ModuleForm;
 use yii\helpers\FileHelper;
 use common\modules\core\components\Tools;
+use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
+use common\modules\core\components\FileUploader;
 
 class ModuleController extends \common\modules\admin\components\BaseController
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'import' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
+    
     /**
      * 模块列表
      */
@@ -67,11 +83,55 @@ EOF;
         FileHelper::createDirectory($modulesDir, 0755, true);
         FileHelper::createDirectory($themesDir, 0755, true);
         file_put_contents($uploadedFileDir . '/config.php', $config);
+
         Tools::xCopy(Yii::getAlias('@common/modules/' . $model->name), $modulesDir . '/' . $model->name);
         Tools::xCopy(Yii::getAlias('@themes/backend/base/views/' . $model->name), $themesDir . '/' . $model->name);
         Tools::zipDir($uploadedFileDir);
+        
         Yii::$app->getSession()->setFlash('success', "'$model->title'已经打包完成");
         return $this->redirect(['index']);
+    }
+    
+    
+    /**
+     * 模块导入
+     * @return type
+     */
+    public function actionImport()
+    {
+        $importModule = UploadedFile::getInstanceByName('importModule');
+        if ($importModule) {
+            $fileUploader = new FileUploader([
+                'uploadedFileRoot' => '@downloader',
+                'uploadedFile' => $importModule,
+                'UploadedFileName' => $importModule->name,
+            ]);
+            $fileName = $fileUploader->save();
+            if ($fileName) {
+                $path = Yii::getAlias('@downloader/' . $fileName);
+                Tools::unZip($path);
+                
+                $pathinfo = pathinfo($path);
+                $dirPath = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'];
+                $config = require($dirPath . DIRECTORY_SEPARATOR . 'config.php');
+                $modules = Module::getAll();
+                if (!isset($modules[$config['name']])) {
+                    $moduleModel = new Module();
+                    $moduleModel->attributes = $config;
+                    $moduleModel->save();
+                    
+                    Tools::xCopy($dirPath . DIRECTORY_SEPARATOR . 'common', Yii::getAlias('@common'));
+                    Tools::xCopy($dirPath . DIRECTORY_SEPARATOR . 'themes', Yii::getAlias('@themes'));
+                    Yii::$app->getSession()->setFlash('success', '导入模块成功');
+                } else {
+                    Yii::$app->getSession()->setFlash('error', '您导入的模块已经存在');
+                }
+                return $this->redirect(['index']);
+            } else {
+                Yii::$app->getSession()->setFlash('error', '模块导入失败');
+                return $this->redirect(['index']);
+            }
+        }
     }
     
     

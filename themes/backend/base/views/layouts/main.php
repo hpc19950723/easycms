@@ -61,11 +61,11 @@ AppAsset::register($this);
                         </center>
                     </div>
                 </a>
-                <a href="/">
+                <a href="javascript:void(0)">
                 <div>
                     <center>
-                        <p><span class="glyphicon glyphicon-home"></span></p>
-                        <span>系统首页</span>
+                        <p><span class="glyphicon glyphicon-user"></span></p>
+                        <span><?= Yii::$app->user->identity->username ?></span>
                     </center>
                 </div>
                 </a>
