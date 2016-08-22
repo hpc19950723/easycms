@@ -164,20 +164,24 @@ EOF;
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $module = $model->toArray();
-        $model->delete();
-        
-        $migrate = new Migrate([
-            'migrationPath' => '@common/modules/' . $module['name'] . '/migrations'
-        ]);
-        $migrate->down();
-        
-        $moduleDir = Yii::getAlias('@common/modules/' . $module['name']);
-        $themeDir = Yii::getAlias('@themes/backend/base/views/' . $module['name']);
-        FileHelper::removeDirectory($moduleDir);
-        FileHelper::removeDirectory($themeDir);
-        
-        Yii::$app->getSession()->setFlash('success', '模块删除成功');
+        if(!$model->deletable) {
+            Yii::$app->getSession()->setFlash('error', "'$model->title'不可删除");
+        } else {
+            $module = $model->toArray();
+            $model->delete();
+
+            $migrate = new Migrate([
+                'migrationPath' => '@common/modules/' . $module['name'] . '/migrations'
+            ]);
+            $migrate->down();
+
+            $moduleDir = Yii::getAlias('@common/modules/' . $module['name']);
+            $themeDir = Yii::getAlias('@themes/backend/base/views/' . $module['name']);
+            FileHelper::removeDirectory($moduleDir);
+            FileHelper::removeDirectory($themeDir);
+
+            Yii::$app->getSession()->setFlash('success', '模块删除成功');
+        }
         return $this->redirect(['index']);
     }
     
