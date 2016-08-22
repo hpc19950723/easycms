@@ -12,6 +12,7 @@ use common\modules\core\components\Tools;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\modules\core\components\FileUploader;
+use common\modules\core\components\Migrate;
 
 class ModuleController extends \common\modules\admin\components\BaseController
 {
@@ -122,6 +123,11 @@ EOF;
                     
                     Tools::xCopy($dirPath . DIRECTORY_SEPARATOR . 'common', Yii::getAlias('@common'));
                     Tools::xCopy($dirPath . DIRECTORY_SEPARATOR . 'themes', Yii::getAlias('@themes'));
+                    //数据迁移
+                    $migrate = new Migrate([
+                        'migrationPath' => '@common/modules/' . $config['name'] . '/migrations'
+                    ]);
+                    $migrate->up();
                     Yii::$app->getSession()->setFlash('success', '导入模块成功');
                 } else {
                     Yii::$app->getSession()->setFlash('error', '您导入的模块已经存在');
@@ -149,6 +155,30 @@ EOF;
         return $this->render('create', [
             'model' => $model
         ]);
+    }
+    
+    
+    /**
+     * 模块删除
+     */
+    public function actionDelete($id)
+    {
+        $model = $this->findModel($id);
+        $module = $model->toArray();
+        $model->delete();
+        
+        $migrate = new Migrate([
+            'migrationPath' => '@common/modules/' . $module['name'] . '/migrations'
+        ]);
+        $migrate->down();
+        
+        $moduleDir = Yii::getAlias('@common/modules/' . $module['name']);
+        $themeDir = Yii::getAlias('@themes/backend/base/views/' . $module['name']);
+        FileHelper::removeDirectory($moduleDir);
+        FileHelper::removeDirectory($themeDir);
+        
+        Yii::$app->getSession()->setFlash('success', '模块删除成功');
+        return $this->redirect(['index']);
     }
     
     

@@ -56,8 +56,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'zip' => function ($url, $model, $key) {
                         $options = [
-                            'title' => Yii::t('admin', '压缩'),
-                            'aria-label' => Yii::t('admin', '压缩'),
+                            'title' => Yii::t('admin', '模块打包'),
+                            'aria-label' => Yii::t('admin', '模块打包'),
                             'data-pjax' => '0',
                         ];
                         return Html::a('<span class="glyphicon glyphicon-compressed"></span>', $url, $options);

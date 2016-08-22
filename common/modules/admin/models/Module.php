@@ -104,4 +104,10 @@ class Module extends \common\modules\core\models\CommonActiveRecord
     {
         static::refreshCache();
     }
+    
+    
+    public function afterDelete()
+    {
+        static::refreshCache();
+    }
 }
