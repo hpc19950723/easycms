@@ -1,12 +1,12 @@
 <?php
 
-namespace common\modules\admin\controllers;
+namespace common\modules\module\controllers;
 
 use Yii;
-use common\modules\admin\models\Module;
+use common\modules\module\models\Module;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
-use common\modules\admin\models\forms\ModuleForm;
+use common\modules\module\models\forms\ModuleForm;
 use yii\helpers\FileHelper;
 use common\modules\core\components\Tools;
 use yii\filters\VerbFilter;
@@ -14,7 +14,7 @@ use yii\web\UploadedFile;
 use common\modules\core\components\FileUploader;
 use common\modules\core\components\Migrate;
 
-class ModuleController extends \common\modules\admin\components\BaseController
+class IndexController extends \common\modules\admin\components\BaseController
 {
     public function behaviors()
     {

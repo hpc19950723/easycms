@@ -1,6 +1,8 @@
 <?php
 namespace common\modules\admin;
 
+use common\modules\module\models\Module;
+
 class BaseModule extends \yii\base\Module
 {
     public function init()
@@ -11,10 +13,10 @@ class BaseModule extends \yii\base\Module
         $this->setLayoutPath('@themes/backend/base/views/layouts');
         
         if($this->id !== 'admin') {
-            $modules = models\Module::getAll();
+            $modules = Module::getAll();
             if(!isset($modules[$this->id]['status'])
-                || $modules[$this->id]['status'] == models\Module::STATUS_INACTIVE
-                || $modules[$this->id]['has_admin'] == models\Module::VALUE_NO) {
+                || $modules[$this->id]['status'] == Module::STATUS_INACTIVE
+                || $modules[$this->id]['has_admin'] == Module::VALUE_NO) {
                 throw new \yii\web\NotFoundHttpException('该模块已经关闭');
             }
         }

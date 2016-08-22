@@ -1,8 +1,8 @@
 <?php
 
-namespace common\modules\admin\models\forms;
+namespace common\modules\module\models\forms;
 
-use common\modules\admin\models\Module;
+use common\modules\module\models\Module;
 use yii\base\Exception;
 
 class ModuleForm extends \yii\base\Model

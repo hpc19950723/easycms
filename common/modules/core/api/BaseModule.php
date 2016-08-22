@@ -1,7 +1,7 @@
 <?php
 namespace common\modules\core\api;
 
-use common\modules\admin\models\Module;
+use common\modules\module\models\Module;
 
 class BaseModule extends \yii\base\Module
 {
