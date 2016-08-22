@@ -39,7 +39,7 @@ class Module extends \common\modules\core\models\CommonActiveRecord
     {
         return [
             [['settings'], 'string'],
-            [['status', 'has_api', 'has_admin'], 'integer'],
+            [['status', 'enabled_api', 'enabled_admin'], 'integer'],
             [['name', 'title', 'version'], 'string', 'max' => 45],
             [['dir'], 'string', 'max' => 255],
         ];
@@ -57,8 +57,8 @@ class Module extends \common\modules\core\models\CommonActiveRecord
             'dir' => '目录',
             'settings' => '设置',
             'version' => '版本号',
-            'has_api' => 'API子模块',
-            'has_admin' => 'ADMIN子模块',
+            'enabled_api' => '开启API模块',
+            'enabled_admin' => '开启ADMIN模块',
             'status' => '状态',
         ];
     }

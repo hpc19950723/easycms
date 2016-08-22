@@ -19,9 +19,9 @@ class ModuleForm extends \yii\base\Model
     
     public $status;
     
-    public $has_api;
+    public $enabled_api;
     
-    public $has_admin;
+    public $enabled_admin;
     
     private $_module;
 
@@ -29,7 +29,7 @@ class ModuleForm extends \yii\base\Model
     public function rules()
     {
         return [
-            [['name', 'title', 'version', 'has_api', 'has_admin', 'dir', 'status'], 'required'],
+            [['name', 'title', 'version', 'enabled_api', 'enabled_admin', 'dir', 'status'], 'required'],
             [['settings'], 'string'],
             [['status'], 'in', 'range' => [Module::STATUS_ACTIVE, Module::STATUS_INACTIVE]],
             [['name', 'title', 'version'], 'string', 'max' => 45],
@@ -59,8 +59,8 @@ class ModuleForm extends \yii\base\Model
             'title' => '标题',
             'dir' => '目录',
             'version' => '版本号',
-            'has_api' => 'API子模块',
-            'has_admin' => 'ADMIN子模块',
+            'enabled_api' => '开启API模块',
+            'enabled_admin' => '开启ADMIN模块',
             'status' => '状态',
         ];
     }
@@ -80,8 +80,8 @@ class ModuleForm extends \yii\base\Model
             $this->_module->title = $this->title;
             $this->_module->dir = $this->dir;
             $this->_module->version = $this->version;
-            $this->_module->has_api = $this->has_api;
-            $this->_module->has_admin = $this->has_admin;
+            $this->_module->enabled_api = $this->enabled_api;
+            $this->_module->enabled_admin = $this->enabled_admin;
             $this->_module->status = $this->status;
 
             if($this->_module->save()) {

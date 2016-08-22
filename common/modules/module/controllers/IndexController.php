@@ -73,8 +73,8 @@ return [
     'dir' => '$model->dir',
     'settings' => '$model->settings',
     'version' => '$model->version',
-    'has_api' => '$model->has_api',
-    'has_admin' => '$model->has_admin',
+    'enabled_api' => '$model->enabled_api',
+    'enabled_admin' => '$model->enabled_admin',
     'status' => '$model->status',
 ];
 EOF;

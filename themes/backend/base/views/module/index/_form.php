@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\modules\admin\models\Module;
+use common\modules\module\models\Module;
 ?>
 
 <div class="module-form">
@@ -16,9 +16,9 @@ use common\modules\admin\models\Module;
 
     <?= $form->field($model, 'version')->textInput() ?>
 
-    <?= $form->field($model, 'has_api')->dropDownList(Module::getYesNo()) ?>
+    <?= $form->field($model, 'enabled_api')->dropDownList(Module::getYesNo()) ?>
 
-    <?= $form->field($model, 'has_admin')->dropDownList(Module::getYesNo()) ?>
+    <?= $form->field($model, 'enabled_admin')->dropDownList(Module::getYesNo()) ?>
 
     <?= $form->field($model, 'status')->dropDownList(Module::getStatusList()) ?>
 

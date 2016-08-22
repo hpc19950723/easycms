@@ -30,17 +30,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'version',
             [
-                'attribute' => 'has_api',
+                'attribute' => 'enabled_api',
                 'format' => 'raw',
                 'value' => function($model) {
-                    return Html::input('checkbox', 'status', $model->has_api, ['checked' => (boolean)$model->has_api, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->module_id, 'type' => 'has_api'])]);
+                    return Html::input('checkbox', 'status', $model->enabled_api, ['checked' => (boolean)$model->enabled_api, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->module_id, 'type' => 'enabled_api'])]);
                 }
             ],
             [
-                'attribute' => 'has_admin',
+                'attribute' => 'enabled_admin',
                 'format' => 'raw',
                 'value' => function($model) {
-                    return Html::input('checkbox', 'status', $model->has_admin, ['checked' => (boolean)$model->has_admin, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->module_id, 'type' => 'has_admin'])]);
+                    return Html::input('checkbox', 'status', $model->enabled_admin, ['checked' => (boolean)$model->enabled_admin, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->module_id, 'type' => 'enabled_admin'])]);
                 }
             ],
             [

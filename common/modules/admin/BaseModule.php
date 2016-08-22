@@ -16,7 +16,7 @@ class BaseModule extends \yii\base\Module
             $modules = Module::getAll();
             if(!isset($modules[$this->id]['status'])
                 || $modules[$this->id]['status'] == Module::STATUS_INACTIVE
-                || $modules[$this->id]['has_admin'] == Module::VALUE_NO) {
+                || $modules[$this->id]['enabled_admin'] == Module::VALUE_NO) {
                 throw new \yii\web\NotFoundHttpException('该模块已经关闭');
             }
         }
