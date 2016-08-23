@@ -269,9 +269,9 @@ EOD;
     public static function getTypes()
     {
         return [
-            self::TYPE_ONLY_ADMIN => '仅存在后台模块',
-            self::TYPE_ONLY_API => '仅存在API模块',
-            self::TYPE_ADMIN_API => '存在API和后台模块',
+            self::TYPE_ONLY_ADMIN => '仅存在后台管理',
+            self::TYPE_ONLY_API => '仅存在API',
+            self::TYPE_ADMIN_API => '存在API和后台管理',
         ];
     }
 }
