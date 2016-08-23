@@ -5,6 +5,7 @@ namespace common\modules\admin\controllers\actions;
 use Yii;
 use common\modules\admin\models\CoreConfig;
 use common\modules\admin\models\forms\CoreConfigForm;
+use yii\helpers\ArrayHelper;
 
 class ConfigAction extends \yii\base\Action
 {
@@ -52,7 +53,7 @@ class ConfigAction extends \yii\base\Action
         } else {
             throw new \yii\web\NotFoundHttpException('没有找到配置项');
         }
-        
+        ArrayHelper::multisort($config['sections'], 'sort');
         foreach($config['sections'] as $key => &$section) {
             $path = $moduleId . '/' . $class . '/' . $key;
             
