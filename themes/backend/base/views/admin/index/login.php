@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = '欢迎登录后台系统';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
