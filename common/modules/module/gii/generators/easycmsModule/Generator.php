@@ -96,11 +96,9 @@ class Generator extends \yii\gii\Generator
 
         $output = <<<EOD
 <p>The module has been generated successfully.</p>
-<p>To access the module, you need to add this to your application configuration:</p>
 EOD;
-        $code = '';
 
-        return $output . '<pre>' . highlight_string($code, true) . '</pre>';
+        return $output;
     }
 
     /**
