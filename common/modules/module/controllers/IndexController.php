@@ -170,10 +170,13 @@ EOF;
             $module = $model->toArray();
             $model->delete();
 
-            $migrate = new Migrate([
-                'migrationPath' => '@common/modules/' . $module['name'] . '/migrations'
-            ]);
-            $migrate->down();
+            $migrationPath = Yii::getAlias('@common/modules/' . $module['name'] . '/migrations');
+            if(is_dir($migrationPath)) {
+                $migrate = new Migrate([
+                    'migrationPath' => '@common/modules/' . $module['name'] . '/migrations'
+                ]);
+                $migrate->down();
+            }
 
             $moduleDir = Yii::getAlias('@common/modules/' . $module['name']);
             $themeDir = Yii::getAlias('@themes/backend/base/views/' . $module['name']);

@@ -1,11 +1,12 @@
 <?php
 
-namespace backend\gii\generators\easycmsModule;
+namespace common\modules\module\gii\generators\easycmsModule;
 
 use yii\gii\CodeFile;
 use yii\helpers\Html;
 use Yii;
 use yii\helpers\StringHelper;
+use common\modules\module\models\Module;
 
 /**
  * This generator will generate the skeleton code needed by a module.
@@ -107,8 +108,7 @@ EOD;
      */
     public function requiredTemplates()
     {
-        return [];
-        return ['module.php', 'controller.php', 'view.php'];
+        return ['main.php', 'params.php', 'ApiModule.php', 'AdminModule.php', 'AdminIndexController.php', 'ApiIndexController.php'];
     }
 
     /**
@@ -123,6 +123,29 @@ EOD;
         $files=array_merge($files,$this->generateModule($modulePath));
         $files=array_merge($files,$this->generateController($modulePath));
         return $files;
+    }
+    
+    
+    public function save($files, $answers, &$results)
+    {
+        if (parent::save($files, $answers, $results)) {
+            $model = Module::findOne(['name' => $this->name]);
+            if($model === null) {
+                $model = new Module();
+                $model->setAttributes([
+                    'name' => $this->name,
+                    'title' => $this->title,
+                    'version' => '1.0.0',
+                    'enabled_api' => Module::VALUE_YES,
+                    'enabled_admin' => Module::VALUE_YES,
+                    'delete' => Module::VALUE_YES,
+                    'status' => Module::STATUS_ACTIVE
+                ]);
+                $model->save();
+            }
+            return true;
+        }
+        return false;
     }
     
     

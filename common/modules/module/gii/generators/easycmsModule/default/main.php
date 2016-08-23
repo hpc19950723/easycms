@@ -1,5 +1,5 @@
 <?php
-use backend\gii\generators\easycmsModule\Generator;
+use common\modules\module\gii\generators\easycmsModule\Generator;
 ?>
 <?= '<?php' ?>
 
