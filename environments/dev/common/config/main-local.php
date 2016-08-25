@@ -6,7 +6,7 @@ return [
             'dsn' => 'mysql:host=10.10.10.111;dbname=easycms',
             'username' => 'easycms',
             'password' => '123456',
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
             'on afterOpen' => function($event) {
                 $event->sender->createCommand("SET time_zone = '+8:00'")->execute();
             }
