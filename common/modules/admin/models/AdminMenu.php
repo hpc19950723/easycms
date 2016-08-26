@@ -18,6 +18,9 @@ use yii\db\Expression;
  */
 class AdminMenu extends \yii\db\ActiveRecord
 {
+    const TYPE_ADMIN = 1;
+    const TYPE_DEVELOPER = 2;
+    
     /**
      * @inheritdoc
      */
@@ -46,7 +49,7 @@ class AdminMenu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'route'], 'required'],
+            [['name', 'route', 'env'], 'required'],
             ['position','default', 'value' => 0],
             [['parent_id', 'position'], 'integer'],
             [['name', 'route'], 'string', 'max' => 60],
@@ -67,6 +70,16 @@ class AdminMenu extends \yii\db\ActiveRecord
             'child_route' => '高亮路由',
             'icon' => '图标',
             'position' => '位置',
+            'env' => '所属环境',
+        ];
+    }
+    
+    
+    public static function getEnvs()
+    {
+        return [
+            static::TYPE_ADMIN => '管理员界面',
+            static::TYPE_DEVELOPER => '开发者界面'
         ];
     }
 }

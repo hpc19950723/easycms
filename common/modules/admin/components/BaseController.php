@@ -23,7 +23,23 @@ class BaseController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type || Yii::$app->user->can('/' . $action->controller->module->id . '/' . $action->controller->id . '/' . $action->id);
+                            if(Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type) {
+                                return true;
+                            } else {
+                                $actionId = $action->getUniqueId();
+                                $user = Yii::$app->user;
+                                if ($user->can('/' . $actionId)) {
+                                    return true;
+                                }
+                                $obj = $action->controller;
+                                do {
+                                    if ($user->can('/' . ltrim($obj->getUniqueId() . '/*', '/'))) {
+                                        return true;
+                                    }
+                                    $obj = $obj->module;
+                                } while ($obj !== null);
+                            }
+                            return false;
                         }
                     ],
 
@@ -35,10 +51,11 @@ class BaseController extends Controller
     
     public function getMenus()
     {
-        $menus = AdminMenu::find()->select(['menu_id','name','route','icon','children_count','child_route'])->where(['parent_id' => 0])->orderBy(['position' => SORT_ASC])->createCommand()->queryAll();
+        $env = Yii::$app->getSession()->get('env', AdminMenu::TYPE_ADMIN);
+        $menus = AdminMenu::find()->select(['menu_id','name','route','icon','children_count','child_route'])->where(['parent_id' => 0, 'env' => $env])->orderBy(['position' => SORT_ASC])->createCommand()->queryAll();
         foreach($menus as $key => &$menu) {
             if(0 == $menu['children_count']) {
-                if(Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type || Yii::$app->user->can($menu['route'])) {
+                if($this->isAccess($menu['route'])) {
                     $menu['child_route'] = explode(',',$menu['child_route']);
                     $menu['child_route'][] = $menu['route'];
                 } else {
@@ -46,11 +63,11 @@ class BaseController extends Controller
                 }
                 continue;
             }
-            $menu['children'] = AdminMenu::find()->select(['name','route','icon','children_count','child_route'])->where(['parent_id' => $menu['menu_id']])->orderBy(['position' => SORT_ASC])->createCommand()->queryAll();
+            $menu['children'] = AdminMenu::find()->select(['name','route','icon','children_count','child_route'])->where(['parent_id' => $menu['menu_id'], 'env' => $env])->orderBy(['position' => SORT_ASC])->createCommand()->queryAll();
 
             $childRoutes = [];
             foreach($menu['children'] as $childrenKey => $menuChild) {
-                if(Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type || Yii::$app->user->can($menu['children'][$childrenKey]['route'])) {
+                if($this->isAccess($menu['children'][$childrenKey]['route'])) {
                     $menu['children'][$childrenKey]['child_route'] = explode(',', $menuChild['child_route']);
                     $menu['children'][$childrenKey]['child_route'][] = $menu['children'][$childrenKey]['route'];
                     $childRoutes = ArrayHelper::merge($childRoutes, $menu['children'][$childrenKey]['child_route']);
@@ -66,6 +83,25 @@ class BaseController extends Controller
         }
 
         return $menus;
+    }
+    
+    
+    public function isAccess($permissionName) {
+        if (Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type) {
+            return true;
+        } else {
+            $user = Yii::$app->user;
+            do {
+                if ($user->can($permissionName)) {
+                    return true;
+                }
+                $permissionName = rtrim($permissionName, '/*');
+                $permissionName = explode('/', $permissionName);
+                array_pop($permissionName);
+                $permissionName = '/' . trim(implode('/', $permissionName), '/') . '/*';
+            } while ($permissionName !== '//*');
+            return false;
+        }
     }
     
     

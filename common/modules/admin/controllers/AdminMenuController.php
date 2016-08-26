@@ -8,6 +8,7 @@ use yii\data\ArrayDataProvider;
 use common\modules\admin\components\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\modules\admin\models\searchs\AdminMenuSearch;
 
 /**
  * AdminMenuController implements the CRUD actions for AdminMenu model.
@@ -33,29 +34,12 @@ class AdminMenuController extends BaseController
      */
     public function actionIndex()
     {
-        $models = AdminMenu::find()->where(['parent_id' => 0])
-                ->orderBy(['position' => SORT_ASC])->all();
-        
-        $sortedModels = [];
-        foreach($models as $model) {
-            $sortedModels[] = $model;
-            $childMenuModels = AdminMenu::find()->where(['parent_id' => $model->menu_id])
-                ->orderBy(['position' => SORT_ASC])->all();
-            if(count($childMenuModels)) {
-                $sortedModels = array_merge($sortedModels, $childMenuModels);
-            }
-        }
-        
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $sortedModels,
-            'key' => 'menu_id',
-            'pagination' => [
-                'pageSize' => 100,
-            ],
-        ]);
+        $searchModel = new AdminMenuSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 

@@ -5,6 +5,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use common\modules\admin\models\forms\LoginForm;
+use common\modules\admin\models\AdminMenu;
 
 class IndexController extends \common\modules\admin\components\BaseController
 {
@@ -52,6 +53,8 @@ class IndexController extends \common\modules\admin\components\BaseController
 
     public function actionIndex()
     {
+        $env = Yii::$app->request->get('env', AdminMenu::TYPE_ADMIN);
+        Yii::$app->getSession()->set('env', $env);
         return $this->render('index');
     }
 

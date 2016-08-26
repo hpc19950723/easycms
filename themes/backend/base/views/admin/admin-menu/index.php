@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\modules\admin\models\AdminMenu;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -19,23 +20,40 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             [
+                'label' => '名称',
                 'attribute' => 'name',
                 'format'=>'raw',
                 'value'=>function($m){
                     return $m->parent_id > 0 ? '|__' . $m->name : $m->name;
                 }
             ],
-            'route',
             [
+                'label' => '所属环境',
+                'attribute' => 'env',
+                'filter' => Html::activeDropDownList($searchModel,'env',AdminMenu::getEnvs(),['prompt'=>'全部','class'=>'form-control']),
+                'value'=> function($m) {
+                    return AdminMenu::getEnvs()[$m->env];
+                }
+            ],
+            [
+                'label' => '路由',
+                'attribute' => 'route'
+            ],
+            [
+                'label' => '图标',
                 'attribute'=>'icon',
                 'format'=>'raw',
                 'value'=>function($m){
                     return Html::tag('i', $m->icon, ['class' => 'icon Hui-iconfont']);
                 }
             ],
-            'position',
+            [
+                'label' => '位置',
+                'attribute' => 'position',
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

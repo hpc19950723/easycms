@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
         $belongTo += AdminMenu::find()->select(['name','menu_id'])->where(['parent_id' => 0])->indexBy('menu_id')->column();
     ?>
     <?= $form->field($model, 'parent_id')->dropdownList($belongTo) ?>
+    
+    <?= $form->field($model, 'env')->dropdownList(AdminMenu::getEnvs()) ?>
 
     <?= $form->field($model, 'route')->textInput(['maxlength' => true]) ?>
 
