@@ -86,20 +86,22 @@ class BaseController extends Controller
     }
     
     
-    public function isAccess($permissionName) {
+    public function isAccess($route) {
         if (Admin::USER_TYPE_SUPERADMIN == Yii::$app->user->identity->user_type) {
             return true;
         } else {
             $user = Yii::$app->user;
-            do {
-                if ($user->can($permissionName)) {
+            $permissions = Yii::$app->getAuthManager()->getPermissionsByUser($user->getId());
+            $permissionsName = array_keys($permissions);
+            foreach ($permissionsName as $permissionName) {
+                if (substr($permissionName, -2) === '/*') {
+                    $permissionName = substr($permissionName, 0, -2);
+                }
+
+                if (stripos(rtrim($route, '/') . '/', $permissionName . '/') !== false) {
                     return true;
                 }
-                $permissionName = rtrim($permissionName, '/*');
-                $permissionName = explode('/', $permissionName);
-                array_pop($permissionName);
-                $permissionName = '/' . trim(implode('/', $permissionName), '/') . '/*';
-            } while ($permissionName !== '//*');
+            }
             return false;
         }
     }
