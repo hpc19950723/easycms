@@ -87,7 +87,7 @@ class UserForm extends Model
      * @param type $userId
      * @return type
      */
-    public function initUser($userId)
+    public function initData($userId)
     {
         $this->_user = User::findOne(['user_id' => $userId]);
 

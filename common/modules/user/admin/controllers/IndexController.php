@@ -72,7 +72,7 @@ class IndexController extends \common\modules\admin\components\BaseController
     public function actionUpdate($id)
     {
         $model = new UserForm();
-        if($model->initUser($id) === null) {
+        if($model->initData($id) === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 

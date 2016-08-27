@@ -121,7 +121,7 @@ class IndexController extends BaseController
     public function actionUpdate()
     {
         $model = new UserForm();
-        $model->initUser(Yii::$app->user->getId());
+        $model->initData(Yii::$app->user->getId());
         
         $post = Yii::$app->request->post();
         $post['avatar'] = UploadedFile::getInstanceByName('avatar');
