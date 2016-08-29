@@ -78,6 +78,20 @@ class IndexController extends \common\modules\admin\components\BaseController
     
     
     /**
+     * 更新状态
+     */
+    public function actionUpdateStatus($id)
+    {
+        if(Yii::$app->request->isAjax) {
+            $model = $this->findModel($id);
+            $model->status = $model->status == Advert::STATUS_ACTIVE ? Advert::STATUS_INACTIVE : Advert::STATUS_ACTIVE;
+            $model->save();
+            return self::formatSuccessResult();
+        }
+    }
+    
+    
+    /**
      * 删除广告位
      * @param int $id
      */

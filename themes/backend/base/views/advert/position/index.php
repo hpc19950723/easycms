@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use common\modules\advert\models\AdvertPosition;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,8 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'height',
             [
                 'attribute' => 'status',
+                'format' => 'raw',
                 'value' => function($model) {
-                    return AdvertPosition::getStatus()[$model->status];
+                    return Html::input('checkbox', 'status', $model->status, ['checked' => (boolean)$model->status, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->position_id])]);
                 }
             ],
             [

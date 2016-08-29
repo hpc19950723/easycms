@@ -27,7 +27,7 @@ class m160826_073038_create_advert_advert_position_table extends Migration
         $this->addCommentOnColumn('advert_position', 'identifier', '唯一标识符,仅可包含英文,下划线(_),数字');
         
         $this->createTable('advert', [
-            'advert' => $this->primaryKey(),
+            'advert_id' => $this->primaryKey(),
             'position_id' => $this->integer(11)->notNull(),
             'name' => $this->string(60)->notNull(),
             'link' => $this->string(),

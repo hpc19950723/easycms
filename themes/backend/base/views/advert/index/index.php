@@ -39,8 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'status',
+                'format' => 'raw',
                 'value' => function($model) {
-                    return Advert::getStatus()[$model->status];
+                    return Html::input('checkbox', 'status', $model->status, ['checked' => (boolean)$model->status, 'data-toggle' => 'switch', 'data-on-color' => 'primary', 'data-off-color' => 'default', 'class' => 'status', 'data-ajax-url' => Url::to(['update-status', 'id' => $model->advert_id])]);
                 }
             ],
             [
