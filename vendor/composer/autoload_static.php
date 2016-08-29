@@ -33,6 +33,10 @@ class ComposerStaticInit3cf8600e25af544f008c7946a3ed6c2e
             'kartik\\file\\' => 12,
             'kartik\\base\\' => 12,
         ),
+        'd' => 
+        array (
+            'dosamigos\\datepicker\\' => 21,
+        ),
         'c' => 
         array (
             'cebe\\markdown\\' => 14,
@@ -101,6 +105,10 @@ class ComposerStaticInit3cf8600e25af544f008c7946a3ed6c2e
         'kartik\\base\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base',
+        ),
+        'dosamigos\\datepicker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/2amigos/yii2-date-picker-widget/src',
         ),
         'cebe\\markdown\\' => 
         array (
