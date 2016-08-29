@@ -5,11 +5,13 @@ use Yii;
 use common\modules\advert\models\forms\AdvertPositionForm;
 use common\modules\advert\models\AdvertPosition;
 use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
 
 class PositionController extends \common\modules\admin\components\BaseController
 {
     /**
-     * @inheritdoc
+     * 广告位列表
+     * @return mixed
      */
     public function actionIndex()
     {
@@ -41,6 +43,11 @@ class PositionController extends \common\modules\admin\components\BaseController
     }
     
     
+    /**
+     * 更新广告位
+     * @param int $id
+     * @return mixed
+     */
     public function actionUpdate($id)
     {
         $model = new AdvertPositionForm();
@@ -49,9 +56,31 @@ class PositionController extends \common\modules\admin\components\BaseController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect('index');
         } else {
-            return $this->render('create', [
+            return $this->render('update', [
                 'model' => $model
             ]);
         }
+    }
+    
+    
+    /**
+     * 删除广告位
+     * @param int $id
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+        return $this->redirect('index');
+    }
+    
+    
+    protected function findModel($id)
+    {
+        $model = AdvertPosition::findOne($id);
+        if ($model === null) {
+            throw new NotFoundHttpException('页面不存在');
+        }
+        
+        return $model;
     }
 }

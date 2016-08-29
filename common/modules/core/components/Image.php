@@ -98,7 +98,7 @@ class Image
     }
     
     
-    public function resize($width, $height = null)
+    public function resize($width = null, $height = null)
     {
         $this->setWidth($width);
         $this->setHeight($height);
@@ -144,12 +144,10 @@ class Image
     
     protected function getDestinationImageFile()
     {
-        if(!$this->_destinationImageFile && $this->_width) {
+        if(!$this->_destinationImageFile) {
             $this->_destinationImageFile = Yii::getAlias('@uploads/cache/' . $this->_width . 'x' . $this->_height . $this->_dstImageName);
-        } elseif(!$this->_width) {
-            $this->_destinationImageFile = $this->getImageFile();
         }
-        
+
         return $this->_destinationImageFile;
     }
     
@@ -191,6 +189,22 @@ class Image
             elseif (null === $this->_height) {
                 $this->_dstHeight = round($this->_width * ($this->_imageHeight / $this->_imageWidth));
             }
+            
+            if ($this->_keepAspectRatio) {
+                // do not make picture bigger, than it is, if required
+                if ($this->_constrainOnly) {
+                    if (($this->_dstWidth >= $this->_imageWidth) && ($this->_dstHeight >= $this->_imageHeight)) {
+                        $this->_dstWidth  = $this->_imageWidth;
+                        $this->_dstHeight = $this->_imageHeight;
+                    }
+                }
+                // keep aspect ratio
+                if ($this->_imageWidth / $this->_imageHeight >= $this->_dstWidth / $this->_dstHeight) {
+                    $this->_dstHeight = round(($this->_dstWidth / $this->_imageWidth) * $this->_imageHeight);
+                } else {
+                    $this->_dstWidth = round(($this->_dstHeight / $this->_imageHeight) * $this->_imageWidth);
+                }
+            }
         }
         else {
             if (null === $this->_width) {
@@ -200,22 +214,7 @@ class Image
                 $this->_dstHeight = $this->_width;
             }
         }
-
-        if ($this->_keepAspectRatio) {
-            // do not make picture bigger, than it is, if required
-            if ($this->_constrainOnly) {
-                if (($this->_dstWidth >= $this->_imageWidth) && ($this->_dstHeight >= $this->_imageHeight)) {
-                    $this->_dstWidth  = $this->_imageWidth;
-                    $this->_dstHeight = $this->_imageHeight;
-                }
-            }
-            // keep aspect ratio
-            if ($this->_imageWidth / $this->_imageHeight >= $this->_dstWidth / $this->_dstHeight) {
-                $this->_dstHeight = round(($this->_dstWidth / $this->_imageWidth) * $this->_imageHeight);
-            } else {
-                $this->_dstWidth = round(($this->_dstHeight / $this->_imageHeight) * $this->_imageWidth);
-            }
-        }
+//        echo $this->_dstWidth, ' ', $this->_dstHeight;exit;
     }
     
     
@@ -223,7 +222,7 @@ class Image
     {
         $lastUnderlinePostion = strrpos($this->_imageName, '_');
         $lastPointPosition = strrpos($this->_imageName, '.');
-        $this->_dstImageName = substr($this->_imageName, 0, $lastUnderlinePostion + 1) . $this->_dstWidth . 'x' . $this->_dstWidth . substr($this->_imageName, $lastPointPosition);
+        $this->_dstImageName = substr($this->_imageName, 0, $lastUnderlinePostion + 1) . $this->_dstWidth . 'x' . $this->_dstHeight . substr($this->_imageName, $lastPointPosition);
     }
     
     

@@ -14,7 +14,7 @@ use common\modules\core\components\Tools;
         'options' => ['accept' => 'image/*'],
         'pluginOptions' => [
             'initialPreview' => [
-                $model->isNewRecord ? null : (empty($model->avatar) ? null : Tools::getFileUrl($model->avatar, 'avatar')),
+                $model->isNewRecord ? null : (empty($model->avatar) ? null : Tools::getFileUrl($model->avatar)),
             ],
             'initialPreviewAsData' => true,
             'initialPreviewFileType' => 'image',

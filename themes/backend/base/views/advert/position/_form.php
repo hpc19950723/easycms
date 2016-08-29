@@ -4,9 +4,9 @@ use yii\widgets\ActiveForm;
 use common\modules\advert\models\AdvertPosition;
 ?>
 
-<div class="user-form">
+<div class="advert-position-form">
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(); ?>
     
     <?= $form->field($model, 'name')->textInput() ?>
     
