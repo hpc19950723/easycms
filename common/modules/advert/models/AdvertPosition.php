@@ -38,7 +38,8 @@ class AdvertPosition extends \common\modules\core\models\CommonActiveRecord
             'width' => '宽度',
             'height' => '高度',
             'status' => '状态',
-            'description' => '描述'
+            'description' => '描述',
+            'advert_qty' => '广告数'
         ];
     }
     

@@ -21,7 +21,7 @@ class AdvertForm extends \yii\base\Model
     
     public $end_time;
     
-    public $position;
+    public $position = 0;
     
     public $status = Advert::STATUS_ACTIVE;
     

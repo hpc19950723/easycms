@@ -4,7 +4,6 @@ use yii\widgets\ActiveForm;
 use common\modules\advert\models\Advert;
 use kartik\file\FileInput;
 use common\modules\core\components\Tools;
-use common\modules\advert\models\AdvertPosition;
 use dosamigos\datepicker\DatePicker;
 ?>
 
@@ -14,7 +13,7 @@ use dosamigos\datepicker\DatePicker;
     
     <?= $form->field($model, 'name')->textInput() ?>
     
-    <?= $form->field($model, 'position_id')->dropDownList(AdvertPosition::find()->select(['name', 'position_id'])->indexBy('position_id')->column()) ?>
+    <?= $form->field($model, 'position_id')->dropDownList($advertPosition, ['prompt'=>'-- 选择所属广告位 --']) ?>
     
     <?= $form->field($model, 'image')->widget(FileInput::classname(), [
         'options' => ['accept' => 'image/*'],

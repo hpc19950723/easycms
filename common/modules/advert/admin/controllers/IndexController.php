@@ -6,6 +6,7 @@ use common\modules\advert\models\Advert;
 use yii\data\ActiveDataProvider;
 use common\modules\advert\models\forms\AdvertForm;
 use yii\web\UploadedFile;
+use common\modules\advert\models\AdvertPosition;
 
 class IndexController extends \common\modules\admin\components\BaseController
 {
@@ -26,11 +27,16 @@ class IndexController extends \common\modules\admin\components\BaseController
     
     
     /**
-     * 创建广告位
+     * 创建广告
      * @return mixed
      */
     public function actionCreate()
     {
+        $advertPosition = AdvertPosition::find()->select(['name', 'position_id'])->indexBy('position_id')->column();
+        if (empty($advertPosition)) {
+            Yii::$app->session->setFlash('error', '广告位不存在,请创建广告位');
+            return $this->redirect(['index']);
+        }
         $model = new AdvertForm();
         
         $model->setScenario(AdvertForm::SCENARIOS_CREATE);
@@ -44,14 +50,15 @@ class IndexController extends \common\modules\admin\components\BaseController
             return $this->redirect('index');
         } else {
             return $this->render('create', [
-                'model' => $model
+                'model' => $model,
+                'advertPosition' => $advertPosition
             ]);
         }
     }
     
     
     /**
-     * 更新广告位
+     * 更新广告
      * @param int $id
      * @return mixed
      */
@@ -97,7 +104,9 @@ class IndexController extends \common\modules\admin\components\BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        @unlink(Yii::getAlias('@uploads' . $model->image));
+        $model->delete();
         return $this->redirect('index');
     }
     

@@ -20,6 +20,7 @@ class m160826_073038_create_advert_advert_position_table extends Migration
             'height' => $this->smallInteger(5)->defaultValue(0)->notNull(),
             'description' => $this->string(255),
             'status' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0;停用 1;启用'",
+            'advert_qty' => $this->smallInteger(5)->defaultValue(0)->notNull(),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
         ]);

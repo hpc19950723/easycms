@@ -25,8 +25,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'identifier',
-            'width',
-            'height',
+            [
+                'label' => '版位尺寸',
+                'value' => function($model) {
+                    return $model->width . '*' . $model->height;
+                }
+            ],
+            'advert_qty',
             [
                 'attribute' => 'status',
                 'format' => 'raw',

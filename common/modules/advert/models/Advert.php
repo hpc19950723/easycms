@@ -59,4 +59,24 @@ class Advert extends \common\modules\core\models\CommonActiveRecord
     {
         return $this->hasOne(AdvertPosition::className(), ['position_id' => 'position_id']);
     }
+    
+    
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+            $model = AdvertPosition::findOne($this->position_id);
+            if ($model !== null) {
+                $model->updateCounters(['advert_qty' => 1]);
+            }
+        }
+    }
+    
+    
+    public function afterDelete()
+    {
+        $model = AdvertPosition::findOne($this->position_id);
+        if ($model !== null) {
+            $model->updateCounters(['advert_qty' => -1]);
+        }
+    }
 }
