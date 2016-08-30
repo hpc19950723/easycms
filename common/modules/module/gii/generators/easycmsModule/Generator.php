@@ -158,6 +158,11 @@ EOD;
             $modulePath . '/config/params.php',
             $this->render('params.php')
         );
+        
+        $files[] = new CodeFile(
+            $modulePath . '/messages/zh-CN/' . $this->name . '.php',
+            $this->render('messages.php')
+        );
         return $files;
     }
     

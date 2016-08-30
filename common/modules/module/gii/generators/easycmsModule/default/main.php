@@ -4,6 +4,17 @@ use common\modules\module\gii\generators\easycmsModule\Generator;
 <?= '<?php' ?>
 
 return [
+    'components' => [
+        'i18n' => [
+            'translations' => [
+                '<?= $generator->name ?>' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/modules/<?= $generator->name ?>/messages',
+                    'sourceLanguage' => 'en-US',
+                ]
+            ]
+        ]
+    ],
 <?php if($generator->type == Generator::TYPE_ONLY_ADMIN): ?>
     'admin' => [
         'modules' => [
