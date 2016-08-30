@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use common\modules\advert\models\AdvertPosition;
+use common\modules\core\components\Tools;
 
 class Advert extends \common\modules\core\models\CommonActiveRecord
 {
@@ -17,6 +18,23 @@ class Advert extends \common\modules\core\models\CommonActiveRecord
         return '{{%advert}}';
     }
     
+    
+    public function fields()
+    {
+        return [
+            'name',
+            'link',
+            'image' => function($model) {
+                return Tools::getFileUrl($model->image);
+            },
+            'start_time',
+            'end_time',
+            'position',
+            'status'
+        ];
+    }
+
+
     
     public function behaviors()
     {

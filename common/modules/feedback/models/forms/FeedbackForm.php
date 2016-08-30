@@ -31,6 +31,14 @@ class FeedbackForm extends Model
     }
     
     
+    public function attributeLabels()
+    {
+        return [
+            'content' => '内容'
+        ];
+    }
+    
+    
     public function save()
     {
         if($this->validate()) {

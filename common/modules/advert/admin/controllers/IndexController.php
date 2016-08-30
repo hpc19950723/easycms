@@ -78,7 +78,8 @@ class IndexController extends \common\modules\admin\components\BaseController
             return $this->redirect('index');
         } else {
             return $this->render('create', [
-                'model' => $model
+                'model' => $model,
+                'advertPosition' => AdvertPosition::find()->select(['name', 'position_id'])->indexBy('position_id')->column()
             ]);
         }
     }

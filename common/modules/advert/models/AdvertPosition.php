@@ -17,6 +17,14 @@ class AdvertPosition extends \common\modules\core\models\CommonActiveRecord
     }
     
     
+    public function extraFields()
+    {
+        return [
+            'adverts'
+        ];
+    }
+    
+    
     public function behaviors()
     {
         return [
@@ -41,6 +49,14 @@ class AdvertPosition extends \common\modules\core\models\CommonActiveRecord
             'description' => '描述',
             'advert_qty' => '广告数'
         ];
+    }
+    
+    
+    public function getAdverts()
+    {
+        return $this->hasMany(Advert::className(), ['position_id' => 'position_id'])
+                ->where(['status' => Advert::STATUS_ACTIVE])
+                ->orderBy(['position' => SORT_ASC]);
     }
     
     

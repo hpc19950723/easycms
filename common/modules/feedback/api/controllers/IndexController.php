@@ -37,7 +37,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
         if($model->load(Tools::getPost(['user_id' => Yii::$app->user->getId()]), '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10206, 'Create feedback fail', $model->errors);
+            return self::formatResult(10206, Tools::getFirstError($model->errors));
         }
     }
 }
