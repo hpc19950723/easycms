@@ -8,7 +8,7 @@ use yii\data\ArrayDataProvider;
 use common\modules\admin\components\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\modules\admin\models\searchs\AdminMenuSearch;
+use common\modules\admin\models\searches\AdminMenuSearch;
 
 /**
  * AdminMenuController implements the CRUD actions for AdminMenu model.

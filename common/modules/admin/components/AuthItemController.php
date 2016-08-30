@@ -4,7 +4,7 @@ namespace common\modules\admin\components;
 
 use Yii;
 use common\modules\admin\models\AdminAuthItem;
-use common\modules\admin\models\searchs\AdminAuthItemSearch;
+use common\modules\admin\models\searches\AdminAuthItemSearch;
 use common\modules\admin\models\forms\ItemForm;
 use yii\rbac\Item;
 use yii\data\ActiveDataProvider;
