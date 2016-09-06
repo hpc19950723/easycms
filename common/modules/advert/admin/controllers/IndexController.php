@@ -77,7 +77,7 @@ class IndexController extends \common\modules\admin\components\BaseController
         if (Yii::$app->request->isPost && $model->save()) {
             return $this->redirect('index');
         } else {
-            return $this->render('create', [
+            return $this->render('update', [
                 'model' => $model,
                 'advertPosition' => AdvertPosition::find()->select(['name', 'position_id'])->indexBy('position_id')->column()
             ]);

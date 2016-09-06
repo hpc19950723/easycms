@@ -13,6 +13,14 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'index',
     'bootstrap' => ['log'],
+     'modules' => [
+        'redactor' => [
+            'class' => 'yii\redactor\RedactorModule',
+            'uploadDir' => '@uploads/images/article',
+            'uploadUrl' => '@resDomain/images/article',
+            'imageAllowExtensions'=>['jpg','png','gif']
+        ],
+    ],
     'components' => [
         'user' => [
             'identityClass' => 'common\modules\admin\models\Admin',

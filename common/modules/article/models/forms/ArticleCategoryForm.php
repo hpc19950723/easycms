@@ -31,6 +31,7 @@ class ArticleCategoryForm extends \yii\base\Model
     {
         return [
             [['name', 'identifier', 'status', 'parent_id'], 'required'],
+            ['identifier','match', 'pattern'=>'/^[a-z0-9_]*?$/','message' => '输入格式不正确,只能包含小写字母,数值,下划线(_). 如, "example_page".'],
             ['identifier', 'unique', 'targetClass' => '\common\modules\article\models\ArticleCategory', 'targetAttribute' => 'identifier', 'when' => function(){
                 return $this->isNewRecord || $this->_articleCategory->identifier != $this->identifier;
             }, 'filter' => ['status' => [ArticleCategory::STATUS_INACTIVE, ArticleCategory::STATUS_ACTIVE]]],

@@ -66,7 +66,7 @@ class ArticleCategory extends \common\modules\core\models\CommonActiveRecord
 
         $categories = [];
         foreach($models as $model) {
-            $childrenCategories = static::getCategires($model->category_id);
+            $childrenCategories = static::getCategories($model->category_id);
             if(empty($childrenCategories)) {
                 $categories[$model->category_id] = $model->name;
             } else {

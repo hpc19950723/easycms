@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'identifier')->textInput(['maxlength' => true])->hint('仅包含英文字母数字下划线(_)') ?>
+    <?= $form->field($model, 'identifier')->textInput(['maxlength' => true])->hint('唯一标识符,只能包含小写字母,数值,下划线(_). 如, "example_page".') ?>
     
     <?php
         $belongTo = [ 0 => '主分类'];
