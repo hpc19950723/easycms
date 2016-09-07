@@ -56,4 +56,32 @@ class Article extends CommonActiveRecord
     {
         return $this->hasOne(ArticleCategory::className(), ['category_id' => 'category_id']);
     }
+    
+    
+    public function afterDelete()
+    {
+        if (0 < $this->category_id) {
+            ArticleCategory::findOne($this->category_id)->updateCounters(['items_count' => -1]);
+        }
+    }
+    
+    
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($insert) {
+            if (0 < $this->category_id) {
+                ArticleCategory::findOne($this->category_id)->updateCounters(['items_count' => 1]);
+            }
+        } else {
+            if($changedAttributes['category_id'] != $this->category_id) {
+                if(0 < $this->category_id) {
+                    ArticleCategory::findOne($this->category_id)->updateCounters(['items_count' => 1]);
+                }
+
+                if(0 < $changedAttributes['category_id']) {
+                    ArticleCategory::findOne($changedAttributes['category_id'])->updateCounters(['items_count' => -1]);
+                }
+            }
+        }
+    }
 }

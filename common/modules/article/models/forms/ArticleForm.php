@@ -33,9 +33,9 @@ class ArticleForm extends Model
             [['title', 'status', 'category_id'], 'required'],
             [['content', 'link'], 'required', 'when' => function() {
                 if($this->content || $this->link) {
-                    return true;
-                } else {
                     return false;
+                } else {
+                    return true;
                 }
             }, 'whenClient' => "function (attribute, value) {
                 if ($('#articleform-link').val() != '' || $('#articleform-content').val() != '') {

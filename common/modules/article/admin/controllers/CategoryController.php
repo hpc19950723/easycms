@@ -100,7 +100,7 @@ class CategoryController extends \common\modules\admin\components\BaseController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if ($model->children_count == 0) {
+        if ($model->children_count == 0 && $model->items_count == 0) {
             $model->delete();
         } else {
             Yii::$app->session->setFlash('error', '请先删除该分类下的所有子分类和文章');

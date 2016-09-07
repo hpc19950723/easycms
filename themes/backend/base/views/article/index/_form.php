@@ -16,7 +16,11 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'category_id')->dropdownList(ArticleCategory::getCategories(),['prompt'=>'-- 选择所属分类 --'])?>
+    <?php
+        $categories[0] = '单页面';
+        $categories = array_merge($categories, ArticleCategory::getCategories());
+    ?>
+    <?= $form->field($model, 'category_id')->dropdownList($categories,['prompt'=>'-- 选择所属分类 --'])?>
 
     <?= $form->field($model, 'status')->dropdownList(Article::getStatus())?>
     

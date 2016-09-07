@@ -21,6 +21,7 @@ class m160830_070647_create_article_table extends Migration
             'position' => $this->smallInteger(5)->notNull()->defaultValue(0),
             'status' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户状态 0;停用 1;启用'",
             'children_count' => $this->integer(10)->notNull()->defaultValue(0)->comment('子类数量'),
+            'items_count' => $this->integer(10)->notNull()->defaultValue(0)->comment('文章数量'),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
         ]);
@@ -47,7 +48,6 @@ class m160830_070647_create_article_table extends Migration
         $this->addCommentOnColumn('article', 'image', '文章图片');
         $this->addCommentOnColumn('article', 'content', '内容');
         $this->addCommentOnColumn('article', 'link', '外部链接');
-        $this->addForeignKey('FK_ATICLE_ARTICLE_CATEGORY_CATEGORY_ID', 'article', 'category_id', 'article_category', 'category_id', 'CASCADE', 'CASCADE');
     }
 
     /**

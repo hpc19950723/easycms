@@ -32,12 +32,6 @@ class IndexController extends \common\modules\admin\components\BaseController
      */
     public function actionCreate()
     {
-        $articleCategory = ArticleCategory::getCategories();
-        if (empty($articleCategory)) {
-            Yii::$app->session->setFlash('error', '请先创建内容分类');
-            return $this->redirect(['index']);
-        }
-        
         $model = new ArticleForm();
         $model->setScenario(ArticleForm::SCENARIOS_CREATE);
         if(Yii::$app->request->isPost) {
