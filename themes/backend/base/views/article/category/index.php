@@ -22,15 +22,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-             [
-                'label'=>'分类名称',
+            [
+                'label' => '名称',
+                'attribute' => 'name',
                 'format'=>'raw',
                 'value'=>function($m){
                     return $m->parent_id > 0 ? '|__' . $m->name : $m->name;
                 }
             ],
-            'identifier',
             [
+                'label' => '标识符',
+                'attribute' => 'identifier',
+            ],
+            [
+                'label' => '状态',
                 'attribute' => 'status',
                 'format' => 'raw',
                 'value' => function($model) {
@@ -38,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'header' => '管理操作',
+                'header' => '操作',
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{update} {delete}'
             ],

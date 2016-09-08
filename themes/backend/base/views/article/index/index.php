@@ -38,6 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'label' => '标识符',
+                'attribute' => 'identifier',
+            ],
+            [
                 'attribute' => 'category_id',
                 'filter'=> Html::activeDropDownList($searchModel,'category_id', $categories,['prompt'=>'全部','class'=>'form-control']),
                 'value' => function($model) {

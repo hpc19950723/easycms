@@ -18,9 +18,18 @@ use yii\helpers\Url;
     
     <?php
         $categories[0] = '单页面';
-        $categories = array_merge($categories, ArticleCategory::getCategories());
+        $categories += ArticleCategory::getCategories();
     ?>
     <?= $form->field($model, 'category_id')->dropdownList($categories,['prompt'=>'-- 选择所属分类 --'])?>
+
+    <?php
+    if ($model->category_id == 0) {
+        $options = null;
+    } else {
+        $options = ['style' => 'display:none;'];
+    }
+    ?>
+    <?= $form->field($model, 'identifier', ['options' => $options])->textInput(['maxlength' => true])->hint('唯一标识符,只能包含小写字母,数值,下划线(_). 如, "example_page".') ?>
 
     <?= $form->field($model, 'status')->dropdownList(Article::getStatus())?>
     
@@ -64,3 +73,18 @@ use yii\helpers\Url;
     <?php ActiveForm::end(); ?>
 
 </div>
+<script>
+$(function() {
+    $('#articleform-category_id').change(function() {
+        change($(this).val());
+    });
+    
+    function change(value) {
+        if(value === '0') {
+            $('.field-articleform-identifier').show();
+        } else {
+            $('.field-articleform-identifier').hide();
+        }
+    }
+});
+</script>

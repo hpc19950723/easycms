@@ -10,6 +10,8 @@ use common\modules\core\components\Tools;
 
 class ArticleForm extends Model
 {
+    public $identifier;
+
     public $title;
 
     public $image;
@@ -31,6 +33,9 @@ class ArticleForm extends Model
     public function rules() {
         return [
             [['title', 'status', 'category_id'], 'required'],
+            ['identifier', 'unique', 'targetClass' => '\common\modules\article\models\Article', 'targetAttribute' => 'identifier', 'when' => function(){
+                return $this->isNewRecord || $this->_article->identifier != $this->identifier;
+            }],
             [['content', 'link'], 'required', 'when' => function() {
                 if($this->content || $this->link) {
                     return false;
@@ -54,8 +59,8 @@ class ArticleForm extends Model
 
     public function scenarios() {
         $scenarios = [
-            self:: SCENARIOS_CREATE => ['title', 'content', 'image', 'category_id', 'status', 'link'],
-            self:: SCENARIOS_UPDATE => ['title', 'content', 'image', 'category_id', 'status', 'link'],
+            self:: SCENARIOS_CREATE => ['title', 'content', 'image', 'category_id', 'status', 'link', 'identifier'],
+            self:: SCENARIOS_UPDATE => ['title', 'content', 'image', 'category_id', 'status', 'link', 'identifier'],
         ];
         return array_merge( parent:: scenarios(), $scenarios);
     }
@@ -69,7 +74,8 @@ class ArticleForm extends Model
             'content'       => '文章内容',
             'category_id'   => '文章分类',
             'status'        => '文章状态',
-            'link'  => '外部链接'
+            'link'  => '外部链接',
+            'identifier' => '标识符'
         ];
     }
     
@@ -114,10 +120,14 @@ class ArticleForm extends Model
             }
             $this->_article->title = $this->title;
             $this->_article->content = $this->content;
-            $this->_article->category_id=$this->category_id;
+            $this->_article->category_id = $this->category_id;
             $this->_article->status = $this->status;
             $this->_article->link = $this->link;
-
+            if ($this->identifier !== null && $this->category_id == 0) {
+                $this->_article->identifier = $this->identifier;
+            } else {
+                $this->_article->identifier = null;
+            }
             return $this->_article->save();
         } else {
             return false;

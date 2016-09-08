@@ -35,6 +35,7 @@ class Article extends CommonActiveRecord
         return [
             'title' => '文章名称',
             'category_id' => '所属分类',
+            'identifier' => '标识符',
             'image' => '图片',
             'content' => '内容',
             'link' => '外部链接',

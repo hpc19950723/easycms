@@ -16,7 +16,7 @@ class ArticleSearch extends Article
     {
         return [
             [['category_id', 'status'], 'integer'],
-            ['title', 'safe']
+            [['title', 'identifier'], 'safe']
         ];
     }
 
@@ -58,6 +58,7 @@ class ArticleSearch extends Article
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'identifier', $this->identifier]);
 
         return $dataProvider;
     }
