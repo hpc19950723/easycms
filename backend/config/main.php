@@ -13,7 +13,7 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'defaultRoute' => 'index',
     'bootstrap' => ['log'],
-     'modules' => [
+    'modules' => [
         'redactor' => [
             'class' => 'yii\redactor\RedactorModule',
             'uploadDir' => '@uploads/images/article',

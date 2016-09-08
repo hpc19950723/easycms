@@ -23,7 +23,7 @@ use yii\helpers\Url;
     <?= $form->field($model, 'category_id')->dropdownList($categories,['prompt'=>'-- 选择所属分类 --'])?>
 
     <?php
-    if ($model->category_id == 0) {
+    if ($model->category_id === 0) {
         $options = null;
     } else {
         $options = ['style' => 'display:none;'];
