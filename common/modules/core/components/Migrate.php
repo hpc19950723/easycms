@@ -39,18 +39,7 @@ class Migrate extends \yii\base\Component
             return true;
         }
 
-        $total = count($migrations);
-        $limit = (int) $limit;
-        if ($limit > 0) {
-            $migrations = array_slice($migrations, 0, $limit);
-        }
-
         $n = count($migrations);
-        if ($n === $total) {
-            Yii::info("Total $n new " . ($n === 1 ? 'migration' : 'migrations') . " to be applied:\n", __METHOD__);
-        } else {
-            Yii::info("Total $n out of $total new " . ($total === 1 ? 'migration' : 'migrations') . " to be applied:\n", __METHOD__);
-        }
 
         foreach ($migrations as $migration) {
             Yii::info("\t$migration\n", __METHOD__);
@@ -72,26 +61,15 @@ class Migrate extends \yii\base\Component
     }
     
     
-    public function down($limit = 1)
+    public function down()
     {
-        if ($limit === 'all') {
-            $limit = null;
-        } else {
-            $limit = (int) $limit;
-            if ($limit < 1) {
-                throw new Exception('The step argument must be greater than 0.');
-            }
-        }
-
-        $migrations = $this->getMigrationHistory($limit);
+        $migrations = $this->getDownMigrations();
 
         if (empty($migrations)) {
             Yii::info("No migration has been done before.\n", __METHOD__);
 
             return true;
         }
-
-        $migrations = array_keys($migrations);
 
         $n = count($migrations);
         Yii::info("Total $n " . ($n === 1 ? 'migration' : 'migrations') . " to be reverted:\n", __METHOD__);
@@ -186,6 +164,31 @@ class Migrate extends \yii\base\Component
         return $migrations;
     }
     
+    
+    protected function getDownMigrations()
+    {
+        $applied = [];
+        foreach ($this->getMigrationHistory(null) as $version => $time) {
+            $applied[substr($version, 1, 13)] = true;
+        }
+
+        $migrations = [];
+        $handle = opendir($this->migrationPath);
+        while (($file = readdir($handle)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            $path = $this->migrationPath . DIRECTORY_SEPARATOR . $file;
+            if (preg_match('/^(m(\d{6}_\d{6})_.*?)\.php$/', $file, $matches) && isset($applied[$matches[2]]) && is_file($path)) {
+                $migrations[] = $matches[1];
+            }
+        }
+        closedir($handle);
+        arsort($migrations);
+
+        return $migrations;
+    }
+
     
     protected function getMigrationHistory($limit)
     {
