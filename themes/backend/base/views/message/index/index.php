@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use common\modules\message\models\Message;
 use yii\helpers\StringHelper;
+use dosamigos\datepicker\DatePicker;
+
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -40,8 +42,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => '发布时间',
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'name' => 'created_at',
+                    'attribute' => 'created_at',
+                    'inline' => false, 
+                    'template' => '{addon}{input}',
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd',
+                    ]
+                ]),
                 'attribute' => 'created_at',
-                'value' => 'created_at'
+                'value' => 'created_at',
+                'headerOptions' => [
+                    'style' => 'width:300px'
+                ]
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

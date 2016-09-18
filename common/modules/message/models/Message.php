@@ -5,6 +5,7 @@ namespace common\modules\message\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use common\modules\core\components\Tools;
 
 
 class Message extends \common\modules\core\models\CommonActiveRecord
@@ -42,7 +43,31 @@ class Message extends \common\modules\core\models\CommonActiveRecord
             'title',
             'content',
             'type',
-            'created_at',
+            'image' => function($model) {
+                if($model->image) {
+                    return Tools::getFileUrl($model->image);
+                } else {
+                    return;
+                }
+            },
+            'created_at'
+        ];
+    }
+    
+    
+    public function extraFields()
+    {
+        return [
+            'unreadCount' => function($model) {
+                return static::getUnreadCount($model->type);
+            },
+            'isRead' => function($model) {
+                if($model->messageAction) {
+                    return $model->messageAction->is_read;
+                } else {
+                    return Message::VALUE_NO;
+                }
+            }
         ];
     }
     
@@ -93,5 +118,37 @@ class Message extends \common\modules\core\models\CommonActiveRecord
                 $model->save();
             }
         }
+    }
+    
+    
+    public function getMessageAction()
+    {
+        return $this->hasOne(MessageAction::className(), ['message_id' => 'message_id'])
+                ->where(['user_id' => Yii::$app->user->getId()]);
+    }
+    
+    
+    public function getMessageActions()
+    {
+        return $this->hasOne(MessageAction::className(), ['message_id' => 'message_id']);
+    }
+    
+    
+    /**
+     * 获取未读消息数量
+     * @param $type 消息类型
+     */
+    public static function getUnreadCount($type = null)
+    {
+        $query = static::find()->joinWith(['messageActions'])
+                ->where(['>=', static::tableName() . '.created_at', Yii::$app->user->identity->created_at])
+                ->andWhere('receiver_id = 0 or receiver_id = :receiverId', [':receiverId' => Yii::$app->user->getId()])
+                ->andWhere(['user_id' => null]);
+        
+        if ($type !== null) {
+            $query->andWhere(['type' => $type]);
+        }
+
+        return $query->count();
     }
 }
