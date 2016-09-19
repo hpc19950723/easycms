@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use common\modules\user\models\User;
+use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -69,8 +70,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'options'=> ['width'=>"90px"]
             ],
             [
-                'label' => Yii::t('backend','Created At'),
-                'value' => 'created_at'
+                'label' => '注册时间',
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'name' => 'created_at',
+                    'attribute' => 'created_at',
+                    'inline' => false, 
+                    'template' => '{addon}{input}',
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd',
+                    ]
+                ]),
+                'attribute' => 'created_at',
+                'value' => 'created_at',
+                'headerOptions' => [
+                    'style' => 'width:200px'
+                ]
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

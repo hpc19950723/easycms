@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use common\modules\article\models\Article;
 use common\modules\article\models\ArticleCategory;
 use yii\helpers\StringHelper;
+use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -61,8 +62,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'label' => '创建时间',
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'name' => 'created_at',
+                    'attribute' => 'created_at',
+                    'inline' => false, 
+                    'template' => '{addon}{input}',
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd',
+                    ]
+                ]),
                 'attribute' => 'created_at',
                 'value' => 'created_at',
+                'headerOptions' => [
+                    'style' => 'width:200px'
+                ]
             ],
             [
                 'template' => '{update} {delete}',

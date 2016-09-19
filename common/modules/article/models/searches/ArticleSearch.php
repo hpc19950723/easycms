@@ -16,7 +16,7 @@ class ArticleSearch extends Article
     {
         return [
             [['category_id', 'status'], 'integer'],
-            [['title', 'identifier'], 'safe']
+            [['title', 'identifier','created_at'], 'safe']
         ];
     }
 
@@ -57,8 +57,9 @@ class ArticleSearch extends Article
             'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title]);
-        $query->andFilterWhere(['like', 'identifier', $this->identifier]);
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'identifier', $this->identifier])
+            ->andFilterWhere(['like', 'created_at', $this->created_at]);
 
         return $dataProvider;
     }

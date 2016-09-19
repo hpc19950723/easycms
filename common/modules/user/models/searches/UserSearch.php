@@ -58,14 +58,14 @@ class UserSearch extends User
         $query->andFilterWhere([
             'user_id' => $this->user_id,
             'user_type' => $this->user_type,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
+            'status' => $this->status
         ]);
 
         $query->andFilterWhere(['like', 'mobile', $this->mobile])
             ->andFilterWhere(['like', 'real_name', $this->real_name])
             ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'nickname', $this->nickname]);
+            ->andFilterWhere(['like', 'nickname', $this->nickname])
+            ->andFilterWhere(['like', 'created_at', $this->created_at]);
 
         return $dataProvider;
     }
