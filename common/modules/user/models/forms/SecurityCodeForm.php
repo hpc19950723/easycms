@@ -21,13 +21,15 @@ class SecurityCodeForm extends Model
     const SCENARIOS_RESET_PASSWORD = 'reset_password';
     
     const SCENARIOS_LOGIN = 'login';
+    
+    const SCENARIOS_USER_BIND = 'user_bind';
 
 
     public function rules()
     {
         return [
             [['mobile', 'code', 'type'], 'required'],
-            ['type', 'in', 'range' => [SecurityCode::TYPE_REGISTER, SecurityCode::TYPE_RESET_PASSWORD, SecurityCode::TYPE_LOGIN]],
+            ['type', 'in', 'range' => [static::SCENARIOS_LOGIN, static::SCENARIOS_REGISTER, static::SCENARIOS_RESET_PASSWORD, static::SCENARIOS_USER_BIND]],
             ['mobile', 'match', 'pattern'=>'/^[1][0-9]{10}$/','message' => '手机号格式不正确'],
             ['mobile', 'unique', 'targetClass' => 'common\modules\user\models\User', 'message' => '您输入的手机号已被注册, 请更换手机号', 'on' => [self::SCENARIOS_REGISTER]],
             ['mobile', 'existMobile', 'on' => [self::SCENARIOS_RESET_PASSWORD, self::SCENARIOS_LOGIN]], //登录或重置密码需验证
@@ -79,18 +81,9 @@ class SecurityCodeForm extends Model
             self::SCENARIOS_REGISTER => ['mobile', 'code', 'type'],
             self::SCENARIOS_RESET_PASSWORD => ['mobile', 'code', 'type'],
             self::SCENARIOS_LOGIN => ['mobile', 'code', 'type'],
+            self::SCENARIOS_USER_BIND => ['mobile', 'code', 'type']
          ];
-        return array_merge( parent::scenarios(), $scenarios);
-    }
-    
-    
-    public function getScenarios()
-    {
-        return [
-            SecurityCode::TYPE_REGISTER => self::SCENARIOS_REGISTER,
-            SecurityCode::TYPE_RESET_PASSWORD => self::SCENARIOS_RESET_PASSWORD,
-            SecurityCode::TYPE_LOGIN => self::SCENARIOS_LOGIN
-        ];
+        return $scenarios;
     }
     
     

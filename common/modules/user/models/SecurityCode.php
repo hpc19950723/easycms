@@ -10,11 +10,13 @@ use common\modules\core\components\Tools;
 class SecurityCode extends \common\modules\core\models\CommonActiveRecord
 {
     //验证码类型常量
-    const TYPE_REGISTER = 1;
+    const TYPE_REGISTER = 'register';
     
-    const TYPE_RESET_PASSWORD = 2;
+    const TYPE_RESET_PASSWORD = 'reset_password';
     
-    const TYPE_LOGIN = 3;
+    const TYPE_LOGIN = 'login';
+    
+    const TYPE_USER_BIND = 'user_bind';
 
     public static function tableName() {
         return '{{%security_code}}';

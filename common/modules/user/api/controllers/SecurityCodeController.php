@@ -5,41 +5,43 @@ namespace common\modules\user\api\controllers;
 use Yii;
 use common\modules\core\components\Tools;
 use common\modules\user\models\forms\SecurityCodeForm;
-use common\modules\user\models\SecurityCode;
 
 class SecurityCodeController extends \common\modules\core\api\components\BaseController
 {
-    /**
-     * 发送注册验证码
-     * @return array
-     */
-    public function actionRegister()
+    public function createAction($id)
     {
-        return $this->send(SecurityCode::TYPE_REGISTER);
+        if ($id === '') {
+            $id = $this->defaultAction;
+        }
+        
+        $actionMap = [
+            $id => [
+                'class' => 'common\modules\user\api\controllers\actions\SecurityCodeAction'
+            ]
+        ];
+        return Yii::createObject($actionMap[$id], [$id, $this]);
     }
     
     
     /**
-     * 发送忘记密码验证码
+     * 编辑配置信息
+     * @param string $type 短信类型
      * @return array
      */
-    public function actionResetPassword()
-    {
-        return $this->send(SecurityCode::TYPE_RESET_PASSWORD);
-    }
-    
-    
     public function send($type)
     {
         $code = Tools::getRandomNumber(6, 'number');
-        
         $data = [
             'mobile' => Yii::$app->request->get('mobile'),
             'code' => $code,
             'type' => $type
         ];
+        
         $model = new SecurityCodeForm();
-        $model->setScenario(SecurityCodeForm::getScenarios()[$type]);
+        if (!in_array($type, array_keys($model->scenarios()))) {
+            throw new \yii\web\NotFoundHttpException('请求接口不存在');
+        }
+        $model->setScenario($type);
         if($model->load($data, '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
