@@ -16,6 +16,8 @@ use common\modules\user\models\forms\UserForm;
 use yii\web\UploadedFile;
 use common\modules\core\components\Tools;
 use yii\web\NotFoundHttpException;
+use common\modules\user\models\forms\ThirdPartLoginForm;
+use yii\base\Exception;
 
 class IndexController extends BaseController
 {
@@ -29,7 +31,7 @@ class IndexController extends BaseController
                 HttpBasicAuth::className(),
                 QueryParamAuth::className(),
             ],
-            'optional' => ['create', 'login', 'reset-password']
+            'optional' => ['create', 'login', 'reset-password', 'wechat-login']
         ];
         return $behaviors;
     }
@@ -68,6 +70,67 @@ class IndexController extends BaseController
             return self::formatSuccessResult($data);
         } else {
             return self::formatResult(10200, Tools::getFirstError($model->errors));
+        }
+    }
+    
+    
+    /**
+     * 微信三方登陆
+     * @return array
+     */
+    public function actionWechatLogin()
+    {
+        $code = trim(Yii::$app->request->post('code'));
+        if(empty($code)){
+            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
+        }
+        
+        $model = new ThirdPartLoginForm();
+        $type = Yii::$app->request->post('type', 'login');
+        switch ($type) {
+            case 'login':
+                try {
+                    $weixin = Yii::$app->authClientCollection->getClient('weixin');
+                    $weixin->fetchAccessToken($code);
+                    $userAttributes = $weixin->getUserAttributes();
+
+                    $data = [
+                        'nickname'      => $userAttributes['nickname'],
+                        'avatar'        => $userAttributes['headimgurl'],
+                        'thirdPartId'   => $userAttributes['unionid'],
+                        'gender'        => $userAttributes['sex']
+                    ];
+
+                    $model->setScenario(ThirdPartLoginForm::SCENARIOS_WECHAT_LOGIN);
+                    if ($model->load($data, '') && $token = $model->login()) {
+                        return self::formatSuccessResult($data = ['token' => $token]);
+                    } else {
+                        Yii::$app->cache->set($code, $data, 1800);
+                        return self::formatResult(10207, '请先绑定当前应用账号');
+                    }
+                } catch(Exception $e) {
+                    return self::formatResult(10209, '微信授权登陆失败');
+                }
+                break;
+            case 'bind':
+                $data = Yii::$app->cache->get($code);
+                if ($data === false) {
+                    return self::formatResult(10206, '微信授权过期,请重新授权');
+                }
+
+                $post = Yii::$app->request->post();
+                $post['code'] = $post['secrity_code'];
+                unset($post['secrity_code']);
+                $data = array_merge($data, $post);
+                $model->setScenario(ThirdPartLoginForm::SCENARIOS_WECHAT_BIND);
+                if ($model->load($data, '') && $token = $model->bind()) {
+                    return self::formatSuccessResult($data = ['token' => $token]);
+                } else {
+                    return self::formatResult(10208, Tools::getFirstError($model->errors, '微信账号绑定失败'));
+                }
+                break;
+            default:
+                return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
         }
     }
     

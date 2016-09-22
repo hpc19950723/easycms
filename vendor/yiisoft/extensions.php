@@ -120,4 +120,13 @@ return array (
       '@yii/authclient' => $vendorDir . '/yiisoft/yii2-authclient',
     ),
   ),
+  'leap/yii2-oauth' => 
+  array (
+    'name' => 'leap/yii2-oauth',
+    'version' => 'dev',
+    'alias' => 
+    array (
+      '@leap/oauth' => $vendorDir . '/leap/yii2-oauth',
+    ),
+  ),
 );

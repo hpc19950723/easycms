@@ -155,15 +155,16 @@ class Tools
     /**
      * 获取一条错误信息
      * @param type $errors
+     * @param string $default 默认错误
      * @return type
      */
-    public static function getFirstError($errors)
+    public static function getFirstError($errors, $default)
     {
         foreach($errors as $error) {
             return $error[0];
         }
         
-        return false;
+        return $default;
     }
     
     
@@ -304,6 +305,42 @@ class Tools
         if ($resource === true) {
             $zipArchive->extractTo($dirname);
             $zipArchive->close();
+        }
+    }
+    
+    /**
+     * 获取缓存
+     * @param string $cacheKey
+     * @param mixed $default false
+     * @return mixed 返回缓存数据
+     */
+    public static function getCache($cacheKey, $default = false)
+    {
+        $cache = Yii::$app->cache->get($cacheKey);
+        if ($cache === false) {
+            if ($default instanceof \Closure) {
+                return call_user_func($default);
+            }
+            return $default;
+        }
+        return $cache;
+    }
+    
+    /**
+     * 获取值
+     * @param mixed $value
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function getValue($value, $default = null)
+    {
+        if (!empty($value)) {
+            return $value;
+        } else {
+            if ($default instanceof \Closure) {
+                return call_user_func($default);
+            }
+            return $default;
         }
     }
 }

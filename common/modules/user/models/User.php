@@ -7,6 +7,7 @@ use common\modules\core\models\CommonActiveRecord;
 use yii\web\IdentityInterface;
 use yii\db\Expression;
 use common\modules\core\components\Tools;
+use yii\helpers\ArrayHelper;
 
 /**
  * User model
@@ -281,12 +282,27 @@ class User extends CommonActiveRecord implements IdentityInterface
         }
     }
     
-
-    public static function getGender($gender = '')
+    
+    /**
+     * 获取唯一昵称
+     * @param string $nickname
+     * @param array $nicknames
+     * @return string
+     */
+    public static function getUniqueNickname($nickname, $nicknames = null)
     {
-        if($gender == '男' || $gender == 'M' || $gender == 'm')
-            return 1;
-        else
-            return 2;
+        if ($nicknames === null) {
+            $userModels = static::find()
+                ->where('nickname LIKE :query')
+                ->addParams([':query' => $nickname.'%'])
+                ->all();
+            $nicknames = ArrayHelper::getColumn($userModels, 'nickname');
+        }
+
+        if(in_array($nickname,$nicknames)) {
+            return static::getUniqueNickname($nickname . Tools::getRandomNumber(4), $nicknames);
+        } else {
+            return $nickname;
+        }
     }
 }
