@@ -8,6 +8,7 @@ use common\modules\user\models\User;
 use common\modules\core\components\Tools;
 use common\modules\user\models\SecurityCode;
 use GuzzleHttp\Client;
+use yii\web\HttpException;
 
 class ThirdPartLoginForm extends Model
 {
@@ -24,6 +25,8 @@ class ThirdPartLoginForm extends Model
     public $mobile;
     
     public $password;
+    
+    public $password2;
     
     private $_user;
     
@@ -47,6 +50,7 @@ class ThirdPartLoginForm extends Model
             [['mobile', 'password', 'code'], 'required'],
             ['mobile', 'match', 'pattern'=>'/^[1][0-9]{10}$/','message' => '手机号格式不正确'],
             ['password', 'string', 'min' => 6, 'max' => 32],
+            ['password2', 'compare', 'compareAttribute' => 'password', 'message' => '确认密码不一致'],
             ['code', 'exist', 'targetClass' => 'common\modules\user\models\SecurityCode', 'filter' => function($query) {
                 $query->andWhere([
                     'mobile' => $this->mobile,
@@ -68,10 +72,8 @@ class ThirdPartLoginForm extends Model
     {
         $this->_user = User::findOne(['mobile' => $this->mobile]);
         
-        if ($this->_user !== null) {
-            if (!$this->_user->validatePassword($this->password)) {
-                $this->addError('password', '输入的密码不正确');
-            }
+        if ($this->_user === null && $this->password === null) {
+            throw new HttpException(200, '设置账号密码', 10210);
         }
     }
     
@@ -82,9 +84,9 @@ class ThirdPartLoginForm extends Model
             static::SCENARIOS_QQ_LOGIN => ['thirdPartId'],
             static::SCENARIOS_WEIBO_LOGIN => ['thirdPartId'],
             static::SCENARIOS_WECHAT_LOGIN => ['thirdPartId'],
-            static::SCENARIOS_WEIBO_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password'],
-            static::SCENARIOS_WECHAT_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password'],
-            static::SCENARIOS_QQ_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password']
+            static::SCENARIOS_WEIBO_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password', 'password2'],
+            static::SCENARIOS_WECHAT_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password', 'password2'],
+            static::SCENARIOS_QQ_BIND => ['avatar', 'nickname', 'gender', 'thirdPartId', 'code', 'mobile', 'password', 'password2']
         ];
     }
     
