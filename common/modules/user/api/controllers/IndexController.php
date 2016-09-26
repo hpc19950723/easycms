@@ -232,13 +232,13 @@ class IndexController extends BaseController
                         return self::formatResult(10207, '请先绑定当前应用账号');
                     }
                 } catch(Exception $e) {
-                    return self::formatResult(10209, '微博授权登陆失败');
+                    return self::formatResult(10216, '微博授权登陆失败');
                 }
                 break;
             case 'bind':
                 $data = Yii::$app->cache->get($accessToken);
                 if ($data === false) {
-                    return self::formatResult(10206, '微博授权过期,请重新授权');
+                    return self::formatResult(10214, '微博授权过期,请重新授权');
                 }
 
                 $post = Yii::$app->request->post();
@@ -249,7 +249,7 @@ class IndexController extends BaseController
                 if ($model->load($data, '') && $token = $model->bind()) {
                     return self::formatSuccessResult($data = ['token' => $token]);
                 } else {
-                    return self::formatResult(10208, Tools::getFirstError($model->errors, '微博账号绑定失败'));
+                    return self::formatResult(10215, Tools::getFirstError($model->errors, '微博账号绑定失败'));
                 }
                 break;
             default:
