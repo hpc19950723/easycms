@@ -51,6 +51,11 @@ return [
                     'clientSecret' => 'CXMeLXSeWnVhaeIT',
 
                 ],
+                'weibo' => [
+                    'class' => 'leap\oauth\Weibo',
+                    'clientId' => '917618014',
+                    'clientSecret' => '7ae714a47cf36fcf53a7032f501472b3',
+                ],
             ]
         ],
     ],

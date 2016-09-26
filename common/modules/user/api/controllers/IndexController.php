@@ -31,7 +31,7 @@ class IndexController extends BaseController
                 HttpBasicAuth::className(),
                 QueryParamAuth::className(),
             ],
-            'optional' => ['create', 'login', 'reset-password', 'wechat-login', 'qq-login']
+            'optional' => ['create', 'login', 'reset-password', 'wechat-login', 'qq-login', 'weibo-login']
         ];
         return $behaviors;
     }
@@ -171,13 +171,13 @@ class IndexController extends BaseController
                         return self::formatResult(10207, '请先绑定当前应用账号');
                     }
                 } catch(Exception $e) {
-                    return self::formatResult(10209, 'QQ授权登陆失败');
+                    return self::formatResult(10213, 'QQ授权登陆失败');
                 }
                 break;
             case 'bind':
                 $data = Yii::$app->cache->get($openId);
                 if ($data === false) {
-                    return self::formatResult(10206, 'QQ授权过期,请重新授权');
+                    return self::formatResult(10211, 'QQ授权过期,请重新授权');
                 }
 
                 $post = Yii::$app->request->post();
@@ -188,7 +188,68 @@ class IndexController extends BaseController
                 if ($model->load($data, '') && $token = $model->bind()) {
                     return self::formatSuccessResult($data = ['token' => $token]);
                 } else {
-                    return self::formatResult(10208, Tools::getFirstError($model->errors, 'QQ账号绑定失败'));
+                    return self::formatResult(10212, Tools::getFirstError($model->errors, 'QQ账号绑定失败'));
+                }
+                break;
+            default:
+                return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
+        }
+    }
+    
+    
+    /**
+     * 微博登陆
+     */
+    public function actionWeiboLogin()
+    {
+        $accessToken = trim(Yii::$app->request->post('access_token'));
+
+        if (empty($accessToken)) {
+            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
+        }
+        
+        $model = new ThirdPartLoginForm();
+        $type = Yii::$app->request->post('type', 'login');
+        switch ($type) {
+            case 'login':
+                try {
+                    $qq = Yii::$app->authClientCollection->getClient('weibo');
+                    $qq->setAccessToken(['params' => ['access_token' => $accessToken]]);
+                    $userAttributes = $qq->getUserInfo();
+
+                    $data = [
+                        'nickname'      => $userAttributes['name'],
+                        'avatar'        => $userAttributes['avatar_large'],
+                        'thirdPartId'   => $userAttributes['idstr'],
+                        'gender'        => $userAttributes['gender']
+                    ];
+
+                    $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_LOGIN);
+                    if ($model->load($data, '') && $token = $model->login()) {
+                        return self::formatSuccessResult($data = ['token' => $token]);
+                    } else {
+                        Yii::$app->cache->set($accessToken, $data, 1800);
+                        return self::formatResult(10207, '请先绑定当前应用账号');
+                    }
+                } catch(Exception $e) {
+                    return self::formatResult(10209, '微博授权登陆失败');
+                }
+                break;
+            case 'bind':
+                $data = Yii::$app->cache->get($accessToken);
+                if ($data === false) {
+                    return self::formatResult(10206, '微博授权过期,请重新授权');
+                }
+
+                $post = Yii::$app->request->post();
+                $post['code'] = $post['secrity_code'];
+                unset($post['secrity_code']);
+                $data = array_merge($data, $post);
+                $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_BIND);
+                if ($model->load($data, '') && $token = $model->bind()) {
+                    return self::formatSuccessResult($data = ['token' => $token]);
+                } else {
+                    return self::formatResult(10208, Tools::getFirstError($model->errors, '微博账号绑定失败'));
                 }
                 break;
             default:
