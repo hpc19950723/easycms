@@ -45,6 +45,12 @@ return [
                     'clientId' => 'wx5170ccf5cef58e47',
                     'clientSecret' => '7030d2d490b140fde4912f4867fe3811',
                 ],
+                'qq' => [
+                    'class' => 'leap\oauth\Qq',
+                    'clientId' => '1105322357',
+                    'clientSecret' => 'CXMeLXSeWnVhaeIT',
+
+                ],
             ]
         ],
     ],

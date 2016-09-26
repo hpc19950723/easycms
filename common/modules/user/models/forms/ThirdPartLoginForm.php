@@ -47,9 +47,12 @@ class ThirdPartLoginForm extends Model
         return [
             [['thirdPartId', 'type'], 'required'],
             [['nickname', 'avatar', 'gender'], 'safe'],
-            [['mobile', 'password', 'code'], 'required'],
+            [['mobile', 'code'], 'required'],
             ['mobile', 'match', 'pattern'=>'/^[1][0-9]{10}$/','message' => '手机号格式不正确'],
             ['password', 'string', 'min' => 6, 'max' => 32],
+            ['password2', 'required', 'when' => function() {
+                return $this->password !== null;
+            }],
             ['password2', 'compare', 'compareAttribute' => 'password', 'message' => '确认密码不一致'],
             ['code', 'exist', 'targetClass' => 'common\modules\user\models\SecurityCode', 'filter' => function($query) {
                 $query->andWhere([
@@ -95,6 +98,7 @@ class ThirdPartLoginForm extends Model
         return [
             'mobile' => '手机号',
             'password' => '密码',
+            'password2' => '确认密码',
             'code' => '验证码'
         ];
     }
