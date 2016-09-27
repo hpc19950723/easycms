@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use common\modules\user\models\User;
 use dosamigos\datepicker\DatePicker;
+use common\modules\user\models\UserGroup;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -41,11 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'nickname',
             [
-                'label' => Yii::t('backend', 'User Type'),
-                'attribute' => 'user_type',
-                'filter'=> Html::activeDropDownList($searchModel,'user_type',User::getUserType(),['prompt'=>'全部','class'=>'form-control']),
-                'value' => function($m) {
-                    return User::getUserType()[$m->user_type];
+                'attribute' => 'user_group_id',
+                'filter' => Html::activeDropDownList($searchModel, 'user_group_id', UserGroup::find()->select(['group_name', 'user_group_id'])->indexBy('user_group_id')->column(),['class'=>'form-control','prompt' => '全部']),
+                'value' => function($model) {
+                    if (!empty($model->userGroup)) {
+                        return $model->userGroup->group_name;
+                    } else {
+                        return;
+                    }
                 },
                 'options'=> ['width'=>"90px"]
             ],

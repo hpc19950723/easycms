@@ -81,7 +81,7 @@ class User extends CommonActiveRecord implements IdentityInterface
             'qq',
             'wechat',
             'id_no',
-            'user_type',
+            'user_group_id',
             'status',
         ];
     }
@@ -98,6 +98,7 @@ class User extends CommonActiveRecord implements IdentityInterface
             'qq' => 'QQ号',
             'wechat' => '微信号',
             'avatar' => '头像',
+            'user_group_id' => '用户组'
         ];
     }
 
@@ -304,5 +305,10 @@ class User extends CommonActiveRecord implements IdentityInterface
         } else {
             return $nickname;
         }
+    }
+
+    public function getUserGroup()
+    {
+        return $this->hasOne(UserGroup::className(),['user_group_id' => 'user_group_id']);
     }
 }

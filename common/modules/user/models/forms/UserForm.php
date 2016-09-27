@@ -7,6 +7,7 @@ use yii\base\Model;
 use common\modules\user\models\User;
 use common\modules\core\components\ImageUploader;
 use common\modules\core\components\Tools;
+use common\modules\user\models\UserGroup;
 
 class UserForm extends Model
 {
@@ -22,7 +23,7 @@ class UserForm extends Model
     
     public $email;
     
-    public $user_type = 1;
+    public $user_group_id = 1;
     
     public $qq;
     
@@ -64,7 +65,7 @@ class UserForm extends Model
             [['password'], 'string', 'length' => [6, 32]],
             [['real_name', 'qq', 'wechat'], 'string', 'length' => [2, 255]],
             ['status', 'in', 'range' => array_keys(User::getStatus())],
-            ['user_type', 'safe'],
+            ['user_group_id', 'safe'],
             ['bio', 'string', 'length' => [0, 200]],
             [['id_no'], 'match', 'pattern'=>'/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', 'message' => '身份证号码格式不正确'],
             ['avatar', 'image', 'extensions' => 'jpg, png', 'maxSize' => 2097152, 'mimeTypes' => 'image/jpeg, image/png', 'checkExtensionByMimeType' => false, 'tooBig' => '文件"{file}"太大, 它的大小不能超过2.00 MB'],
@@ -74,8 +75,8 @@ class UserForm extends Model
     
     public function scenarios() {
         $scenarios = [
-            self::SCENARIOS_BACKEND_CREATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
-            self::SCENARIOS_BACKEND_UPDATE => ['nickname', 'mobile', 'gender', 'user_type', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
+            self::SCENARIOS_BACKEND_CREATE => ['nickname', 'mobile', 'gender', 'user_group_id', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
+            self::SCENARIOS_BACKEND_UPDATE => ['nickname', 'mobile', 'gender', 'user_group_id', 'status', 'email', 'password', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
             self::SCENARIOS_API_UPDATE => ['nickname', 'gender', 'email', 'real_name', 'bio', 'id_no', 'avatar', 'qq', 'wechat'],
          ];
         return array_merge( parent:: scenarios(), $scenarios);
@@ -101,6 +102,7 @@ class UserForm extends Model
             $this->wechat = $this->_user->wechat;
             $this->id_no = $this->_user->id_no;
             $this->bio = $this->_user->bio;
+            $this->user_group_id = $this->_user->user_group_id;
             $this->status = $this->_user->status;
             $this->avatar = $this->_user->avatar;
         }
@@ -133,7 +135,7 @@ class UserForm extends Model
             'id_no'             => '身份证号',
             'bio'               => '个人简介',
             'avatar'            => '头像',
-            'user_type'         => '用户类型',
+            'user_group_id'     => '用户组',
             'status'            => '状态'
         ];
     }
@@ -174,6 +176,7 @@ class UserForm extends Model
             $this->_user->id_no = $this->id_no;
             $this->_user->bio = $this->bio;
             $this->_user->status = $this->status;
+            $this->_user->user_group_id = $this->user_group_id;
 
             if($this->_user->save()) {
                 return true;

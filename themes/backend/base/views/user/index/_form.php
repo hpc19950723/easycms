@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
 use common\modules\core\components\Tools;
+use common\modules\user\models\UserGroup;
 ?>
 
 <div class="user-form">
@@ -46,7 +47,7 @@ use common\modules\core\components\Tools;
         
 
     <?php if($model->isNewRecord): ?>
-    <?= $form->field($model, 'user_type')->dropdownList(User::getUserType()) ?>
+    <?= $form->field($model, 'user_group_id')->dropdownList(UserGroup::find()->select(['group_name', 'user_group_id'])->indexBy('user_group_id')->column()) ?>
     <?php endif; ?>
     
     <?= $form->field($model, 'status')->dropdownList(User::getStatus()) ?>

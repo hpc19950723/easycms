@@ -136,7 +136,6 @@ class ThirdPartLoginForm extends Model
                 $this->_user->mobile = $this->mobile;
                 $this->_user->nickname = User::getUniqueNickname($this->nickname);
                 $this->_user->gender = static::getGender($this->gender);
-                $this->_user->user_type = User::USER_TYPE_NORMAL;
                 $this->_user->setPassword($this->password);
                 $this->_user->access_token = Yii::$app->security->generateRandomString(32);
                 $this->_user->{static::getThirdPartField($this->getScenario())} = $this->thirdPartId;

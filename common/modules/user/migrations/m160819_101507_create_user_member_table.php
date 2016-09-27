@@ -26,7 +26,7 @@ class m160819_101507_create_user_member_table extends Migration
             'qq' => $this->string(),
             'wechat' => $this->string(),
             'id_no' => $this->string(18)->comment('身份证号'),
-            'user_type' => "tinyint(2) unsigned NOT NULL DEFAULT '1' COMMENT '用户类型 1;普通'",
+            'user_group_id' => $this->integer(10)->notNull()->defaultValue(1),
             'status' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户状态 -1;删除 0;停用 1;启用'",
             'access_token' => $this->string(),
             'wechat_oauth' => $this->string(),
@@ -38,6 +38,12 @@ class m160819_101507_create_user_member_table extends Migration
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
         ]);
+        
+        $this->createTable('user_group',[
+            'user_group_id' => $this->primaryKey()->unsigned(),
+            'group_name' => $this->string(50)->notNull()->comment('组名称'),
+        ]);
+        $this->insert('user_group',['group_name' =>'普通用户']);
     }
 
     /**
@@ -46,5 +52,6 @@ class m160819_101507_create_user_member_table extends Migration
     public function down()
     {
         $this->dropTable('user_member');
+        $this->dropTable('user_group');
     }
 }
