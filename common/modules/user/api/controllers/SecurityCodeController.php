@@ -45,7 +45,7 @@ class SecurityCodeController extends \common\modules\core\api\components\BaseCon
         if($model->load($data, '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10201, Tools::getFirstError($model->errors));
+            return self::formatResult(10201, Tools::getFirstError($model->errors, '验证码发送失败'));
         }
     }
 }

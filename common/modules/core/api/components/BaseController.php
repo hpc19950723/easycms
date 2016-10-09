@@ -5,9 +5,21 @@ namespace common\modules\core\api\components;
 use Yii;
 use yii\rest\Controller;
 use yii\web\Response;
+use common\modules\core\components\Tools;
 
 class BaseController extends Controller
 {
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['verifySignature'] = [
+            'class' => '\common\modules\core\filters\VerifySignature',
+            'salt' => Tools::getModuleParams('core', 'salt'),
+            'enabled' => false
+        ];
+        return $behaviors;
+    }
+
     /**
      * 返回成功结果,附加成功code
      * @param type $data
