@@ -44,7 +44,7 @@ class VerifySignature extends \yii\base\ActionFilter
                 $splice .= $key . $value;
             }
         }
-        $newSign = md5($splice . $this->salt);
+        $newSign = strtoupper(md5($splice . $this->salt));
 
         //如果需要防止重放攻击需要缓存签名并验证
         if($oldSign !== $newSign) {
