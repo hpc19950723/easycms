@@ -12,6 +12,7 @@ class m160912_022722_create_message_table extends Migration
      */
     public function up()
     {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('message', [
             'message_id' => $this->primaryKey()->unsigned(),
             'sender_id' => $this->integer()->notNull()->comment('发送人ID 0;系统 >0;用户'),
@@ -23,7 +24,7 @@ class m160912_022722_create_message_table extends Migration
             'is_newest' => "tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否为最新消息'",
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
         
         
         $this->createTable('message_action', [
@@ -33,7 +34,7 @@ class m160912_022722_create_message_table extends Migration
             'is_read' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否已读'",
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
     }
 
     /**

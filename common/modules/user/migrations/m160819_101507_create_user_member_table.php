@@ -12,8 +12,9 @@ class m160819_101507_create_user_member_table extends Migration
      */
     public function up()
     {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('user_member', [
-            'user_id' => $this->primaryKey(),
+            'user_id' => $this->primaryKey()->unsigned(),
             'mobile' => $this->string(11)->notNull()->unique(),
             'password' => $this->string(60)->comment('密码'),
             'password_reset_token' => $this->string(),
@@ -37,12 +38,12 @@ class m160819_101507_create_user_member_table extends Migration
             'login_at' => $this->datetime(),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
         
         $this->createTable('user_group',[
             'user_group_id' => $this->primaryKey()->unsigned(),
             'group_name' => $this->string(50)->notNull()->comment('组名称'),
-        ]);
+        ], $tableOptions);
         $this->insert('user_group',['group_name' =>'普通用户']);
     }
 
