@@ -9,7 +9,7 @@ class BaseModule extends \yii\base\Module
     {
         parent::init();
         $this->viewPath = substr($this->basePath, 0, stripos($this->basePath, 'modules') + 7) . DIRECTORY_SEPARATOR . 'views' . substr($this->basePath, stripos($this->basePath, 'modules') + 7);
-        $this->viewPath = preg_replace('/views\/(\w+)\/admin/', 'views/$1', $this->viewPath);
+        $this->viewPath = preg_replace('/views\\' . DIRECTORY_SEPARATOR . '(\w+)\\' . DIRECTORY_SEPARATOR . 'admin/', 'views\\' . DIRECTORY_SEPARATOR . '$1', $this->viewPath);
         $this->setLayoutPath('@themes/backend/base/views/layouts');
         
         if($this->id !== 'admin') {

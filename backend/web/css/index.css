@@ -26,10 +26,7 @@ body {
     background-color: #242323;
     width: 210px;
     height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    overflow: auto;
+    float: left;
 }
 
 .dw_right {
