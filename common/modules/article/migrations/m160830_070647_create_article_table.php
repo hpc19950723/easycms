@@ -12,6 +12,7 @@ class m160830_070647_create_article_table extends Migration
      */
     public function up()
     {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('article_category', [
             'category_id' => $this->primaryKey(),
             'identifier' => $this->string(45)->notNull()->unique(),
@@ -24,7 +25,7 @@ class m160830_070647_create_article_table extends Migration
             'items_count' => $this->integer(10)->notNull()->defaultValue(0)->comment('文章数量'),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
         $this->addCommentOnTable('article_category', '文章分类表');
         $this->addCommentOnColumn('article_category', 'identifier', '唯一标识符,仅可包含英文,下划线(_),数字');
         $this->addCommentOnColumn('article_category', 'parent_id', '父类ID');

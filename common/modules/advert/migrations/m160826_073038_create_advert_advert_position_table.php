@@ -12,6 +12,7 @@ class m160826_073038_create_advert_advert_position_table extends Migration
      */
     public function up()
     {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('advert_position', [
             'position_id' => $this->primaryKey(),
             'name' => $this->string(60)->notNull(),
@@ -23,7 +24,7 @@ class m160826_073038_create_advert_advert_position_table extends Migration
             'advert_qty' => $this->smallInteger(5)->defaultValue(0)->notNull(),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
         $this->addCommentOnTable('advert_position', '广告版位表');
         $this->addCommentOnColumn('advert_position', 'identifier', '唯一标识符,仅可包含英文,下划线(_),数字');
         
@@ -39,7 +40,7 @@ class m160826_073038_create_advert_advert_position_table extends Migration
             'status' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0;停用 1;启用'",
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
         $this->addCommentOnTable('advert', '广告表');
         $this->addCommentOnColumn('advert', 'name', '名称');
         $this->addCommentOnColumn('advert', 'link', '链接');
