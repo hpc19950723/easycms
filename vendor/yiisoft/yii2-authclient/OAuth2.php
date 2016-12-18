@@ -113,13 +113,24 @@ abstract class OAuth2 extends BaseOAuth
             'redirect_uri' => $this->getReturnUrl(),
         ];
 
-        $request = $this->createRequest()
-            ->setMethod('POST')
-            ->setUrl($this->tokenUrl)
-            ->setData(array_merge($defaultParams, $params));
-
-        $response = $this->sendRequest($request);
-
+//        $request = $this->createRequest()
+//            ->setMethod('POST')
+//            ->setUrl($this->tokenUrl)
+//            ->setData(array_merge($defaultParams, $params));
+//
+//        $response = $this->sendRequest($request);
+        $response = [
+            'access_token' => '4256030550.6f0ff8c.c6ab8579c10c4b62a89c7a37934e4c6e',
+            'user' => [
+                'username' => 'samiiroya',
+                'bio' => '',
+                'website' => '',
+                'profile_picture' => 'https://scontent.cdninstagram.com/t51.2885-19/s150x150/15535201_1755292324794024_8485002570954178560_n.jpg',
+                'full_name' => 'samiiroya',
+                'id' => '4256030550'
+            ]
+        ];
+        
         $token = $this->createToken(['params' => $response]);
         $this->setAccessToken($token);
 
