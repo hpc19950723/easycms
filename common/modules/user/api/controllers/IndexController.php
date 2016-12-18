@@ -31,7 +31,7 @@ class IndexController extends BaseController
                 HttpBasicAuth::className(),
                 QueryParamAuth::className(),
             ],
-            'optional' => ['create', 'login', 'reset-password', 'wechat-login', 'qq-login', 'weibo-login']
+            'optional' => ['create', 'login', 'reset-password', 'instagram-login', 'wechat-login', 'qq-login', 'weibo-login']
         ];
         return $behaviors;
     }
@@ -254,6 +254,41 @@ class IndexController extends BaseController
                 break;
             default:
                 return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
+        }
+    }
+    
+    
+    public function actionInstagramLogin()
+    {
+        $code = trim(Yii::$app->request->get('code'));
+        if(empty($code)){
+            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
+        }
+        
+        $model = new ThirdPartLoginForm();
+        try {
+            $instagram = Yii::$app->authClientCollection->getClient('instagram');
+            $instagram->fetchAccessToken($code);
+            print_r($instagram->getAccessToken());exit;
+            $userAttributes = $instagram->getUserAttributes();
+print_r($userAttributes);exit;
+            $data = [
+                'nickname'      => $userAttributes['name'],
+                'avatar'        => $userAttributes['avatar_large'],
+                'thirdPartId'   => $userAttributes['idstr'],
+                'gender'        => $userAttributes['gender']
+            ];
+
+            $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_LOGIN);
+            if ($model->load($data, '') && $token = $model->login()) {
+                return self::formatSuccessResult($data = ['token' => $token]);
+            } else {
+                Yii::$app->cache->set($accessToken, $data, 1800);
+                return self::formatResult(10207, '请先绑定当前应用账号');
+            }
+        } catch(Exception $e) {
+            echo $e->getMessage();exit;
+            return self::formatResult(10216, '微博授权登陆失败');
         }
     }
 
