@@ -269,14 +269,12 @@ class IndexController extends BaseController
         try {
             $instagram = Yii::$app->authClientCollection->getClient('instagram');
             $instagram->fetchAccessToken($code);
-            print_r($instagram->getAccessToken());exit;
-            $userAttributes = $instagram->getUserAttributes();
-print_r($userAttributes);exit;
+            $accessToken = $instagram->getAccessToken();
+            $user = $accessToken->getParam('user');
             $data = [
-                'nickname'      => $userAttributes['name'],
-                'avatar'        => $userAttributes['avatar_large'],
-                'thirdPartId'   => $userAttributes['idstr'],
-                'gender'        => $userAttributes['gender']
+                'nickname'          => $user['username'],
+                'avatar'            => $user['profile_picture'],
+                'instagram_user_id' => $user['id'],
             ];
 
             $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_LOGIN);
