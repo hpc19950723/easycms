@@ -1,3 +1,0 @@
-[submodule "vendor/leap/yii2-oauth"]
-	path = vendor/leap/yii2-oauth
-	url = https://github.com/jump2/yii2-oauth.git
