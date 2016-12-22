@@ -73,191 +73,10 @@ class IndexController extends BaseController
         }
     }
     
-    
     /**
-     * 微信三方登陆
+     * Instagram登录
      * @return array
      */
-    public function actionWechatLogin()
-    {
-        $code = trim(Yii::$app->request->post('code'));
-        if(empty($code)){
-            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-        
-        $model = new ThirdPartLoginForm();
-        $type = Yii::$app->request->post('type', 'login');
-        switch ($type) {
-            case 'login':
-                try {
-                    $weixin = Yii::$app->authClientCollection->getClient('weixin');
-                    $weixin->fetchAccessToken($code);
-                    $userAttributes = $weixin->getUserAttributes();
-
-                    $data = [
-                        'nickname'      => $userAttributes['nickname'],
-                        'avatar'        => $userAttributes['headimgurl'],
-                        'thirdPartId'   => $userAttributes['unionid'],
-                        'gender'        => $userAttributes['sex']
-                    ];
-
-                    $model->setScenario(ThirdPartLoginForm::SCENARIOS_WECHAT_LOGIN);
-                    if ($model->load($data, '') && $token = $model->login()) {
-                        return self::formatSuccessResult($data = ['token' => $token]);
-                    } else {
-                        Yii::$app->cache->set($code, $data, 1800);
-                        return self::formatResult(10207, '请先绑定当前应用账号');
-                    }
-                } catch(Exception $e) {
-                    return self::formatResult(10209, '微信授权登陆失败');
-                }
-                break;
-            case 'bind':
-                $data = Yii::$app->cache->get($code);
-                if ($data === false) {
-                    return self::formatResult(10206, '微信授权过期,请重新授权');
-                }
-
-                $post = Yii::$app->request->post();
-                $post['code'] = $post['secrity_code'];
-                unset($post['secrity_code']);
-                $data = array_merge($data, $post);
-                $model->setScenario(ThirdPartLoginForm::SCENARIOS_WECHAT_BIND);
-                if ($model->load($data, '') && $token = $model->bind()) {
-                    return self::formatSuccessResult($data = ['token' => $token]);
-                } else {
-                    return self::formatResult(10208, Tools::getFirstError($model->errors, '微信账号绑定失败'));
-                }
-                break;
-            default:
-                return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-    }
-    
-    
-    /**
-     * QQ登陆
-     */
-    public function actionQqLogin()
-    {
-        $accessToken = trim(Yii::$app->request->post('access_token'));
-        $openId = trim(Yii::$app->request->post('openid'));
-
-        if (empty($accessToken) || empty($openId)) {
-            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-        
-        $model = new ThirdPartLoginForm();
-        $type = Yii::$app->request->post('type', 'login');
-        switch ($type) {
-            case 'login':
-                try {
-                    $qq = Yii::$app->authClientCollection->getClient('qq');
-                    $qq->setAccessToken(['params' => ['access_token' => $accessToken, 'openid' => $openId]]);
-                    $userAttributes = $qq->getUserInfo();
-
-                    $data = [
-                        'nickname'      => $userAttributes['nickname'],
-                        'avatar'        => $userAttributes['figureurl_qq_2'],
-                        'thirdPartId'   => $openId,
-                        'gender'        => $userAttributes['gender']
-                    ];
-
-                    $model->setScenario(ThirdPartLoginForm::SCENARIOS_QQ_LOGIN);
-                    if ($model->load($data, '') && $token = $model->login()) {
-                        return self::formatSuccessResult($data = ['token' => $token]);
-                    } else {
-                        Yii::$app->cache->set($openId, $data, 1800);
-                        return self::formatResult(10207, '请先绑定当前应用账号');
-                    }
-                } catch(Exception $e) {
-                    return self::formatResult(10213, 'QQ授权登陆失败');
-                }
-                break;
-            case 'bind':
-                $data = Yii::$app->cache->get($openId);
-                if ($data === false) {
-                    return self::formatResult(10211, 'QQ授权过期,请重新授权');
-                }
-
-                $post = Yii::$app->request->post();
-                $post['code'] = $post['secrity_code'];
-                unset($post['secrity_code']);
-                $data = array_merge($data, $post);
-                $model->setScenario(ThirdPartLoginForm::SCENARIOS_QQ_BIND);
-                if ($model->load($data, '') && $token = $model->bind()) {
-                    return self::formatSuccessResult($data = ['token' => $token]);
-                } else {
-                    return self::formatResult(10212, Tools::getFirstError($model->errors, 'QQ账号绑定失败'));
-                }
-                break;
-            default:
-                return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-    }
-    
-    
-    /**
-     * 微博登陆
-     */
-    public function actionWeiboLogin()
-    {
-        $accessToken = trim(Yii::$app->request->post('access_token'));
-
-        if (empty($accessToken)) {
-            return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-        
-        $model = new ThirdPartLoginForm();
-        $type = Yii::$app->request->post('type', 'login');
-        switch ($type) {
-            case 'login':
-                try {
-                    $qq = Yii::$app->authClientCollection->getClient('weibo');
-                    $qq->setAccessToken(['params' => ['access_token' => $accessToken]]);
-                    $userAttributes = $qq->getUserInfo();
-
-                    $data = [
-                        'nickname'      => $userAttributes['name'],
-                        'avatar'        => $userAttributes['avatar_large'],
-                        'thirdPartId'   => $userAttributes['idstr'],
-                        'gender'        => $userAttributes['gender']
-                    ];
-
-                    $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_LOGIN);
-                    if ($model->load($data, '') && $token = $model->login()) {
-                        return self::formatSuccessResult($data = ['token' => $token]);
-                    } else {
-                        Yii::$app->cache->set($accessToken, $data, 1800);
-                        return self::formatResult(10207, '请先绑定当前应用账号');
-                    }
-                } catch(Exception $e) {
-                    return self::formatResult(10216, '微博授权登陆失败');
-                }
-                break;
-            case 'bind':
-                $data = Yii::$app->cache->get($accessToken);
-                if ($data === false) {
-                    return self::formatResult(10214, '微博授权过期,请重新授权');
-                }
-
-                $post = Yii::$app->request->post();
-                $post['code'] = $post['secrity_code'];
-                unset($post['secrity_code']);
-                $data = array_merge($data, $post);
-                $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_BIND);
-                if ($model->load($data, '') && $token = $model->bind()) {
-                    return self::formatSuccessResult($data = ['token' => $token]);
-                } else {
-                    return self::formatResult(10215, Tools::getFirstError($model->errors, '微博账号绑定失败'));
-                }
-                break;
-            default:
-                return self::formatResult(10002, Yii::t('error', 'Invalid params request'));
-        }
-    }
-    
-    
     public function actionInstagramLogin()
     {
         $code = trim(Yii::$app->request->get('code'));
@@ -272,12 +91,12 @@ class IndexController extends BaseController
             $accessToken = $instagram->getAccessToken();
             $user = $accessToken->getParam('user');
             $data = [
-                'nickname'          => $user['username'],
-                'avatar'            => $user['profile_picture'],
+                'nickname' => $user['username'],
+                'avatar' => $user['profile_picture'],
                 'instagram_user_id' => $user['id'],
+                'instagram_access_token' => $accessToken->getParam('access_token')
             ];
 
-            $model->setScenario(ThirdPartLoginForm::SCENARIOS_WEIBO_LOGIN);
             if ($model->load($data, '') && $token = $model->login()) {
                 return self::formatSuccessResult($data = ['token' => $token]);
             } else {
@@ -286,7 +105,7 @@ class IndexController extends BaseController
             }
         } catch(Exception $e) {
             echo $e->getMessage();exit;
-            return self::formatResult(10216, '微博授权登陆失败');
+            return self::formatResult(10216, 'instagram login fail');
         }
     }
 

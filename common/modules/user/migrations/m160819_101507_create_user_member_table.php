@@ -15,9 +15,6 @@ class m160819_101507_create_user_member_table extends Migration
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('user_member', [
             'user_id' => $this->primaryKey()->unsigned(),
-            'mobile' => $this->string(11)->notNull()->unique(),
-            'password' => $this->string(60)->comment('密码'),
-            'password_reset_token' => $this->string(),
             'nickname' => $this->string(65)->comment('昵称'),
             'avatar' => $this->string()->comment('头像'),
             'website' => $this->string()->comment('站点'),
@@ -30,7 +27,7 @@ class m160819_101507_create_user_member_table extends Migration
             'instagram_user_id' => $this->string(),
             'instagram_access_token' => $this->string(),
             'auth_key' => $this->string(),
-            'login_ip' => $this->integer(),
+            'login_ip' => $this->integer()->unsigned(),
             'login_at' => $this->datetime(),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
