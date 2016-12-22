@@ -113,23 +113,12 @@ abstract class OAuth2 extends BaseOAuth
             'redirect_uri' => $this->getReturnUrl(),
         ];
 
-//        $request = $this->createRequest()
-//            ->setMethod('POST')
-//            ->setUrl($this->tokenUrl)
-//            ->setData(array_merge($defaultParams, $params));
-//
-//        $response = $this->sendRequest($request);
-        $response = [
-            'access_token' => '4284959530.6f0ff8c.a72d94dcedf245ec999ada2fecb49686',
-            'user' => [
-                'username' => '何鹏程',
-                'bio' => 'Android_developer',
-                'website' => 'http://blog.csdn.net/hpc19950723',
-                'profile_picture' => 'https://scontent-ams3-1.cdninstagram.com/t51.2885-19/11906329_960233084022564_1448528159_a.jpg',
-                'full_name' => 'android_kiven',
-                'id' => '4284959530'
-            ]
-        ];
+        $request = $this->createRequest()
+            ->setMethod('POST')
+            ->setUrl($this->tokenUrl)
+            ->setData(array_merge($defaultParams, $params));
+
+        $response = $this->sendRequest($request);
         
         $token = $this->createToken(['params' => $response]);
         $this->setAccessToken($token);

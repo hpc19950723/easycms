@@ -59,7 +59,7 @@ return [
                 'instagram' => [
                     'class' => 'leap\oauth\Instagram',
                     'clientId' => '6f0ff8c77aff4c0486d32ef3d38dc611',
-                    'clientSecret' => '1f7dcda8d0124660b4419f073d2b1ce5',
+                    'clientSecret' => '5bd32dbe19804912abde44502f3a113b',
                 ],
             ]
         ],
