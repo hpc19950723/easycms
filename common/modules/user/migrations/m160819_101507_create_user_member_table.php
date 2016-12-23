@@ -24,7 +24,7 @@ class m160819_101507_create_user_member_table extends Migration
             'user_group_id' => $this->integer(10)->notNull()->defaultValue(1),
             'status' => "tinyint(1) NOT NULL DEFAULT '1' COMMENT '用户状态 -1;删除 0;停用 1;启用'",
             'access_token' => $this->string(),
-            'instagram_user_id' => $this->string(),
+            'instagram_user_id' => $this->string(20),
             'instagram_access_token' => $this->string(),
             'auth_key' => $this->string(),
             'login_ip' => $this->integer()->unsigned(),
