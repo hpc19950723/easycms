@@ -98,13 +98,16 @@ class IndexController extends BaseController
             ];
 
             if ($model->load($data, '') && $token = $model->login()) {
-                return self::formatSuccessResult($data = ['token' => $token]);
+                return self::formatSuccessResult([
+                    'token' => $token,
+                    'nickname' => $user['username'],
+                    'avatar' => $user['profile_picture']
+                ]);
             } else {
                 Yii::$app->cache->set($accessToken, $data, 1800);
                 return self::formatResult(10207, '请先绑定当前应用账号');
             }
         } catch(Exception $e) {
-            echo $e->getMessage();exit;
             return self::formatResult(10216, 'instagram login fail');
         }
     }
