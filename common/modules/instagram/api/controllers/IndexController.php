@@ -40,9 +40,9 @@ class IndexController extends \common\modules\core\api\components\BaseController
         $instagram = Yii::$app->authClientCollection->getClient('instagram');
         $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
         //我关注的人
-        $selfFollows = $instagram->api('v1/users/self/follows', 'GET');
+        $selfFollows = $instagram->getSelfFollows();
         //关注我的人
-        $selfFollowedBy = $instagram->api('v1/users/self/followed-by', 'GET');
+        $selfFollowedBy = $instagram->getSelfFollowedBy();
         $followers = [];
         if(!empty($selfFollowedBy['data'])) {
             foreach($selfFollowedBy['data'] as $follower) {
@@ -79,9 +79,9 @@ class IndexController extends \common\modules\core\api\components\BaseController
         $instagram = Yii::$app->authClientCollection->getClient('instagram');
         $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
         //我关注的人
-        $selfFollows = $instagram->api('v1/users/self/follows', 'GET');
+        $selfFollows = $instagram->getSelfFollows();
         //关注我的人
-        $selfFollowedBy = $instagram->api('v1/users/self/followed-by', 'GET');
+        $selfFollowedBy = $instagram->getSelfFollowedBy();
         $follows = [];
         if(!empty($selfFollows['data'])) {
             foreach($selfFollows['data'] as $follow) {
