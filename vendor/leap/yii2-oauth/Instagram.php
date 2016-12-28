@@ -27,16 +27,7 @@ class Instagram extends OAuth2
      */
     public function getSelfFollows($readCache = true)
     {
-        $accessToken = $this->getAccessToken()->getParam('access_token');
-        $cacheKey = 'self_follows_' . md5($accessToken);
-        $data = Yii::$app->cache->get($cacheKey);
-        if(!$readCache || empty($data)) {
-            $data = $this->api('v1/users/self/follows', 'GET');
-            if(isset($data['meta']['code']) && $data['meta']['code'] == 200) {
-                Yii::$app->cache->set($cacheKey, $data, 60 * 10);
-            }
-        }
-        return $data;
+        return $this->cacheApiData('v1/users/self/follows', 'self_follows_', 600, $readCache);
     }
     
     /**
@@ -46,13 +37,18 @@ class Instagram extends OAuth2
      */
     public function getSelfFollowedBy($readCache = true)
     {
+        return $this->cacheApiData('v1/users/self/followed-by', 'self_followed_by_', 600, $readCache);
+    }
+    
+    public function cacheApiData($apiSubUrl, $cacheKeyPrefix, $duration, $readCache = true)
+    {
         $accessToken = $this->getAccessToken()->getParam('access_token');
-        $cacheKey = 'self_followed_by_' . md5($accessToken);
+        $cacheKey = $cacheKeyPrefix . md5($accessToken);
         $data = Yii::$app->cache->get($cacheKey);
         if(!$readCache || empty($data)) {
-            $data = $this->api('v1/users/self/followed-by', 'GET');
+            $data = $this->api($apiSubUrl, 'GET');
             if(isset($data['meta']['code']) && $data['meta']['code'] == 200) {
-                Yii::$app->cache->set($cacheKey, $data, 60 * 10);
+                Yii::$app->cache->set($cacheKey, $data, $duration);
             }
         }
         return $data;

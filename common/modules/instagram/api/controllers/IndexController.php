@@ -30,6 +30,20 @@ class IndexController extends \common\modules\core\api\components\BaseController
     }
     
     /**
+     * 获取登录用户基本信息
+     * @return array
+     */
+    public function actionBaseInfo()
+    {
+        $user = Yii::$app->user->identity;
+        $instagramAccessToken = $user->instagram_access_token;
+        $instagram = Yii::$app->authClientCollection->getClient('instagram');
+        $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
+        $instagramUser = $instagram->initUserAttributes();
+        return $this->formatSuccessResult($instagramUser['data']);
+    }
+    
+    /**
      * 我关注但并没有关注我的人
      * @return array
      */
@@ -62,7 +76,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
         
         $data = [
             'total' => count($selfFollowNotFollowed),
-            'follows' => $selfFollowNotFollowed
+            'users' => $selfFollowNotFollowed
         ];
         
         return $this->formatSuccessResult($data);
@@ -101,7 +115,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
         
         $data = [
             'total' => count($followedButNotFollow),
-            'follows' => $followedButNotFollow
+            'users' => $followedButNotFollow
         ];
         
         return $this->formatSuccessResult($data);
