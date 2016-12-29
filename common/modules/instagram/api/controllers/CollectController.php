@@ -5,6 +5,9 @@ use Yii;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
+use common\modules\instagram\models\forms\CollectForm;
+use yii\data\ActiveDataProvider;
+use common\modules\instagram\models\Collect;
 
 class CollectController extends \common\modules\core\api\components\BaseController
 {
@@ -26,7 +29,12 @@ class CollectController extends \common\modules\core\api\components\BaseControll
      */
     public function actionIndex()
     {
+        $userId = Yii::$app->user->getId();
+        $dataProvider = new ActiveDataProvider([
+            'query' => Collect::find()->where(['user_id' => $userId])->orderBy('created_at desc')
+        ]);
         
+        return self::formatSuccessResult($dataProvider);
     }
     
     /**
@@ -34,14 +42,32 @@ class CollectController extends \common\modules\core\api\components\BaseControll
      */
     public function actionCreate()
     {
-        $instagramUserId = Yii::$app->request->get('instagram_user_id');
+        $model = new CollectForm();
+        
+        if($model->load(Tools::getPost(['user_id' => Yii::$app->user->getId()]), '') && $model->save()) {
+            return self::formatSuccessResult();
+        } else {
+            return self::formatResult(10301, Tools::getFirstError($model->errors));
+        }
     }
     
     /**
      * 删除收藏
      */
-    public function actionDelete()
+    public function actionDelete($id)
     {
+        $this->findModel($id)->delete();
         
+        return self::formatSuccessResult();
+    }
+    
+    protected function findModel($id)
+    {
+        $model = User::findOne(['user_id' => $id, 'status' => User::STATUS_ACTIVE]);
+        if($model === null) {
+            throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
+        }
+        
+        return $model;
     }
 }

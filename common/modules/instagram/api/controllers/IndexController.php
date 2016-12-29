@@ -26,7 +26,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
      */
     public function actionIndex()
     {
-    
+        
     }
     
     /**

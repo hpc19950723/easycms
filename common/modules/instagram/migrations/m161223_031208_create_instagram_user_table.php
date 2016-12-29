@@ -13,7 +13,8 @@ class m161223_031208_create_instagram_user_table extends Migration
     public function up()
     {
         $this->createTable('instagram_user', [
-            'instagram_user_id' => $this->primaryKey()->unsigned(),
+            'id' => $this->primaryKey(),
+            'instagram_user_id' => $this->bigInteger(8)->unsigned()->unique(),
             'username' => $this->string(40)->notNull(),
             'full_name' => $this->string(40)->notNull(),
             'profile_picture' => $this->string(255)->notNull(),
