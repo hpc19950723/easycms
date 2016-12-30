@@ -24,6 +24,13 @@ class Collect extends \common\modules\core\models\CommonActiveRecord
         ];
     }
     
+    public function extraFields()
+    {
+        return [
+            'instagramUser'
+        ];
+    }
+    
     public function getInstagramUser()
     {
         return $this->hasOne(InstagramUser::className(), ['instagram_user_id' => 'instagram_user_id']);

@@ -31,6 +31,7 @@ class CollectController extends \common\modules\core\api\components\BaseControll
     public function actionIndex()
     {
         $userId = Yii::$app->user->getId();
+        Tools::addQueryParams(['expand' => 'instagramUser']);
         $dataProvider = new ActiveDataProvider([
             'query' => Collect::find()->where(['user_id' => $userId])->orderBy('created_at desc')
         ]);
