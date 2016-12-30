@@ -4,7 +4,7 @@ namespace common\modules\instagram\models\forms;
 
 use common\modules\instagram\models\Collect;
 
-class CollectForm extends yii\base\Model
+class CollectForm extends \yii\base\Model
 {
     public $user_id;
     
