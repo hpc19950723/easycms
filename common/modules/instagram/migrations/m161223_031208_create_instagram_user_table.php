@@ -12,6 +12,7 @@ class m161223_031208_create_instagram_user_table extends Migration
      */
     public function up()
     {
+        $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         $this->createTable('instagram_user', [
             'id' => $this->primaryKey(),
             'instagram_user_id' => $this->bigInteger(8)->unsigned()->unique(),
@@ -20,7 +21,7 @@ class m161223_031208_create_instagram_user_table extends Migration
             'profile_picture' => $this->string(255)->notNull(),
             'created_at' => "timestamp NULL DEFAULT NULL COMMENT '创建时间'",
             'updated_at' => "timestamp NULL DEFAULT NULL COMMENT '更新时间'",
-        ]);
+        ], $tableOptions);
     }
 
     /**

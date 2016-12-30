@@ -5,6 +5,7 @@ use Yii;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
+use common\modules\instagram\components\FollowAndFollowed;
 
 class IndexController extends \common\modules\core\api\components\BaseController
 {
@@ -51,12 +52,15 @@ class IndexController extends \common\modules\core\api\components\BaseController
     {
         $user = Yii::$app->user->identity;
         $instagramAccessToken = $user->instagram_access_token;
-        $instagram = Yii::$app->authClientCollection->getClient('instagram');
-        $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
+        $followAndFollowed = Yii::createObject([
+            'class' => 'common\modules\instagram\components\FollowAndFollowed',
+            'accessToken' => $instagramAccessToken
+        ]);
+
         //我关注的人
-        $selfFollows = $instagram->getSelfFollows();
+        $selfFollows = $followAndFollowed->getFollows();
         //关注我的人
-        $selfFollowedBy = $instagram->getSelfFollowedBy();
+        $selfFollowedBy = $followAndFollowed->getFollowedBy();
         $followers = [];
         if(!empty($selfFollowedBy['data'])) {
             foreach($selfFollowedBy['data'] as $follower) {
@@ -90,12 +94,15 @@ class IndexController extends \common\modules\core\api\components\BaseController
     {
         $user = Yii::$app->user->identity;
         $instagramAccessToken = $user->instagram_access_token;
-        $instagram = Yii::$app->authClientCollection->getClient('instagram');
-        $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
+        $followAndFollowed = Yii::createObject([
+            'class' => 'common\modules\instagram\components\FollowAndFollowed',
+            'accessToken' => $instagramAccessToken
+        ]);
+        
         //我关注的人
-        $selfFollows = $instagram->getSelfFollows();
+        $selfFollows = $followAndFollowed->getFollows();
         //关注我的人
-        $selfFollowedBy = $instagram->getSelfFollowedBy();
+        $selfFollowedBy = $followAndFollowed->getFollowedBy();
         $follows = [];
         if(!empty($selfFollows['data'])) {
             foreach($selfFollows['data'] as $follow) {

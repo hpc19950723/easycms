@@ -22,36 +22,20 @@ class Instagram extends OAuth2
     
     /**
      * 获取我关注的人
-     * @param boolean $readCache 是否从缓存中读取
      * @return array
      */
-    public function getSelfFollows($readCache = true)
+    public function getSelfFollows()
     {
-        return $this->cacheApiData('v1/users/self/follows', 'self_follows_', 600, $readCache);
+        return $this->api('v1/users/self/follows', 'GET');
     }
     
     /**
      * 获取关注我的人
-     * @param boolean $readCache 是否从缓存中读取
      * @return array
      */
-    public function getSelfFollowedBy($readCache = true)
+    public function getSelfFollowedBy()
     {
-        return $this->cacheApiData('v1/users/self/followed-by', 'self_followed_by_', 600, $readCache);
-    }
-    
-    public function cacheApiData($apiSubUrl, $cacheKeyPrefix, $duration, $readCache = true)
-    {
-        $accessToken = $this->getAccessToken()->getParam('access_token');
-        $cacheKey = $cacheKeyPrefix . md5($accessToken);
-        $data = Yii::$app->cache->get($cacheKey);
-        if(!$readCache || empty($data)) {
-            $data = $this->api($apiSubUrl, 'GET');
-            if(isset($data['meta']['code']) && $data['meta']['code'] == 200) {
-                Yii::$app->cache->set($cacheKey, $data, $duration);
-            }
-        }
-        return $data;
+        return $this->api('v1/users/self/followed-by', 'GET');
     }
     
     /**
