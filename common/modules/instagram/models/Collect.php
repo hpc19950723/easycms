@@ -9,7 +9,7 @@ use common\modules\instagram\models\InstagramUser;
 class Collect extends \common\modules\core\models\CommonActiveRecord
 {
     public static function tableName() {
-        return '{{%collect}}';
+        return '{{%instagram_collect}}';
     }
     
     public function behaviors()

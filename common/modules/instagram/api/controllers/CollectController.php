@@ -8,6 +8,7 @@ use yii\filters\auth\QueryParamAuth;
 use common\modules\instagram\models\forms\CollectForm;
 use yii\data\ActiveDataProvider;
 use common\modules\instagram\models\Collect;
+use common\modules\core\components\Tools;
 
 class CollectController extends \common\modules\core\api\components\BaseController
 {
@@ -63,7 +64,7 @@ class CollectController extends \common\modules\core\api\components\BaseControll
     
     protected function findModel($id)
     {
-        $model = User::findOne(['user_id' => $id, 'status' => User::STATUS_ACTIVE]);
+        $model = Collect::findOne($id);
         if($model === null) {
             throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
