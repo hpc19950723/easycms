@@ -187,3 +187,4 @@ body {
 
 .hint-block { font-size:14px; color:#6b7a88; margin-bottom: 5px;}
 input[type="file"].import-module { display: none; }
+.redactor-toolbar:after { clear:none; }

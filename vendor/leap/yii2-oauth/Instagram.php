@@ -20,6 +20,10 @@ class Instagram extends OAuth2
         return $this->api('v1/users/self/', 'GET');
     }
     
+    public function getUserBaseInfo($id) {
+        return $this->api('v1/users/' . $id . '/', 'GET');
+    }
+    
     /**
      * 获取我关注的人
      * @return array

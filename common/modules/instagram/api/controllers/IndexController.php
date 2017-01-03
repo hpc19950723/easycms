@@ -31,15 +31,16 @@ class IndexController extends \common\modules\core\api\components\BaseController
     
     /**
      * 获取登录用户基本信息
+     * @param mixed $id 取值 'self' 或 instgram user id
      * @return array
      */
-    public function actionBaseInfo()
+    public function actionBaseInfo($id = 'self')
     {
         $user = Yii::$app->user->identity;
         $instagramAccessToken = $user->instagram_access_token;
         $instagram = Yii::$app->authClientCollection->getClient('instagram');
         $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
-        $instagramUser = $instagram->initUserAttributes();
+        $instagramUser = $instagram->getUserBaseInfo($id);
         return $this->formatSuccessResult($instagramUser['data']);
     }
     

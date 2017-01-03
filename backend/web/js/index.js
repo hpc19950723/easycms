@@ -47,6 +47,8 @@ $(function() {
             dataType: 'json'
         });
     });
-    
-    $(".sidebar").height($(".dw_height").height());
 });
+
+window.onload = function () {
+    $(".sidebar").height($(".dw_height").height());
+}
