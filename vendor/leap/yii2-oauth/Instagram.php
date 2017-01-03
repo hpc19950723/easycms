@@ -39,6 +39,26 @@ class Instagram extends OAuth2
     }
     
     /**
+     * 关注
+     * @param int $instagramUserId
+     * @return array
+     */
+    public function follow($instagramUserId)
+    {
+        return $this->api('v1/users/' . $instagramUserId . '/relationship', 'POST', ['action' => 'follow']);
+    }
+    
+    /**
+     * 取消关注
+     * @param int $instagramUserId
+     * @return array
+     */
+    public function unfollow($instagramUserId)
+    {
+        return $this->api('v1/users/' . $instagramUserId . '/relationship', 'POST', ['action' => 'unfollow']);
+    }
+    
+    /**
      * @inheritdoc
      */
     protected function defaultName()

@@ -5,7 +5,6 @@ use Yii;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
-use common\modules\instagram\components\FollowAndFollowed;
 
 class IndexController extends \common\modules\core\api\components\BaseController
 {
@@ -126,5 +125,43 @@ class IndexController extends \common\modules\core\api\components\BaseController
         ];
         
         return $this->formatSuccessResult($data);
+    }
+    
+    /**
+     * 关注
+     * @param int $id Instagram User Id
+     * @return array
+     */
+    public function actionFollow($id)
+    {
+        $this->relationshop($id, 'follow');
+        
+        return $this->formatSuccessResult();
+    }
+    
+    /**
+     * 取消关注
+     * @param int $id Instagram User Id
+     * @return array
+     */
+    public function actionUnfollow($id)
+    {
+        $this->relationshop($id, 'unfollow');
+        
+        return $this->formatSuccessResult();
+    }
+    
+    /**
+     * 关注或取消关注
+     * @param int $id Instagram User Id
+     * @param string $action
+     */
+    public function relationshop($id, $action)
+    {
+        $user = Yii::$app->user->identity;
+        $instagramAccessToken = $user->instagram_access_token;
+        $instagram = Yii::$app->authClientCollection->getClient('instagram');
+        $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
+        $instagram->{$action}($id);
     }
 }
