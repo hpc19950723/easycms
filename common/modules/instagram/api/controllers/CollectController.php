@@ -9,6 +9,7 @@ use common\modules\instagram\models\forms\CollectForm;
 use yii\data\ActiveDataProvider;
 use common\modules\instagram\models\Collect;
 use common\modules\core\components\Tools;
+use yii\web\NotFoundHttpException;
 
 class CollectController extends \common\modules\core\api\components\BaseController
 {
@@ -49,7 +50,7 @@ class CollectController extends \common\modules\core\api\components\BaseControll
         if($model->load(Tools::getPost(['user_id' => Yii::$app->user->getId()]), '') && $model->save()) {
             return self::formatSuccessResult();
         } else {
-            return self::formatResult(10301, Tools::getFirstError($model->errors));
+            return self::formatResult(10301, Tools::getFirstError($model->errors, Yii::t('instagram', 'Add to collection failed')));
         }
     }
     
@@ -58,14 +59,15 @@ class CollectController extends \common\modules\core\api\components\BaseControll
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $userId = Yii::$app->user->getId();
+        $this->findModelByUserId($id, $userId)->delete();
         
         return self::formatSuccessResult();
     }
     
-    protected function findModel($id)
+    protected function findModelByUserId($id, $userId)
     {
-        $model = Collect::findOne($id);
+        $model = Collect::find()->where(['user_id' => $userId, 'instagram_collect_id' => $id])->one();
         if($model === null) {
             throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
