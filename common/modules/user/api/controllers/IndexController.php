@@ -175,6 +175,16 @@ class IndexController extends BaseController
         }
     }
     
+    /**
+     * 退出登录
+     * @return array
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->identity->generateAccessToken();
+        return self::formatSuccessResult();
+    }
+    
     
     protected function findModel($id)
     {
