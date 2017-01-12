@@ -156,11 +156,11 @@ class IndexController extends \common\modules\core\api\components\BaseController
     {
         $user = Yii::$app->user->identity;
         $instagramAccessToken = $user->instagram_access_token;
-        $instagram = Yii::createObject([
-            'class' => 'common\modules\instagram\components\Instagram',
+        $instagramUser = Yii::createObject([
+            'class' => 'common\modules\instagram\components\InstagramUser',
             'accessToken' => $instagramAccessToken
         ]);
-        $statisticData = $instagram->getStatisticData();
+        $statisticData = $instagramUser->getStatisticData();
         return $this->formatSuccessResult($statisticData);
     }
     
