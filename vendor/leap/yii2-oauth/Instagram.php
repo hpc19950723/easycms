@@ -62,6 +62,11 @@ class Instagram extends OAuth2
         return $this->api('v1/users/' . $instagramUserId . '/relationship', 'POST', ['action' => 'unfollow']);
     }
     
+    public function selfMediaRecent()
+    {
+        return $this->api('v1/users/self/media/recent/', 'GET');
+    }
+    
     /**
      * @inheritdoc
      */
