@@ -27,7 +27,12 @@ class Instagram extends Component
     
     public function getCache($method, $params, $readCache = true, $duration = 0, $callback = null)
     {
-        $cacheKey = $method . '_' . md5(http_build_query($params) . $this->accessToken);
+        if(is_array($params)) {
+            $addtionKey = http_build_query($params);
+        } else {
+            $addtionKey = $params;
+        }
+        $cacheKey = $method . '_' . md5($addtionKey . $this->accessToken);
         $data = Yii::$app->cache->get($cacheKey);
         if(!$readCache || empty($data)) {
             if(is_array($params)) {

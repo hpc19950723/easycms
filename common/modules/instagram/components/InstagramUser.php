@@ -42,6 +42,6 @@ class InstagramUser extends Instagram
         if($mediaList['meta']['code'] == 200 && !empty($mediaList['data'])) {
             return $mediaList['data'];
         }
-        return;
+        return [];
     }
 }
