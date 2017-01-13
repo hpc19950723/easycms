@@ -25,12 +25,16 @@ class Instagram extends Component
         $this->instagram->setAccessToken(['params' => ['access_token' => $this->accessToken]]);
     }
     
-    public function getCache($method, $readCache = true, $duration = 0, $callback = null)
+    public function getCache($method, $params, $readCache = true, $duration = 0, $callback = null)
     {
-        $cacheKey = $method . '_' . md5($this->accessToken);
+        $cacheKey = $method . '_' . md5(http_build_query($params) . $this->accessToken);
         $data = Yii::$app->cache->get($cacheKey);
         if(!$readCache || empty($data)) {
-            $data = $this->instagram->$method();
+            if(is_array($params)) {
+                $data = call_user_func_array(array($this->instagram, $method), $params);
+            } else {
+                $data = call_user_func(array($this->instagram, $method), $params);
+            }
             if($callback instanceof \Closure && isset($data['meta']['code']) && $data['meta']['code'] == 200) {
                 call_user_func($callback, $data['data']);
             }

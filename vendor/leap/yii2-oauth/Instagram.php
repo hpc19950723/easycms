@@ -62,9 +62,14 @@ class Instagram extends OAuth2
         return $this->api('v1/users/' . $instagramUserId . '/relationship', 'POST', ['action' => 'unfollow']);
     }
     
-    public function selfMediaRecent()
+    /**
+     * 获取最近media
+     * @param string $id 取值 'self'字符串 或 instagram user id
+     * @return array
+     */
+    public function getMediaRecent($id)
     {
-        return $this->api('v1/users/self/media/recent/', 'GET');
+        return $this->api('v1/users/' . $id . '/media/recent/', 'GET');
     }
     
     /**

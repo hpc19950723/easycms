@@ -7,9 +7,13 @@ use common\modules\instagram\components\Instagram;
 
 class InstagramUser extends Instagram
 {
+    /**
+     * 基本统计数据
+     * @return array
+     */
     public function getStatisticData()
     {
-        $selfMediaRecent =  $this->getCache('selfMediaRecent', true, 600);
+        $selfMediaRecent =  $this->getCache('getMediaRecent', 'self', true, 600);
         $data = [
             'total_likes' => 0,
             'avg_likes' => 0,
@@ -30,5 +34,14 @@ class InstagramUser extends Instagram
             $data['avg_comments'] = floor($data['total_comments'] / $totalMedia);
         }
         return $data;
+    }
+    
+    public function getMediaRecent($id)
+    {
+        $mediaList =  $this->getCache('getMediaRecent', $id, true, 600);
+        if($mediaList['meta']['code'] == 200 && !empty($mediaList['data'])) {
+            return $mediaList['data'];
+        }
+        return;
     }
 }

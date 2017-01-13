@@ -10,14 +10,14 @@ class FollowAndFollowed extends Instagram
 {
     public function getFollows()
     {
-        return $this->getCache('getSelfFollows', true, 600, function($users){
+        return $this->getCache('getSelfFollows', null, true, 600, function($users){
             InstagramUser::batchInsert($users);
         });
     }
     
     public function getFollowedBy()
     {
-        return $this->getCache('getSelfFollowedBy', true, 600, function($users){
+        return $this->getCache('getSelfFollowedBy', null, true, 600, function($users){
             InstagramUser::batchInsert($users);
         });
     }

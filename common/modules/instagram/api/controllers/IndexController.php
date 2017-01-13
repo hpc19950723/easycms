@@ -164,6 +164,18 @@ class IndexController extends \common\modules\core\api\components\BaseController
         return $this->formatSuccessResult($statisticData);
     }
     
+    public function actionMediaList($id = 'self')
+    {
+        $user = Yii::$app->user->identity;
+        $instagramAccessToken = $user->instagram_access_token;
+        $instagramUser = Yii::createObject([
+            'class' => 'common\modules\instagram\components\InstagramUser',
+            'accessToken' => $instagramAccessToken
+        ]);
+        $mediaList = $instagramUser->getMediaRecent($id);
+        return $this->formatSuccessResult($mediaList);
+    }
+    
     /**
      * 关注或取消关注
      * @param int $id Instagram User Id
