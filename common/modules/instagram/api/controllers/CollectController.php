@@ -67,7 +67,7 @@ class CollectController extends \common\modules\core\api\components\BaseControll
     
     protected function findModelByUserId($id, $userId)
     {
-        $model = Collect::find()->where(['user_id' => $userId, 'instagram_collect_id' => $id])->one();
+        $model = Collect::find()->where(['user_id' => $userId, 'instagram_user_id' => $id])->one();
         if($model === null) {
             throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
