@@ -5,6 +5,7 @@ use Yii;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
+use common\modules\instagram\models\Collect;
 
 class IndexController extends \common\modules\core\api\components\BaseController
 {
@@ -36,11 +37,15 @@ class IndexController extends \common\modules\core\api\components\BaseController
      */
     public function actionBaseInfo($id = 'self')
     {
+        $userId = Yii::$app->user->getId();
         $user = Yii::$app->user->identity;
         $instagramAccessToken = $user->instagram_access_token;
         $instagram = Yii::$app->authClientCollection->getClient('instagram');
         $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
         $instagramUser = $instagram->getUserBaseInfo($id);
+        if($id !== 'self') {
+            $instagramUser['collected'] = Collect::isCollected($userId, $id);
+        }
         return static::formatSuccessResult($instagramUser['data']);
     }
     

@@ -35,4 +35,17 @@ class Collect extends \common\modules\core\models\CommonActiveRecord
     {
         return $this->hasOne(InstagramUser::className(), ['instagram_user_id' => 'instagram_user_id']);
     }
+    
+    /**
+     * 是否收藏
+     * @param int $userId
+     * @param int $instagramUserId
+     * @return boolean
+     */
+    public static function isCollected($userId, $instagramUserId)
+    {
+        $count = $this->find()->where(['user_id' => $userId, 'instagram_user_id' => $instagramUserId])
+                ->count();
+        return (boolean)$count;
+    }
 }
