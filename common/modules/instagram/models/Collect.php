@@ -44,7 +44,7 @@ class Collect extends \common\modules\core\models\CommonActiveRecord
      */
     public static function isCollected($userId, $instagramUserId)
     {
-        $count = $this->find()->where(['user_id' => $userId, 'instagram_user_id' => $instagramUserId])
+        $count = static::find()->where(['user_id' => $userId, 'instagram_user_id' => $instagramUserId])
                 ->count();
         return (boolean)$count;
     }
