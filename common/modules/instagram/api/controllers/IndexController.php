@@ -44,7 +44,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
         $instagram->setAccessToken(['params' => ['access_token' => $instagramAccessToken]]);
         $instagramUser = $instagram->getUserBaseInfo($id);
         if($id !== 'self') {
-            $instagramUser['collected'] = Collect::isCollected($userId, $id);
+            $instagramUser['data']['collected'] = Collect::isCollected($userId, $id);
         }
         return static::formatSuccessResult($instagramUser['data']);
     }
