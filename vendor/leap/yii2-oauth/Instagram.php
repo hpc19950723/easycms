@@ -63,6 +63,16 @@ class Instagram extends OAuth2
     }
     
     /**
+     * 获取去其他用户的关系
+     * @param string $id
+     * @return array
+     */
+    public function getRelationship($id)
+    {
+        return $this->api('v1/users/' . $id . '/relationship/', 'GET');
+    }
+    
+    /**
      * 获取最近media
      * @param string $id 取值 'self'字符串 或 instagram user id
      * @return array
