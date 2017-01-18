@@ -45,7 +45,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
         $instagramUser = $instagram->getUserBaseInfo($id);
         if($id !== 'self') {
             $instagramUser['data']['collected'] = Collect::isCollected($userId, $id);
-            $instagramUser['data']['relationship'] = $instagram->getRelationship($id);
+            $instagramUser['data']['relationship'] = $instagram->getRelationship($id)['data'];
         }
         return static::formatSuccessResult($instagramUser['data']);
     }
