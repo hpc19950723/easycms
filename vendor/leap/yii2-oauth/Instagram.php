@@ -5,6 +5,7 @@ namespace leap\oauth;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\web\HttpException;
+use yii\authclient\InvalidResponseException;
 
 class Instagram extends OAuth2
 {
@@ -19,7 +20,7 @@ class Instagram extends OAuth2
     public function api($apiSubUrl, $method = 'GET', $data = [], $headers = [])
     {
         try{
-            parent::api($apiSubUrl, $method, $data, $headers);
+            return parent::api($apiSubUrl, $method, $data, $headers);
         } catch (InvalidResponseException $e) {
             $data = $e->response->getData();
             if($data['error_type'] == 'OAuthAccessTokenException') {
