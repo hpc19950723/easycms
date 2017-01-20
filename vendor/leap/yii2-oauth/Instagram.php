@@ -23,7 +23,7 @@ class Instagram extends OAuth2
             return parent::api($apiSubUrl, $method, $data, $headers);
         } catch (InvalidResponseException $e) {
             $data = $e->response->getData();
-            if($data['error_type'] == 'OAuthAccessTokenException') {
+            if(isset($data['meta']['error_type']) && $data['meta']['error_type'] == 'OAuthAccessTokenException') {
                 throw new HttpException(200, 'Instagram access_token provided is invalid.', 400);
             } else {
                 throw $e;
