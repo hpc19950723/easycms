@@ -167,7 +167,7 @@ class IndexController extends \common\modules\core\api\components\BaseController
             'accessToken' => $instagramAccessToken
         ]);
         $statisticData = $instagramUser->getStatisticData();
-        return $this->formatSuccessResult($statisticData);
+        return static::formatSuccessResult($statisticData);
     }
     
     public function actionMediaList($id = 'self')
@@ -179,7 +179,39 @@ class IndexController extends \common\modules\core\api\components\BaseController
             'accessToken' => $instagramAccessToken
         ]);
         $mediaList = $instagramUser->getMediaRecent($id);
-        return $this->formatSuccessResult($mediaList);
+        return static::formatSuccessResult($mediaList);
+    }
+    
+    public function actionLike($id)
+    {
+        $user = Yii::$app->user->identity;
+        $instagramAccessToken = $user->instagram_access_token;
+        $instagramLike = Yii::createObject([
+            'class' => 'common\modules\instagram\components\InstagramLike',
+            'accessToken' => $instagramAccessToken
+        ]);
+        $success = $instagramLike->like($id);
+        if($success) {
+            return static::formatSuccessResult();
+        } else {
+            return static::formatResult(20001, Yii::t('instagram', 'Like the media failed'));
+        }
+    }
+    
+    public function actionDeleteLike($id)
+    {
+        $user = Yii::$app->user->identity;
+        $instagramAccessToken = $user->instagram_access_token;
+        $instagramLike = Yii::createObject([
+            'class' => 'common\modules\instagram\components\InstagramLike',
+            'accessToken' => $instagramAccessToken
+        ]);
+        $success = $instagramLike->deleteLike($id);
+        if($success) {
+            return static::formatSuccessResult();
+        } else {
+            return static::formatResult(20001, Yii::t('instagram', 'Delete like the media failed'));
+        }
     }
     
     /**

@@ -78,6 +78,26 @@ class Instagram extends OAuth2
     }
     
     /**
+     * like media
+     * @param int $mediaId
+     * @return array
+     */
+    public function like($mediaId)
+    {
+        return $this->api('media/' .$mediaId  . '/likes', 'POST');
+    }
+    
+    /**
+     * delete like media
+     * @param int $mediaId
+     * @return array
+     */
+    public function deleteLike($mediaId)
+    {
+        return $this->api('media/' .$mediaId  . '/likes', 'DELETE');
+    }
+    
+    /**
      * 获取去其他用户的关系
      * @param string $id
      * @return array
