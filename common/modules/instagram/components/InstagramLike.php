@@ -17,9 +17,9 @@ class InstagramLike extends Instagram
         }
     }
     
-    public function unlike($mediaId)
+    public function deleteLike($mediaId)
     {
-        $result = $this->instagram->unlike($mediaId);
+        $result = $this->instagram->deleteLike($mediaId, $this->accessToken);
         if(isset($result['meta']['code']) && 200 == $result['meta']['code']) {
             return true;
         } else {

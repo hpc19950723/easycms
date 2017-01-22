@@ -84,7 +84,7 @@ class Instagram extends OAuth2
      */
     public function like($mediaId)
     {
-        return $this->api('media/' .$mediaId  . '/likes', 'POST');
+        return $this->api('v1/media/' .$mediaId  . '/likes', 'POST');
     }
     
     /**
@@ -92,9 +92,9 @@ class Instagram extends OAuth2
      * @param int $mediaId
      * @return array
      */
-    public function deleteLike($mediaId)
+    public function deleteLike($mediaId, $accessToken)
     {
-        return $this->api('media/' .$mediaId  . '/likes', 'DELETE');
+        return $this->api('v1/media/' .$mediaId  . '/likes?access_token=' . $accessToken, 'DELETE');
     }
     
     /**
